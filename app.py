@@ -9,8 +9,8 @@ except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# ఎప్పటికీ సపోర్ట్ చేసే గూగుల్ అధికారిక మోడల్‌గా మార్చబడింది
-model = genai.GenerativeModel('gemini-1.5-flash')
+# ప్రస్తుతం గూగుల్ సపోర్ట్ చేసే సరికొత్త అఫీషియల్ మోడల్
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 # సైడ్‌బార్ సమాచారం మరియు ఫీచర్స్
 with st.sidebar:
