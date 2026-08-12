@@ -9,14 +9,13 @@ except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# సరికొత్త Gemini 2.5 Flash మోడల్ కనెక్షన్
-model = genai.GenerativeModel('gemini-2.5-flash')
+# ఇక్కడ సరికొత్త సపోర్టెడ్ మోడల్‌గా మార్చబడింది
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # సైడ్‌బార్ సమాచారం మరియు ఫీచర్స్
 with st.sidebar:
     st.title("⚙️ సెట్టింగ్స్ / Features")
     
-    # 1. మెయిన్ మోడ్ సెలెక్టర్ (చాట్ లేదా వీడియో ఎడిటింగ్ గైడ్)
     app_mode = st.radio(
         "మీరు ఏం చేయాలనుకుంటున్నారు?:",
         ["🤖 AI చాటింగ్ (Chat)", "🎬 వీడియో ఎడిటింగ్ అసిస్టెంట్ (Video Assistant)"]
@@ -24,9 +23,8 @@ with st.sidebar:
     
     st.write("---")
     
-    # 2. భాషను ఎంచుకునే ఫీచర్
     language = st.selectbox(
-        "సмаధానం చెప్పాల్సిన భాష (Language):",
+        "సమాధానం చెప్పాల్సిన భాష (Language):",
         ["Telugu (తెలుగు)", "English", "Hindi (हिंदी)"]
     )
     
@@ -34,7 +32,6 @@ with st.sidebar:
     st.write("### 🤖 యాప్ వివరాలు:")
     st.info("ఈ **Smart AI** చాట్‌బాట్‌ను రవీందర్ గారు రూపొందించారు.")
     
-    # 3. క్లియర్ చాట్ బటన్
     if st.button("🧹 చాట్ క్లియర్ చేయండి (Clear Chat)"):
         st.session_state.messages = []
         st.rerun()
@@ -70,7 +67,7 @@ else:
     st.title("🎬 Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
     st.write("యూట్యూబ్ (YouTube), ఇన్‌స్టాగ్రామ్ రీల్స్ కోసం వీడియోలు ఎలా చేయాలో ఈ AI మీకు స్క్రిప్ట్ మరియు ఎడిటింగ్ ఐడియాలు ఇస్తుంది!")
     
-    video_topic = st.text_input("మీరు ఏ టాపిక్ పై వీడియో చేయాలనుకుంటున్నారు? (ఉదాహరణకు: వంటలు, టెక్నాలజీ, ట్రావెల్):")
+    video_topic = st.text_input("మీరు ఏ టాпиక్ పై వీడియో చేయాలనుకుంటున్నారు? (ఉదాహరణకు: వంటలు, టెక్నాలజీ, ట్రావెల్):")
     video_type = st.selectbox("వీడియో రకం ఎంచుకోండి:", ["YouTube Long Video", "Instagram Reel / YouTube Short"])
     
     if st.button("🚀 వీడియో స్క్రిప్ట్ & ఎడిటింగ్ ప్లాన్ తయారుచేయి"):
