@@ -9,8 +9,8 @@ except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# ప్రస్తుతం గూగుల్ సపోర్ట్ చేసే సరికొత్త అఫీషియల్ మోడల్
-model = genai.GenerativeModel('gemini-2.5-flash')
+# గూగుల్ రికమండ్ చేసిన సరికొత్త అఫీషియల్ మోడల్
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # సైడ్‌బార్ సమాచారం మరియు ఫీచర్స్
 with st.sidebar:
@@ -30,7 +30,7 @@ with st.sidebar:
     
     st.write("---")
     st.write("### 🤖 యాప్ వివరాలు:")
-    st.info("ఈ **Smart AI** చాట్‌బాట్‌ను రవీందర్ గారు రూపొందించారు.")
+    st.info("ఈ **Smart AI** చాట్‌బాట్‌ను రవీんだర్ గారు రూపొందించారు.")
     
     if st.button("🧹 చాట్ క్లియర్ చేయండి (Clear Chat)"):
         st.session_state.messages = []
