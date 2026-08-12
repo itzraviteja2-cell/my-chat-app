@@ -9,8 +9,8 @@ except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# సరికొత్త గూగుల్ మోడల్ కనెక్షన్
-model = genai.GenerativeModel('gemini-2.5-flash')
+# ఎప్పటికీ సపోర్ట్ చేసే గూగుల్ అధికారిక మోడల్‌గా మార్చబడింది
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # సైడ్‌బార్ సమాచారం మరియు ఫీచర్స్
 with st.sidebar:
@@ -69,10 +69,10 @@ else:
     st.title("🎬 ✨ Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
     st.write("యూట్యూబ్ (YouTube), ఇన్‌స్టాగ్రామ్ రీల్స్ కోసం వీడియోలు ఎలా చేయాలో ఈ AI మీకు స్క్రిప్ట్ మరియు ఎడిటింగ్ ఐడియాలు ఇస్తుంది!")
     
-    video_topic = st.text_input("మీరు ఏ టాпиక్ పై వీడియో చేయాలనుకుంటున్నారు? (ఉదాహరణకు: వంటలు, టెక్నాలజీ, 👀):")
+    video_topic = st.text_input("మీరు ఏ టాపిక్ పై వీడియో చేయాలనుకుంటున్నారు? (ఉదాహరణకు: వంటలు, టెక్నాలజీ, ట్రావెల్):")
     video_type = st.selectbox("వీడియో రకం ఎంచుకోండి:", ["YouTube Long Video", "Instagram Reel / YouTube Short"])
     
-    if st.button("🚀 व्हिडिओ స్క్రిప్ట్ & ఎడిటింగ్ ప్లాన్ తయారుచేయి"):
+    if st.button("🚀 వీడియో స్క్రిప్ట్ & ఎడిటింగ్ ప్లాన్ తయారుచేయి"):
         if video_topic:
             with st.spinner("మీ కోసం వీడియో ప్లాన్ రెడీ చేస్తున్నాను..."):
                 try:
