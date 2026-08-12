@@ -13,7 +13,7 @@ genai.configure(api_key=st_api_key)
 model = genai.GenerativeModel("gemini-pro")
 
 # యాప్ టైటిల్
-st.title("🤖 నా Gemini AI చాట్‌బాట్")
+st.title("🤖 smart AI")
 st.write("మీకు కావలసిన ప్రశ్నను కింద అడగండి:")
 
 # యూజర్ ఇన్‌పుట్ బాక్స్
