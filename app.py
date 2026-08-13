@@ -29,7 +29,7 @@ try:
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
-    st.error(f"API Key సెటప్ లోపం: {e}")
+        st.error(f"API Key సెటప్ లోపం: {e}")
     st.stop()
 
 st.title("✨ Aurora AI")
