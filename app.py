@@ -5,56 +5,55 @@ from google.genai import types
 # Streamlit Secrets నుండి API Key ని పొందడం
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
-    # కొత్త AQ. కీస్ ని కూడా సపోర్ట్ చేసే సరికొత్త క్లయింట్ ఆప్షన్
     client = genai.Client(api_key=api_key)
 except KeyError:
     st.error("Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# 🔵 ఎట్టి పరిస్థితుల్లోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
+# ఎర్రర్ రాకుండా ఐకాన్ స్టైలింగ్ కోడ్
 st.markdown("""
     <style>
     .stTextInput div[data-baseweb="input"] {
-        border: 2px solid #1e88e5 !important;
+        border: 2px solid #1E88E5 !important;
         border-radius: 8px !important;
     }
     .stTextInput div[data-baseweb="input"]:focus-within {
-        border-color: #1565c0 !important;
-        box-shadow: 0 0 0 2px #1565c0 !important;
+        border-color: #1565C0 !important;
+        box-shadow: 0 0 2px #1565C0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# సైడ్‌బార్ సమాచారం మరియు ఫీచర్స్
+# సైడ్‌బార్ సెట్టింగ్‌లు
 with st.sidebar:
     st.title("⚙️ సెట్టింగ్స్ / Features")
     
     app_mode = st.radio(
-        "మీరు ఏం చేయాలనుకుంటున్నారు?:",
-        ["🤖 AI చాటింగ్ (Chat)", "🎬 వీడియో ఎడిటింగ్ అసిస్టెంట్ (Video Assistant)"]
+        "మీరు ఏమి చేయాలనుకుంటున్నారు?:",
+        ["💬 AI చాటింగ్ (Chat)", "🎬 వీడియో ఎడిటింగ్ అసిస్టెంట్ (Video Assistant)"]
     )
     
     st.write("---")
     
     language = st.selectbox(
-        "సమాధానం చెప్పాల్సిన భాష (Language):",
+        "సంభాషణ చేయాల్సిన భాష (Language):",
         ["Telugu (తెలుగు)", "English", "Hindi (हिंदी)"]
     )
     
     st.write("---")
     st.write("### 🤖 యాప్ వివరాలు:")
-    st.info("ఈ **Smart AI** చాట్‌బాట్‌ను రవీందర్ గారు రూపొందించారు.")
+    st.info("ఈ **Smart AI** అసిస్టెంట్‌ని మీ అవసరాల కోసం రూపొందించాము.")
     
     if st.button("🧹 చాట్ క్లియర్ చేయండి (Clear Chat)"):
         st.session_state.messages = []
         st.rerun()
 
-# ----------------- మోడ్ 1: AI చాటింగ్ -----------------
-if app_mode == "🤖 AI చాటింగ్ (Chat)":
-    st.title("✨ smart AI")
-    st.subheader("మీ స్మార్ట్ ఆలోచనలకు.. సరైన AI తోడు!")
+# మోడ్ 1: AI చాటింగ్
+if app_mode == "💬 AI చాటింగ్ (Chat)":
+    st.title("✨ Smart AI")
+    st.subheader("మీ స్మార్ట్ ఆలోచనలకు... సరైన AI తోడు!")
     st.write("మీకు కావలసిన ప్రశ్నను కింద అడగండి:")
-    
+
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -66,48 +65,26 @@ if app_mode == "🤖 AI చాటింగ్ (Chat)":
         with st.chat_message("user"):
             st.write(user_input)
         st.session_state.messages.append({"role": "user", "content": user_input})
-        
+
         with st.chat_message("assistant"):
             with st.spinner("సమాధానం కోసం వెతుకుతున్నాను..."):
                 try:
                     prompt = f"Please respond strictly in {language}. User question: {user_input}"
-                    # 2026 లేటెస్ట్ స్టేబుల్ జెమిని మోడల్
+                    
+                    # సరిచేయబడిన సరియైన మోడల్ నేమ్
                     response = client.models.generate_content(
-                        model='gemini-2.5-flash',
+                        model='gemini-1.5-flash',
                         contents=prompt,
                     )
+                    
                     st.write(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
+                    
                 except Exception as e:
-                    st.info("సర్వర్ కొంచెం బిజీగా ఉంది, దయచేసి ఒక్క క్షణం ఆగి మళ్లీ ప్రయత్నించండి.")
+                    # ఒకవేళ ఎర్రర్ వస్తే అసలు సమస్య ఏంటో స్క్రీన్ పైన చూపిస్తుంది
+                    st.error(f"Error details: {e}")
 
-# ----------------- మోడ్ 2: వీడియో ఎడిటింగ్ అసిస్టెంట్ -----------------
+# మోడ్ 2: వీడియో ఎడిటింగ్ అసిస్టెంట్
 else:
-    st.title("🎬 ✨ Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
-    st.write("యూట్యూబ్ (YouTube), ఇన్‌స్టాగ్రామ్ రీల్స్ కోసం వీడియోలు ఎలా చేయాలో ఈ AI మీకు స్క్రిప్ట్ మరియు ఎడిటింగ్ ఐడియాలు ఇస్తుంది!")
-    
-    video_topic = st.text_input("మీరు ఏ టాపిక్ పై వీడియో చేయాలనుకుంటున్నారు? (ఉదాహరణకు: వంటలు, టెక్నాలజీ, ట్రావెల్):")
-    video_type = st.selectbox("వీριο రకం ఎంచుకోండి:", ["YouTube Long Video", "Instagram Reel / YouTube Short"])
-    
-    if st.button("🚀 వీడియో స్క్రిప్ట్ & ఎడిటింగ్ ప్లాన్ తయారుచేయి"):
-        if video_topic:
-            with st.spinner("మీ కోసం వీడియో ప్లాన్ రెడీ చేస్తున్నాను..."):
-                try:
-                    video_prompt = f"""
-                    Provide a complete response strictly in {language}.
-                    Create a full video production plan for a {video_type} on the topic: '{video_topic}'.
-                    Include:
-                    1. A catchy title.
-                    2. A step-by-step video script (Intro, Main Body, Outro).
-                    3. Specific Video Editing tips (where to add text, effects, cuts, and background music).
-                    """
-                    response = client.models.generate_content(
-                        model='gemini-2.5-flash',
-                        contents=video_prompt,
-                    )
-                    st.success("✨ మీ వీడియో ప్లాన్ రెడీ అయింది!")
-                    st.write(response.text)
-                except Exception as e:
-                    st.info("ఒక్క క్షణం ఆగండి, వివరాలు లోడ్ అవుతున్నాయి...")
-        else:
-            st.warning("దయచేసి పైన ఒక టాపిక్ టైప్ చేయండి!")
+    st.title("🎬 Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
+    st.write("వీడియో ఎడిటింగ్ కి సంబంధించిన సందేహాలను ఇక్కడ అడగవచ్చు.")
