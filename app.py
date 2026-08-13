@@ -5,8 +5,10 @@ try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
     
-    # అత్యంత వేగంగా పనిచేసే సరికొత్త మోడల్
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    # అందుబాటులో ఉన్న వర్కింగ్ మోడల్‌ని ఆటోమేటిక్‌గా సెలెక్ట్ చేసుకుంటుంది
+    available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+    model_name = available_models[0] if available_models else 'gemini-flash-latest'
+    model = genai.GenerativeModel(model_name)
 
 except Exception as e:
     st.error(f"API Key / Models లోపం: {e}")
