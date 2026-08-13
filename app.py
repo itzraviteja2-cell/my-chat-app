@@ -9,10 +9,10 @@ except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# ఎప్పటికీ సపోర్ట్ చేసే గూగుల్ స్థిరమైన మోడల్
+# 2026 లో గూగుల్ సపోర్ట్ చేసే సరికొత్త అఫీషియల్ మోడల్
 model = genai.GenerativeModel('gemini-2.5-flash')
 
-# ఎట్టి పరిస్థితుల్లోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
+# 🔵 ఎట్టి పరిస్థితుల్లోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
 st.markdown("""
     <style>
     .stTextInput div[data-baseweb="input"] {
