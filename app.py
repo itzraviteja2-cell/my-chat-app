@@ -4,13 +4,12 @@ from google import genai
 # Streamlit Secrets నుండి API Key ని పొందడం
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
-    # సరికొత్త గూగుల్ కనెక్షన్ పద్ధతి
     client = genai.Client(api_key=api_key)
 except KeyError:
-    st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
+    st.error("Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# 🔵 ఎట్టి పరిస్థితుల్లోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
+# ఎట్టి పరిస్థితుల్లోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
 st.markdown("""
     <style>
     .stTextInput div[data-baseweb="input"] {
@@ -67,10 +66,9 @@ if app_mode == "🤖 AI చాటింగ్ (Chat)":
         st.session_state.messages.append({"role": "user", "content": user_input})
         
         with st.chat_message("assistant"):
-            with st.spinner("సమాధానం కోసం వెతుకుతున్నాను..."):
+            with st.spinner("సмаధానం కోసం వెతుకుతున్నాను..."):
                 try:
                     prompt = f"Please respond strictly in {language}. User question: {user_input}"
-                    # సరికొత్త జెమిని మోడల్ కాల్
                     response = client.models.generate_content(
                         model='gemini-2.5-flash',
                         contents=prompt,
@@ -85,7 +83,7 @@ else:
     st.title("🎬 ✨ Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
     st.write("యూట్యూబ్ (YouTube), ఇన్‌స్టాగ్రామ్ రీల్స్ కోసం వీడియోలు ఎలా చేయాలో ఈ AI మీకు స్క్రిప్ట్ మరియు ఎడిటింగ్ ఐడియాలు ఇస్తుంది!")
     
-    video_topic = st.text_input("మీరు ఏ టాపిక్ పై వీడియో చేయాలనుకుంటున్నారు? (ఉదాహరణకు: వంటలు, టెక్నాలజీ, ట్రావెల్):")
+    video_topic = st.text_input("మీరు ఏ టాపిక్ పై వీడియో చేయాలనుకుంటున్నారు? (ఉదాహరణకు: వంటలు, టెక్నాలジー, ట్రావెల్):")
     video_type = st.selectbox("వీడియో రకం ఎంచుకోండి:", ["YouTube Long Video", "Instagram Reel / YouTube Short"])
     
     if st.button("🚀 వీడియో స్క్రిప్ట్ & ఎడిటింగ్ ప్లాన్ తయారుచేయి"):
