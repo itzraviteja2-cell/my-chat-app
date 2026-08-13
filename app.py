@@ -1,17 +1,14 @@
 import streamlit as st
 import google.generativeai as genai
 
+# Streamlit Secrets నుండి API Key ని పొందడం
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    
-    # అందుబాటులో ఉన్న వర్కింగ్ మోడల్‌ని ఆటోమేటిక్‌గా సెలెక్ట్ చేసుకుంటుంది
-    available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-    model_name = available_models[0] if available_models else 'gemini-flash-latest'
-    model = genai.GenerativeModel(model_name)
-
+    # ఎల్లప్పుడూ లేటెస్ట్ వర్కింగ్ మోడల్‌కి కనెక్ట్ అవుతుంది
+    model = genai.GenerativeModel('gemini-flash-latest')
 except Exception as e:
-    st.error(f"API Key / Models లోపం: {e}")
+    st.error(f"API Key సెటప్ లోపం: {e}")
     st.stop()
 
 # UI Styling
@@ -24,12 +21,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# సైడ్‌బార్
+# సైడ్‌బార్ సెట్టింగ్‌లు
 with st.sidebar:
     st.title("⚙️ సెట్టింగ్స్")
     app_mode = st.radio("ఎంచుకోండి:", ["💬 AI చాటింగ్ (Chat)", "🎬 వీడియో ఎడిటింగ్ అసిస్టెంట్"])
     st.write("---")
     language = st.selectbox("భాష:", ["Telugu (తెలుగు)", "English", "Hindi (हिंदी)"])
+    
     if st.button("🧹 చాట్ క్లియర్ చేయండి"):
         st.session_state.messages = []
         st.rerun()
