@@ -1,16 +1,14 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 
 # Streamlit Secrets నుండి API Key ని పొందడం
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
-    genai.configure(api_key=api_key)
+    # సరికొత్త గూగుల్ కనెక్షన్ పద్ధతి
+    client = genai.Client(api_key=api_key)
 except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
-
-# 2026 లో గూగుల్ సపోర్ట్ చేసే సరికొత్త అఫీషియల్ మోడల్
-model = genai.GenerativeModel('gemini-2.5-flash')
 
 # 🔵 ఎట్టి పరిస్థితుల్లోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
 st.markdown("""
@@ -72,7 +70,11 @@ if app_mode == "🤖 AI చాటింగ్ (Chat)":
             with st.spinner("సమాధానం కోసం వెతుకుతున్నాను..."):
                 try:
                     prompt = f"Please respond strictly in {language}. User question: {user_input}"
-                    response = model.generate_content(prompt)
+                    # సరికొత్త జెమిని మోడల్ కాల్
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=prompt,
+                    )
                     st.write(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
@@ -98,7 +100,10 @@ else:
                     2. A step-by-step video script (Intro, Main Body, Outro).
                     3. Specific Video Editing tips (where to add text, effects, cuts, and background music).
                     """
-                    response = model.generate_content(video_prompt)
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=video_prompt,
+                    )
                     st.success("✨ మీ వీడియో ప్లాన్ రెడీ అయింది!")
                     st.write(response.text)
                 except Exception as e:
