@@ -1,14 +1,20 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Streamlit Secrets నుండి API Key పొందడం
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    # కొత్త మరియు సరిగ్గా పనిచేసే మోడల్
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    
+    # మీ API Key కి పనిచేసే మోడల్స్ అన్నింటినీ ఇక్కడ చెక్ చేస్తున్నాం
+    available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+    st.write("అందుబాటులో ఉన్న మోడల్స్:", available_models)
+
+    # మొదటి సరిపోయే మోడల్‌ని ఆటోమేటిక్‌గా ఎంచుకుంటుంది
+    model_name = 'models/gemini-1.5-flash' if 'models/gemini-1.5-flash' in available_models else available_models[0]
+    model = genai.GenerativeModel(model_name)
+
 except Exception as e:
-    st.error(f"API Key సెటప్ లోపం: {e}")
+    st.error(f"API Key / Models లోపం: {e}")
     st.stop()
 
 # UI Styling
@@ -18,14 +24,10 @@ st.markdown("""
         border: 2px solid #1E88E5 !important;
         border-radius: 8px !important;
     }
-    .stTextInput div[data-baseweb="input"]:focus-within {
-        border-color: #1565C0 !important;
-        box-shadow: 0 0 2px #1565C0 !important;
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# సైడ్‌బార్ సెట్టింగ్‌లు
+# సైడ్‌బార్
 with st.sidebar:
     st.title("⚙️ సెట్టింగ్స్")
     app_mode = st.radio("ఎంచుకోండి:", ["💬 AI చాటింగ్ (Chat)", "🎬 వీడియో ఎడిటింగ్ అసిస్టెంట్"])
@@ -63,6 +65,3 @@ if app_mode == "💬 AI చాటింగ్ (Chat)":
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
                     st.error(f"Error details: {e}")
-else:
-    st.title("🎬 Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
-    st.write("వీడియో ఎడిటింగ్ కి సంబంధించిన సందేహాలను ఇక్కడ అడగవచ్చు.")
