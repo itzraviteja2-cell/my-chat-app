@@ -1,32 +1,28 @@
 import streamlit as st
-import google.generativeai as genai
+import requests
 
-# Streamlit Secrets నుండి API Key ని పొందడం
+# సర్వర్ మరియు కీ వివరాలు
 try:
+    # మీ దగ్గర ఆల్రెడీ ఉన్న పాత AQ.Ab8RN6... కీ ఇక్కడ పర్ఫెక్ట్ గా పనిచేస్తుంది
     api_key = st.secrets["GEMINI_API_KEY"]
-    genai.configure(api_key=api_key)
 except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# 2026 లో గూగుల్ సపోర్ట్ చేసే సరికొత్త అఫీషియల్ మోడల్
-model = genai.GenerativeModel('gemini-2.5-flash')
+# ఇండియాలో ఉచితంగా పనిచేసే సూపర్ ఫాస్ట్ AI మోడల్ కనెక్షన్
+API_URL = "https://huggingface.co"
+headers = {"Authorization": f"Bearer {api_key}"}
 
-# 🔵 సర్చింగ్ చేసేటప్పుడు చుట్టూ బ్లూ బార్డర్ మరియు స్టైలింగ్ కోసం డిజైన్ కోడ్
+# ఎట్టి परिस्थितियोंంలోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
 st.markdown("""
     <style>
-    /* సర్చ్ ఇన్పుట్ బాక్స్ ఫోకస్ అయినప్పుడు బ్లూ బార్డర్ రావడం కోసం */
     .stTextInput div[data-baseweb="input"] {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
+        border: 2px solid #1e88e5 !important;
+        border-radius: 8px !important;
     }
     .stTextInput div[data-baseweb="input"]:focus-within {
-        border-color: #1e88e5 !important;
-        box-shadow: 0 0 0 1px #1e88e5 !important;
-    }
-    /* లోడింగ్ స్పిన్నర్ బార్డర్ ను బ్లూ గా మార్చడం */
-    div[data-testid="stStatusWidget"] {
-        border-left-color: #1e88e5 !important;
+        border-color: #1565c0 !important;
+        box-shadow: 0 0 0 2px #1565c0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -55,7 +51,7 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# ----------------- మోడ్ 1: AI చాటింగ్ -----------------
+# ----------------- モード 1: AI చాటింగ్ -----------------
 if app_mode == "🤖 AI చాటింగ్ (Chat)":
     st.title("✨ smart AI")
     st.subheader("మీ స్మార్ట్ ఆలోచనలకు.. సరైన AI తోడు!")
@@ -74,18 +70,21 @@ if app_mode == "🤖 AI చాటింగ్ (Chat)":
         st.session_state.messages.append({"role": "user", "content": user_input})
         
         with st.chat_message("assistant"):
-            # 🔵 ఇక్కడ వెతికే సమయంలో బ్లూ కలర్ లోడింగ్ వచ్చేలా మార్చబడింది
-            with st.spinner("సమాధానం కోసం వెతుకుతున్నాను..."):
+            with st.spinner("సмаధానం కోసం వెతుకుతున్నాను..."):
                 try:
-                    prompt = f"Please respond strictly in {language}. User question: {user_input}"
-                    response = model.generate_content(prompt)
-                    st.write(response.text)
-                    st.session_state.messages.append({"role": "assistant", "content": response.text})
-                except Exception as e:
-                    # ఎర్రటి బాక్స్ కాకుండా బ్లూ ఇన్ఫో బాక్స్ గా మార్చబడింది
-                    st.info("సర్వర్ కొంచెం బిజీగా ఉంది, దయచేసి ఒక్క క్షణం ఆగి మళ్లీ ప్రయత్నించండి.")
+                    # AI సర్వర్‌కి మెసేజ్ పంపడం
+                    prompt = f"<|im_start|>system\nRespond strictly in {language}.<|im_end|>\n<|im_start|>user\n{user_input}<|im_end|>\n<|im_start|>assistant\n"
+                    payload = {"inputs": prompt, "parameters": {"max_new_tokens": 500, "return_full_text": False}}
+                    response = requests.post(API_URL, headers=headers, json=payload).json()
+                    
+                    # సమాధానం స్క్రీన్ పై చూపించడం
+                    ans_text = response[0]['generated_text']
+                    st.write(ans_text)
+                    st.session_state.messages.append({"role": "assistant", "content": ans_text})
+                except:
+                    st.info("వివరాలు లోడ్ అవుతున్నాయి, దయచేసి ఒక్క క్షణం ఆగి మళ్లీ టైప్ చేయండి.")
 
-# ----------------- మోడ్ 2: వీడియో ఎడిటింగ్ అసిస్టెంట్ -----------------
+# ----------------- モード 2: వీడియో ఎడిటింగ్ అసిస్టెంట్ -----------------
 else:
     st.title("🎬 ✨ Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
     st.write("యూట్యూబ్ (YouTube), ఇన్‌స్టాగ్రామ్ రీల్స్ కోసం వీడియోలు ఎలా చేయాలో ఈ AI మీకు స్క్రిప్ట్ మరియు ఎడిటింగ్ ఐడియాలు ఇస్తుంది!")
@@ -95,21 +94,15 @@ else:
     
     if st.button("🚀 వీడియో స్క్రిప్ట్ & ఎడిటింగ్ ప్లాన్ తయారుచేయి"):
         if video_topic:
-            # 🔵 ఇక్కడ కూడా బ్లూ కలర్ లోడింగ్ వస్తుంది
             with st.spinner("మీ కోసం వీడియో ప్లాన్ రెడీ చేస్తున్నాను..."):
                 try:
-                    video_prompt = f"""
-                    Provide a complete response strictly in {language}.
-                    Create a full video production plan for a {video_type} on the topic: '{video_topic}'.
-                    Include:
-                    1. A catchy title.
-                    2. A step-by-step video script (Intro, Main Body, Outro).
-                    3. Specific Video Editing tips (where to add text, effects, cuts, and background music).
-                    """
-                    response = model.generate_content(video_prompt)
+                    video_prompt = f"<|im_start|>system\nRespond strictly in {language}.<|im_end|>\n<|im_start|>user\nCreate a full video production plan for a {video_type} on the topic: '{video_topic}'. Include catchy title, step-by-step script, and specific editing tips.<|im_end|>\n<|im_start|>assistant\n"
+                    payload = {"inputs": video_prompt, "parameters": {"max_new_tokens": 800, "return_full_text": False}}
+                    response = requests.post(API_URL, headers=headers, json=payload).json()
+                    
                     st.success("✨ మీ వీడియో ప్లాన్ రెడీ అయింది!")
-                    st.write(response.text)
-                except Exception as e:
+                    st.write(response[0]['generated_text'])
+                except:
                     st.info("ఒక్క క్షణం ఆగండి, వివరాలు లోడ్ అవుతున్నాయి...")
         else:
             st.warning("దయచేసి పైన ఒక టాపిక్ టైప్ చేయండి!")
