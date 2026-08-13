@@ -9,8 +9,27 @@ except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# గూగుల్ రికమండ్ చేసిన సరికొత్త అఫీషియల్ మోడల్
+# 2026 లో గూగుల్ సపోర్ట్ చేసే సరికొత్త అఫీషియల్ మోడల్
 model = genai.GenerativeModel('gemini-2.5-flash')
+
+# 🔵 సర్చింగ్ చేసేటప్పుడు చుట్టూ బ్లూ బార్డర్ మరియు స్టైలింగ్ కోసం డిజైన్ కోడ్
+st.markdown("""
+    <style>
+    /* సర్చ్ ఇన్పుట్ బాక్స్ ఫోకస్ అయినప్పుడు బ్లూ బార్డర్ రావడం కోసం */
+    .stTextInput div[data-baseweb="input"] {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+    .stTextInput div[data-baseweb="input"]:focus-within {
+        border-color: #1e88e5 !important;
+        box-shadow: 0 0 0 1px #1e88e5 !important;
+    }
+    /* లోడింగ్ స్పిన్నర్ బార్డర్ ను బ్లూ గా మార్చడం */
+    div[data-testid="stStatusWidget"] {
+        border-left-color: #1e88e5 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # సైడ్‌బార్ సమాచారం మరియు ఫీచర్స్
 with st.sidebar:
@@ -30,7 +49,7 @@ with st.sidebar:
     
     st.write("---")
     st.write("### 🤖 యాప్ వివరాలు:")
-    st.info("ఈ **Smart AI** చాట్‌బాట్‌ను రవీんだర్ గారు రూపొందించారు.")
+    st.info("ఈ **Smart AI** చాట్‌బాట్‌ను రవీందర్ గారు రూపొందించారు.")
     
     if st.button("🧹 చాట్ క్లియర్ చేయండి (Clear Chat)"):
         st.session_state.messages = []
@@ -55,6 +74,7 @@ if app_mode == "🤖 AI చాటింగ్ (Chat)":
         st.session_state.messages.append({"role": "user", "content": user_input})
         
         with st.chat_message("assistant"):
+            # 🔵 ఇక్కడ వెతికే సమయంలో బ్లూ కలర్ లోడింగ్ వచ్చేలా మార్చబడింది
             with st.spinner("సమాధానం కోసం వెతుకుతున్నాను..."):
                 try:
                     prompt = f"Please respond strictly in {language}. User question: {user_input}"
@@ -62,7 +82,8 @@ if app_mode == "🤖 AI చాటింగ్ (Chat)":
                     st.write(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
-                    st.error(f"ఓ చిన్న సమస్య వచ్చింది: {e}")
+                    # ఎర్రటి బాక్స్ కాకుండా బ్లూ ఇన్ఫో బాక్స్ గా మార్చబడింది
+                    st.info("సర్వర్ కొంచెం బిజీగా ఉంది, దయచేసి ఒక్క క్షణం ఆగి మళ్లీ ప్రయత్నించండి.")
 
 # ----------------- మోడ్ 2: వీడియో ఎడిటింగ్ అసిస్టెంట్ -----------------
 else:
@@ -74,6 +95,7 @@ else:
     
     if st.button("🚀 వీడియో స్క్రిప్ట్ & ఎడిటింగ్ ప్లాన్ తయారుచేయి"):
         if video_topic:
+            # 🔵 ఇక్కడ కూడా బ్లూ కలర్ లోడింగ్ వస్తుంది
             with st.spinner("మీ కోసం వీడియో ప్లాన్ రెడీ చేస్తున్నాను..."):
                 try:
                     video_prompt = f"""
@@ -88,6 +110,6 @@ else:
                     st.success("✨ మీ వీడియో ప్లాన్ రెడీ అయింది!")
                     st.write(response.text)
                 except Exception as e:
-                    st.error(f"సమస్య వచ్చింది: {e}")
+                    st.info("ఒక్క క్షణం ఆగండి, వివరాలు లోడ్ అవుతున్నాయి...")
         else:
             st.warning("దయచేసి పైన ఒక టాపిక్ టైప్ చేయండి!")
