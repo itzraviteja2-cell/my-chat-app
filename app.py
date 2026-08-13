@@ -5,13 +5,8 @@ try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
     
-    # మీ API Key కి పనిచేసే మోడల్స్ అన్నింటినీ ఇక్కడ చెక్ చేస్తున్నాం
-    available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-    st.write("అందుబాటులో ఉన్న మోడల్స్:", available_models)
-
-    # మొదటి సరిపోయే మోడల్‌ని ఆటోమేటిక్‌గా ఎంచుకుంటుంది
-    model_name = 'models/gemini-1.5-flash' if 'models/gemini-1.5-flash' in available_models else available_models[0]
-    model = genai.GenerativeModel(model_name)
+    # అత్యంత వేగంగా పనిచేసే సరికొత్త మోడల్
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
 except Exception as e:
     st.error(f"API Key / Models లోపం: {e}")
@@ -65,3 +60,6 @@ if app_mode == "💬 AI చాటింగ్ (Chat)":
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
                     st.error(f"Error details: {e}")
+else:
+    st.title("🎬 Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
+    st.write("వీడియో ఎడిటింగ్ కి సంబంధించిన సందేహాలను ఇక్కడ అడగవచ్చు.")
