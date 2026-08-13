@@ -2,22 +2,39 @@ import streamlit as st
 import google.generativeai as genai
 from PIL import Image
 
-# Page Config
-st.set_page_config(page_title="Smart AI", page_icon="logo.png", layout="centered")
+# Page Config - లోగో, టైటిల్ అమరిక
+st.set_page_config(
+    page_title="Aurora AI", 
+    page_icon="logo.png", 
+    layout="centered"
+)
+
+# టెక్స్ట్ బాక్స్ నుండి బయటకు రాకుండా డిజైన్ స్టైలింగ్
+st.markdown("""
+    <style>
+    .stChatMessage, .stMarkdown, p {
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: pre-wrap !important;
+    }
+    .stChatInputContainer {
+        padding-bottom: 20px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # API Setup
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    # Gemini Flash మోడల్ మల్టీ మోడల్ (Text/Image/Audio) కి సపోర్ట్ చేస్తుంది
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
-        st.error(f"API Key సెటప్ లోపం: {e}")
+    st.error(f"API Key సెటప్ లోపం: {e}")
     st.stop()
 
-st.title("✨ Smart AI")
+st.title("✨ Aurora AI")
 
-# --- కొత్త ఫీచర్లు: ఫోటో & మైక్ కంట్రోల్స్ ---
+# --- ఫోటో & మైక్ కంట్రోల్స్ ---
 col1, col2 = st.columns([1, 1])
 
 with col1:
@@ -39,7 +56,7 @@ for message in st.session_state.messages:
 user_input = st.chat_input("మీ సందేశాన్ని టైప్ చేయండి...")
 
 # --- లాజిక్ ---
-# 1. ఒకవేళ యూజర్ ఫోటో పంపిస్తే
+# 1. ఫోటో పంపినప్పుడు
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption="అప్‌లోడ్ చేసిన ఫోటో", width=200)
@@ -49,16 +66,15 @@ if uploaded_file is not None:
             st.write(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
 
-# 2. ఒకవేళ యూజర్ ఆడియో పంపిస్తే
+# 2. వాయిస్ పంపినప్పుడు
 if audio_value:
     with st.chat_message("assistant"):
         st.write("వాయిస్ వింటున్నాను...")
-        # ఆడియోను AI కి పంపుతున్నాం
         response = model.generate_content(["ఈ వాయిస్‌లో ఉన్న విషయాన్ని అర్థం చేసుకోండి", audio_value])
         st.write(response.text)
         st.session_state.messages.append({"role": "assistant", "content": response.text})
 
-# 3. టెక్స్ట్ ఇన్‌పుట్
+# 3. టెక్స్ట్ పంపినప్పుడు
 if user_input:
     with st.chat_message("user"):
         st.write(user_input)
