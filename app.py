@@ -5,13 +5,13 @@ import google.generativeai as genai
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    # కొత్త మరియు అధికారికంగా పనిచేసే మోడల్
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # కొత్త మరియు సరిగ్గా పనిచేసే మోడల్
+    model = genai.GenerativeModel('gemini-1.5-flash-latest')
 except Exception as e:
-    st.error(f"API Key ఆకృతీకరణలో లోపం: {e}")
+    st.error(f"API Key సెటప్ లోపం: {e}")
     st.stop()
 
-# ఇన్పుట్ బాక్స్ ఐకాన్ / బార్డర్ స్టైలింగ్
+# UI Styling
 st.markdown("""
     <style>
     .stTextInput div[data-baseweb="input"] {
@@ -27,29 +27,15 @@ st.markdown("""
 
 # సైడ్‌బార్ సెట్టింగ్‌లు
 with st.sidebar:
-    st.title("⚙️ సెట్టింగ్స్ / Features")
-    
-    app_mode = st.radio(
-        "మీరు ఏమి చేయాలనుకుంటున్నారు?:",
-        ["💬 AI చాటింగ్ (Chat)", "🎬 వీడియో ఎడిటింగ్ అసిస్టెంట్ (Video Assistant)"]
-    )
-    
+    st.title("⚙️ సెట్టింగ్స్")
+    app_mode = st.radio("ఎంచుకోండి:", ["💬 AI చాటింగ్ (Chat)", "🎬 వీడియో ఎడిటింగ్ అసిస్టెంట్"])
     st.write("---")
-    
-    language = st.selectbox(
-        "సంభాషణ చేయాల్సిన భాష (Language):",
-        ["Telugu (తెలుగు)", "English", "Hindi (हिंदी)"]
-    )
-    
-    st.write("---")
-    st.write("### 🤖 యాప్ వివరాలు:")
-    st.info("ఈ **Smart AI** అసిస్టెంట్‌ని మీ అవసరాల కోసం రూపొందించాము.")
-    
-    if st.button("🧹 చాట్ క్లియర్ చేయండి (Clear Chat)"):
+    language = st.selectbox("భాష:", ["Telugu (తెలుగు)", "English", "Hindi (हिंदी)"])
+    if st.button("🧹 చాట్ క్లియర్ చేయండి"):
         st.session_state.messages = []
         st.rerun()
 
-# మోడ్ 1: AI చాటింగ్
+# AI చాటింగ్ విభాగం
 if app_mode == "💬 AI చాటింగ్ (Chat)":
     st.title("✨ Smart AI")
     st.subheader("మీ స్మార్ట్ ఆలోచనలకు... సరైన AI తోడు!")
@@ -71,17 +57,12 @@ if app_mode == "💬 AI చాటింగ్ (Chat)":
             with st.spinner("సమాధానం కోసం వెతుకుతున్నాను..."):
                 try:
                     prompt = f"Please respond strictly in {language}. User question: {user_input}"
-                    
-                    # గూగుల్ జెనరేటివ్ AI ద్వారా ఆన్సర్ పొందడం
                     response = model.generate_content(prompt)
                     
                     st.write(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
-                    
                 except Exception as e:
                     st.error(f"Error details: {e}")
-
-# మోడ్ 2: వీడియో ఎడిటింగ్ అసిస్టెంట్
 else:
     st.title("🎬 Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
     st.write("వీడియో ఎడిటింగ్ కి సంబంధించిన సందేహాలను ఇక్కడ అడగవచ్చు.")
