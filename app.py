@@ -10,7 +10,7 @@ except KeyError:
     st.stop()
 
 # గూగుల్ రికమండ్ చేసిన సరికొత్త అఫీషియల్ మోడల్
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 # సైడ్‌బార్ సమాచారం మరియు ఫీచర్స్
 with st.sidebar:
