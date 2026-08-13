@@ -12,7 +12,7 @@ try:
     # Gemini Flash మోడల్ మల్టీ మోడల్ (Text/Image/Audio) కి సపోర్ట్ చేస్తుంది
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
-    st.error(f"API Key సెటప్ లోపం: {e}")
+        st.error(f"API Key సెటప్ లోపం: {e}")
     st.stop()
 
 st.title("✨ Smart AI")
