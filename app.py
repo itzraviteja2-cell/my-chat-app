@@ -1,19 +1,18 @@
 import streamlit as st
-import requests
+import google.generativeai as genai
 
-# సర్వర్ మరియు కీ వివరాలు
+# Streamlit Secrets నుండి API Key ని పొందడం
 try:
-    # మీ దగ్గర ఆల్రెడీ ఉన్న పాత AQ.Ab8RN6... కీ ఇక్కడ పర్ఫెక్ట్ గా పనిచేస్తుంది
     api_key = st.secrets["GEMINI_API_KEY"]
+    genai.configure(api_key=api_key)
 except KeyError:
     st.error("చాలా முக்கியం: Streamlit Secrets లో GEMINI_API_KEY ని సెట్ చేయలేదు!")
     st.stop()
 
-# ఇండియాలో ఉచితంగా పనిచేసే సూపర్ ఫాస్ట్ AI మోడల్ కనెక్షన్
-API_URL = "https://huggingface.co"
-headers = {"Authorization": f"Bearer {api_key}"}
+# ఎప్పటికీ సపోర్ట్ చేసే గూగుల్ స్థిరమైన మోడల్
+model = genai.GenerativeModel('gemini-2.5-flash')
 
-# ఎట్టి परिस्थितियोंంలోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
+# ఎట్టి పరిస్థితుల్లోనూ ఎరుపు రంగు రాకుండా బ్లూ బార్డర్ గా లాక్ చేసే స్టైలింగ్ కోడ్
 st.markdown("""
     <style>
     .stTextInput div[data-baseweb="input"] {
@@ -51,7 +50,7 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# ----------------- モード 1: AI చాటింగ్ -----------------
+# ----------------- మోడ్ 1: AI చాటింగ్ -----------------
 if app_mode == "🤖 AI చాటింగ్ (Chat)":
     st.title("✨ smart AI")
     st.subheader("మీ స్మార్ట్ ఆలోచనలకు.. సరైన AI తోడు!")
@@ -70,21 +69,16 @@ if app_mode == "🤖 AI చాటింగ్ (Chat)":
         st.session_state.messages.append({"role": "user", "content": user_input})
         
         with st.chat_message("assistant"):
-            with st.spinner("సмаధానం కోసం వెతుకుతున్నాను..."):
+            with st.spinner("సమాధానం కోసం వెతుకుతున్నాను..."):
                 try:
-                    # AI సర్వర్‌కి మెసేజ్ పంపడం
-                    prompt = f"<|im_start|>system\nRespond strictly in {language}.<|im_end|>\n<|im_start|>user\n{user_input}<|im_end|>\n<|im_start|>assistant\n"
-                    payload = {"inputs": prompt, "parameters": {"max_new_tokens": 500, "return_full_text": False}}
-                    response = requests.post(API_URL, headers=headers, json=payload).json()
-                    
-                    # సమాధానం స్క్రీన్ పై చూపించడం
-                    ans_text = response[0]['generated_text']
-                    st.write(ans_text)
-                    st.session_state.messages.append({"role": "assistant", "content": ans_text})
-                except:
-                    st.info("వివరాలు లోడ్ అవుతున్నాయి, దయచేసి ఒక్క క్షణం ఆగి మళ్లీ టైప్ చేయండి.")
+                    prompt = f"Please respond strictly in {language}. User question: {user_input}"
+                    response = model.generate_content(prompt)
+                    st.write(response.text)
+                    st.session_state.messages.append({"role": "assistant", "content": response.text})
+                except Exception as e:
+                    st.info("సర్వర్ కొంచెం బిజీగా ఉంది, దయచేసి ఒక్క క్షణం ఆగి మళ్లీ ప్రయత్నించండి.")
 
-# ----------------- モード 2: వీడియో ఎడిటింగ్ అసిస్టెంట్ -----------------
+# ----------------- మోడ్ 2: వీడియో ఎడిటింగ్ అసిస్టెంట్ -----------------
 else:
     st.title("🎬 ✨ Smart AI - వీడియో ఎడిటింగ్ అసిస్టెంట్")
     st.write("యూట్యూబ్ (YouTube), ఇన్‌స్టాగ్రామ్ రీల్స్ కోసం వీడియోలు ఎలా చేయాలో ఈ AI మీకు స్క్రిప్ట్ మరియు ఎడిటింగ్ ఐడియాలు ఇస్తుంది!")
@@ -96,13 +90,18 @@ else:
         if video_topic:
             with st.spinner("మీ కోసం వీడియో ప్లాన్ రెడీ చేస్తున్నాను..."):
                 try:
-                    video_prompt = f"<|im_start|>system\nRespond strictly in {language}.<|im_end|>\n<|im_start|>user\nCreate a full video production plan for a {video_type} on the topic: '{video_topic}'. Include catchy title, step-by-step script, and specific editing tips.<|im_end|>\n<|im_start|>assistant\n"
-                    payload = {"inputs": video_prompt, "parameters": {"max_new_tokens": 800, "return_full_text": False}}
-                    response = requests.post(API_URL, headers=headers, json=payload).json()
-                    
+                    video_prompt = f"""
+                    Provide a complete response strictly in {language}.
+                    Create a full video production plan for a {video_type} on the topic: '{video_topic}'.
+                    Include:
+                    1. A catchy title.
+                    2. A step-by-step video script (Intro, Main Body, Outro).
+                    3. Specific Video Editing tips (where to add text, effects, cuts, and background music).
+                    """
+                    response = model.generate_content(video_prompt)
                     st.success("✨ మీ వీడియో ప్లాన్ రెడీ అయింది!")
-                    st.write(response[0]['generated_text'])
-                except:
+                    st.write(response.text)
+                except Exception as e:
                     st.info("ఒక్క క్షణం ఆగండి, వివరాలు లోడ్ అవుతున్నాయి...")
         else:
             st.warning("దయచేసి పైన ఒక టాపిక్ టైప్ చేయండి!")
