@@ -26,7 +26,7 @@ if not api_key:
 client = genai.Client(api_key=api_key)
 
 # 4. SIDEBAR TOOLS (ఫైల్ & వాయిస్ అప్లోడ్)
-st.sidebar.header("📁メディア & ఆడియో టూల్స్")
+st.sidebar.header("📁 మీడియా & ఆడియో టూల్స్")
 
 # వాయిస్ ఇన్పుట్
 audio_input = st.sidebar.audio_input("🎙️ వాయిస్ రికార్డ్ చేయండి")
@@ -77,7 +77,7 @@ if prompt or audio_input or uploaded_file:
             
             # 2. అప్లోడ్ చేసిన ఫైల్ (ఇమేజ్/వీడియో) ప్రాసెస్ చేయడం
             if uploaded_file is not None:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)) as tmp_file:
                     tmp_file.write(uploaded_file.getvalue())
                     tmp_file_path = tmp_file.name
                 
@@ -95,17 +95,17 @@ if prompt or audio_input or uploaded_file:
                 contents_list.append(uploaded_audio)
                 os.unlink(tmp_audio_path)
             
-            # జెమిని API కాల్ (సరికొత్త గూగుల్ మోడల్ gemini-3.7-flash తో)
+            # జెమిని API కాల్ (రద్దీ తక్కువగా ఉండే gemini-2.0-flash మోడల్ తో)
             response = client.models.generate_content(
-                model='gemini-3.7-flash',
+                model='gemini-2.0-flash',
                 contents=contents_list
             )
             
             # సమాధానాన్ని స్క్రీన్ పై చూపించడం
-            model='gemini-2.5-pro'
+            full_response = response.text
             message_placeholder.markdown(full_response)
             
-            # హిస్టరీలో సేవ్ చేయడం
+            # ヒస్టరీలో సేవ్ చేయడం
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             
         except Exception as e:
