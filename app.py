@@ -1,23 +1,17 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 from PIL import Image
 
 # 1. Page Config
 st.set_page_config(page_title="Aurora AI", page_icon="✨")
 
-# 2. API Setup
+# 2. API Setup (New Google GenAI SDK)
 api_key = st.secrets.get("GEMINI_API_KEY")
 if not api_key:
-    st.error("🔑 API Key దొరకలేదు! Streamlit Secrets లో తనిఖీ చేయండి.")
+    st.error("🔑 API Key దొరకలేదు! Streamlit Secrets లో చూడండి.")
     st.stop()
 
-genai.configure(api_key=api_key)
-
-# సపోర్ట్ చేసే మోడల్‌ను ఎంచుకోవడం (gemini-1.5-flash లేదా gemini-2.0-flash-exp)
-try:
-    model = genai.GenerativeModel('gemini-1.5-flash')
-except Exception:
-    model = genai.GenerativeModel('gemini-2.0-flash-exp')
+client = genai.Client(api_key=api_key)
 
 # 3. Session State
 if "messages" not in st.session_state:
@@ -46,7 +40,10 @@ if uploaded_file:
     if st.button("🔍 ఫోటో విశ్లేషించు"):
         with st.chat_message("assistant"):
             try:
-                response = model.generate_content(["ఈ ఫోటోలో ఏముందో వివరంగా చెప్పండి.", image])
+                response = client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=["ఈ ఫోటోలో ఏముందో వివరించండి.", image]
+                )
                 st.write(response.text)
                 st.session_state.messages.append({"role": "assistant", "content": response.text})
             except Exception as e:
@@ -59,7 +56,10 @@ if prompt := st.chat_input("మీ సందేశాన్ని టైప్ �
         st.write(prompt)
     with st.chat_message("assistant"):
         try:
-            response = model.generate_content(prompt)
+            response = client.models.generate_content(
+                model='gemini-2.0-flash',
+                contents=prompt
+            )
             st.write(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
