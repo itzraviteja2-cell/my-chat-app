@@ -9,7 +9,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. Responsive Layout CSS (UI సున్నితంగా కనిపించడానికి)
+# 2. Responsive Layout CSS
 st.markdown("""
 <style>
     .stChatMessage, .stMarkdown, p {
@@ -17,7 +17,6 @@ st.markdown("""
         overflow-wrap: break-word !important;
         white-space: pre-wrap !important;
     }
-    /* అప్‌లోడ్ బటన్లను కిందకి సర్దే మార్పులు */
     div[data-testid="stFileUploader"] {
         margin-top: 0px;
     }
@@ -49,8 +48,8 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# 7. Bottom Controls (ఫోటో & వాయిస్ కిందనే ఉండేలా 3 కంటైనర్లు)
-st.divider() # చిన్న లైన్
+# 7. Bottom Controls
+st.divider()
 
 col1, col2 = st.columns([1, 1])
 
@@ -60,7 +59,7 @@ with col1:
 with col2:
     audio_value = st.audio_input("🎙️ మైక్ (వాయిస్)")
 
-# 8. Main Chat Input Box (ఎప్పుడూ స్క్రీన్ కింద ఉంటుంది)
+# 8. Main Chat Input Box
 user_input = st.chat_input("మీ సందేశాన్ని టైప్ చేయండి...")
 
 # 9. Image Processing Logic
@@ -72,7 +71,7 @@ if uploaded_file is not None:
             with st.spinner("ఫోటోని చూస్తున్నాను..."):
                 try:
                     response = client.models.generate_content(
-                        model='gemini-2.5-flash',
+                        model='models/gemini-2.5-flash',
                         contents=["ఈ ఫోటోలో ఏముందో వివరంగా వివరించండి.", image]
                     )
                     st.write(response.text)
@@ -87,17 +86,15 @@ if audio_value:
 
 # 11. Text Chat Logic
 if user_input:
-    # యూజర్ మెసేజ్ చూపించు
     with st.chat_message("user"):
         st.write(user_input)
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # Gemini AI నుండి సమాధానం
     with st.chat_message("assistant"):
         with st.spinner("ఆలోచిస్తోంది..."):
             try:
                 response = client.models.generate_content(
-                    model='gemini-2.5-flash',
+                    model='models/gemini-2.5-flash',
                     contents=user_input
                 )
                 st.write(response.text)
