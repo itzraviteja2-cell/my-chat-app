@@ -1,5 +1,5 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 from PIL import Image
 
 # 1. Page Config
@@ -9,7 +9,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. Responsive Layout CSS
+# 2. Responsive Layout CSS (UI సున్నితంగా కనిపించడానికి)
 st.markdown("""
 <style>
     .stChatMessage, .stMarkdown, p {
@@ -17,85 +17,89 @@ st.markdown("""
         overflow-wrap: break-word !important;
         white-space: pre-wrap !important;
     }
-    .stChatInputContainer {
-        padding-bottom: 20px;
+    /* అప్‌లోడ్ బటన్లను కిందకి సర్దే మార్పులు */
+    div[data-testid="stFileUploader"] {
+        margin-top: 0px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. API Setup & Model Initialization
+# 3. API Setup & Client Initialization
 api_key = st.secrets.get("GEMINI_API_KEY")
 
 if not api_key:
     st.error("🔑 API Key దొరకలేదు! Streamlit Secrets లో GEMINI_API_KEY ని తనిఖీ చేయండి.")
     st.stop()
 
-# Configure API
-genai.configure(api_key=api_key)
-
-# Initialize Model
 try:
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    client = genai.Client(api_key=api_key)
 except Exception as e:
-    st.error(f"మోడల్ లోడ్ చేయడంలో లోపం జరిగింది: {e}")
+    st.error(f"క్లయింట్ లోడ్ చేయడంలో లోపం జరిగింది: {e}")
     st.stop()
 
 # 4. App Title
 st.title("✨ Aurora AI")
 
-# 5. Media Controls
-col1, col2 = st.columns([1, 1])
-
-with col1:
-    uploaded_file = st.file_uploader("➕ ఫోటో అప్‌లోడ్ చేయండి", type=["png", "jpg", "jpeg"])
-
-with col2:
-    audio_value = st.audio_input("🎙️ మైక్ (వాయిస్)")
-
-# 6. Chat History Session State
+# 5. Chat History Session State
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 7. Display Chat History
+# 6. Display Chat History
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# 8. Chat Input Box
+# 7. Bottom Controls (ఫోటో & వాయిస్ కిందనే ఉండేలా 3 కంటైనర్లు)
+st.divider() # చిన్న లైన్
+
+col1, col2 = st.columns([1, 1])
+
+with col1:
+    uploaded_file = st.file_uploader("🖼️ ఫోటో ఎంచుకోండి", type=["png", "jpg", "jpeg"])
+
+with col2:
+    audio_value = st.audio_input("🎙️ మైక్ (వాయిస్)")
+
+# 8. Main Chat Input Box (ఎప్పుడూ స్క్రీన్ కింద ఉంటుంది)
 user_input = st.chat_input("మీ సందేశాన్ని టైప్ చేయండి...")
 
-# 9. Logic for Image Processing
+# 9. Image Processing Logic
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption="అప్‌లోడ్ చేసిన ఫోటో", width=200)
-    if st.button("ఫోటో గురించి అడగండి"):
+    if st.button("ఈ ఫోటో గురించి విశ్లేషించు"):
         with st.chat_message("assistant"):
-            with st.spinner("విశ్లేషిస్తోంది..."):
+            with st.spinner("ఫోటోని చూస్తున్నాను..."):
                 try:
-                    response = model.generate_content(["ఈ ఫోటోలో ఏమిందో వివరంగా వివరించండి.", image])
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=["ఈ ఫోటోలో ఏముందో వివరంగా వివరించండి.", image]
+                    )
                     st.write(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
-                    st.error(f"ఎర్రర్: {e}")
+                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
 
-# 10. Logic for Voice Input
+# 10. Voice Logic
 if audio_value:
     with st.chat_message("assistant"):
-        st.write("వాయిస్ వింటున్నాను...")
-        # Note: Audio processing logic can be extended here
+        st.write("వాయిస్ రికార్డ్ అయ్యింది, ప్రాసెస్ చేస్తున్నాను...")
 
-# 11. Logic for Text Chat Input
+# 11. Text Chat Logic
 if user_input:
-    # Display user message
+    # యూజర్ మెసేజ్ చూపించు
     with st.chat_message("user"):
         st.write(user_input)
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # Generate Response from Gemini
+    # Gemini AI నుండి సమాధానం
     with st.chat_message("assistant"):
         with st.spinner("ఆలోచిస్తోంది..."):
             try:
-                response = model.generate_content(user_input)
+                response = client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=user_input
+                )
                 st.write(response.text)
                 st.session_state.messages.append({"role": "assistant", "content": response.text})
             except Exception as e:
