@@ -102,7 +102,7 @@ if prompt or audio_input or uploaded_file:
             )
             
             # సమాధానాన్ని స్క్రీన్ పై చూపించడం
-            full_response = response.text
+            model='gemini-2.5-pro'
             message_placeholder.markdown(full_response)
             
             # హిస్టరీలో సేవ్ చేయడం
