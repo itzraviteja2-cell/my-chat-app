@@ -5,20 +5,22 @@ from PIL import Image
 # 1. Page Config
 st.set_page_config(page_title="Aurora AI", page_icon="✨")
 
-# 2. API Setup (gemini-1.5-flash మాత్రమే వాడండి, ఎర్రర్ రాదు)
+# 2. API Setup
 api_key = st.secrets.get("GEMINI_API_KEY")
 if not api_key:
-    st.error("🔑 API Key దొరకలేదు!")
+    st.error("🔑 API Key దొరకలేదు! Secrets సరిగ్గా ఉన్నాయో లేదో చూడండి.")
     st.stop()
 
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash')
+
+# మోడల్ పేరును అత్యంత కొత్త మరియు స్థిరమైన 'gemini-2.5-flash' కి మారాము
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 # 3. Session State
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 4. SIDEBAR (అన్ని ఆప్షన్లు ఇక్కడే పెట్టండి, అప్పుడే యాప్ క్రాష్ అవ్వదు)
+# 4. SIDEBAR
 with st.sidebar:
     st.title("✨ Aurora AI Menu")
     if st.button("🗑️ Clear Chat"):
@@ -36,15 +38,18 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# 6. Logic (ఫోటో అప్‌లోడ్)
+# 6. Logic (Image Handling)
 if uploaded_file:
     image = Image.open(uploaded_file)
     st.image(image, width=200)
     if st.button("🔍 ఫోటో విశ్లేషించు"):
         with st.chat_message("assistant"):
-            response = model.generate_content(["ఈ ఫోటోలో ఏముందో వివరించండి.", image])
-            st.write(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
+            try:
+                response = model.generate_content(["ఈ ఫోటోలో ఏముందో వివరించండి.", image])
+                st.write(response.text)
+                st.session_state.messages.append({"role": "assistant", "content": response.text})
+            except Exception as e:
+                st.error(f"ఎర్రర్ వచ్చింది: {e}")
 
 # 7. Main Chat Input
 if prompt := st.chat_input("మీ సందేశాన్ని టైప్ చేయండి..."):
@@ -57,4 +62,4 @@ if prompt := st.chat_input("మీ సందేశాన్ని టైప్ �
             st.write(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
-            st.error("ఎర్రర్ వచ్చింది. దయచేసి మళ్లీ ప్రయత్నించండి.")
+            st.error(f"ఎర్రర్ వివరాలు: {e}")
