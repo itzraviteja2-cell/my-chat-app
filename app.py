@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 from PIL import Image
 
 # 1. Page Config
@@ -23,17 +23,21 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. API Setup & Client Initialization
+# 3. API Setup & Model Initialization
 api_key = st.secrets.get("GEMINI_API_KEY")
 
 if not api_key:
     st.error("🔑 API Key దొరకలేదు! Streamlit Secrets లో GEMINI_API_KEY ని తనిఖీ చేయండి.")
     st.stop()
 
+# Configure API Key
+genai.configure(api_key=api_key)
+
+# Initialize Model (పనిచేసే సరికొత్త మోడల్)
 try:
-    client = genai.Client(api_key=api_key)
+    model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
-    st.error(f"క్లయింట్ లోడ్ చేయడంలో లోపం జరిగింది: {e}")
+    st.error(f"మోడల్ లోడ్ చేయడంలో లోపం జరిగింది: {e}")
     st.stop()
 
 # 4. App Title
@@ -70,10 +74,7 @@ if uploaded_file is not None:
         with st.chat_message("assistant"):
             with st.spinner("ఫోటోని చూస్తున్నాను..."):
                 try:
-                    response = client.models.generate_content(
-                        model='models/gemini-2.5-flash',
-                        contents=["ఈ ఫోటోలో ఏముందో వివరంగా వివరించండి.", image]
-                    )
+                    response = model.generate_content(["ఈ ఫోటోలో ఏముందో వివరంగా వివరించండి.", image])
                     st.write(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
@@ -93,10 +94,7 @@ if user_input:
     with st.chat_message("assistant"):
         with st.spinner("ఆలోచిస్తోంది..."):
             try:
-                response = client.models.generate_content(
-                    model='models/gemini-2.5-flash',
-                    contents=user_input
-                )
+                response = model.generate_content(user_input)
                 st.write(response.text)
                 st.session_state.messages.append({"role": "assistant", "content": response.text})
             except Exception as e:
