@@ -97,7 +97,7 @@ if prompt or audio_input or uploaded_file:
             
             # జెమిని API కాల్ (రద్దీ తక్కువగా ఉండే gemini-2.0-flash మోడల్ తో)
             response = client.models.generate_content(
-                model='gemini-2.0-flash',
+                model='gemini-2.5-flash',
                 contents=contents_list
             )
             
