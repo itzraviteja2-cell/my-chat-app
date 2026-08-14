@@ -33,9 +33,9 @@ if not api_key:
 # Configure API Key
 genai.configure(api_key=api_key)
 
-# Initialize Model (పనిచేసే సరికొత్త మోడల్)
+# Initialize Model (పక్కాగా పనిచేసే మోడల్ పేరు)
 try:
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash-8b')
 except Exception as e:
     st.error(f"మోడల్ లోడ్ చేయడంలో లోపం జరిగింది: {e}")
     st.stop()
