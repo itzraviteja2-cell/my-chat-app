@@ -6,7 +6,7 @@ import tempfile
 # 1. PAGE SETTINGS
 st.set_page_config(page_title="Aurora AI", layout="wide")
 
-# అనవసరమైన బటన్లు/మెనూలను దాచడానికి CSS
+# అనవసరమైన హ్యాడర్లు దాచడానికి CSS
 hide_style = """
 <style>
 #MainMenu {visibility: hidden;}
@@ -27,10 +27,21 @@ if not api_key:
     st.stop()
 client = genai.Client(api_key=api_key)
 
-# 4. SIDEBAR
-st.sidebar.header("🛠️ టూల్స్")
-audio_input = st.sidebar.audio_input("🎙️ మైక్")
-uploaded_file = st.sidebar.file_uploader("📂 మీడియా", type=["mp4", "png", "jpg", "jpeg"])
+# 4. SIDEBAR (➕ కొత్త చాట్ & 🎙️ మైక్ ఫీచర్లు)
+st.sidebar.header("🛠️ ఆప్షన్లు")
+
+# ➕ కొత్త చాట్ బటన్ (చాట్ క్లియర్ చేయడానికి)
+if st.sidebar.button("➕ కొత్త చాట్ ప్రారంభించు (New Chat)", use_container_width=True):
+    st.session_state.messages = []
+    st.rerun()
+
+st.sidebar.markdown("---")
+
+# 🎙️ మైక్ ద్వారా ఆడియో రికార్డింగ్
+audio_input = st.sidebar.audio_input("🎙️ మైక్ (మాట్లాడండి)")
+
+# 📂 ఫైల్ అప్‌లోడర్
+uploaded_file = st.sidebar.file_uploader("📂 ఫోటో / వీడియో అప్‌లోడ్", type=["mp4", "png", "jpg", "jpeg"])
 
 # 5. CHAT LOGIC
 if "messages" not in st.session_state:
@@ -40,10 +51,11 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-prompt = st.chat_input("ఏదైనా అడగండి...")
+prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
 if prompt or audio_input or uploaded_file:
-    user_text = prompt if prompt else "ఈ ఫైల్ గురించి వివరించండి."
+    user_text = prompt if prompt else "ఈ ఆడియో/ఫైల్ ని విశ్లేషించి సమాధానం ఇవ్వండి."
+    
     if prompt:
         st.session_state.messages.append({"role": "user", "content": user_text})
         with st.chat_message("user"):
@@ -63,8 +75,12 @@ if prompt or audio_input or uploaded_file:
                     t.write(uploaded_file.getvalue())
                     contents.append(client.files.upload(file=t.name))
             
-            # ఇక్కడ మోడల్ పేరు gemini-1.5-flash అని మార్చాను, ఇది కచ్చితంగా పనిచేస్తుంది!
-            response = client.models.generate_content(model="gemini-1.5-flash", contents=contents)
+            # కొత్త SDK కోసం సరి చేసిన మోడల్ నేమ్
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=contents
+            )
+            
             message_placeholder.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
