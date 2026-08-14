@@ -12,7 +12,7 @@ st.set_page_config(
 
 # 2. AURORA AI HEADER
 st.title("🤖 Aurora AI")
-st.caption("ప్రశ్నలు అడగండి AI & వీడియో/ఆడియో ఇన్పుట్లతో")
+st.caption("ప్రశ్నలు అడగండి )
 st.markdown("---")
 
 # 3. GEMINI API SETUP
