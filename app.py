@@ -26,7 +26,7 @@ if not api_key:
 client = genai.Client(api_key=api_key)
 
 # 4. SIDEBAR TOOLS (ఫైల్ & వాయిస్ అప్లోడ్)
-st.sidebar.header("📁 మీడియా & ఆడియో టూల్స్")
+st.sidebar.header("📁メディア & ఆడియో టూల్స్")
 
 # వాయిస్ ఇన్పుట్
 audio_input = st.sidebar.audio_input("🎙️ వాయిస్ రికార్డ్ చేయండి")
@@ -77,16 +77,12 @@ if prompt or audio_input or uploaded_file:
             
             # 2. అప్లోడ్ చేసిన ఫైల్ (ఇమేజ్/వీడియో) ప్రాసెస్ చేయడం
             if uploaded_file is not None:
-                # తాత్కాలిక ఫైల్ క్రియేట్ చేయడం
                 with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
                     tmp_file.write(uploaded_file.getvalue())
                     tmp_file_path = tmp_file.name
                 
-                # API కి ఫైల్ అప్లోడ్ చేయడం
                 uploaded_media = client.files.upload(file=tmp_file_path)
                 contents_list.append(uploaded_media)
-                
-                # తాత్కాలిక ఫైల్ ని డిలీట్ చేయడం
                 os.unlink(tmp_file_path)
 
             # 3. రికార్డ్ చేసిన ఆడియో ప్రాసెస్ చేయడం
@@ -99,9 +95,9 @@ if prompt or audio_input or uploaded_file:
                 contents_list.append(uploaded_audio)
                 os.unlink(tmp_audio_path)
             
-            # జెమిని API కాల్ (కొత్త మోడల్ gemini-2.5-flash తో)
+            # జెమిని API కాల్ (సరికొత్త గూగుల్ మోడల్ gemini-3.7-flash తో)
             response = client.models.generate_content(
-                model='gemini-2.5-flash',
+                model='gemini-3.7-flash',
                 contents=contents_list
             )
             
