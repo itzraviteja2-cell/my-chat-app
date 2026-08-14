@@ -1,7 +1,7 @@
-1  import streamlit as st
-2  import google.generativeai as genai
-3  import os
-4  import tempfile
+ import streamlit as st
+ import google.generativeai as genai
+ import os
+ import tempfile
 
 # 1. PAGE SETTINGS
 st.set_page_config(
