@@ -6,13 +6,13 @@ import tempfile
 # 1. PAGE SETTINGS
 st.set_page_config(
     page_title="Aurora AI",
-    page_icon="🌌",
+    page_icon="🤖",
     layout="wide"
 )
 
 # 2. AURORA AI HEADER
-st.title("🌌 Aurora AI")
-st.caption("మీ వ్యక్తిగత AI & వీడియో/ఆడియో అసిస్టెంట్")
+st.title("🤖 Aurora AI")
+st.caption("ప్రశ్నలు అడగండి AI & వీడియో/ఆడియో ఇన్పుట్లతో")
 st.markdown("---")
 
 # 3. GEMINI API SETUP
@@ -22,17 +22,18 @@ if not api_key:
     st.error("GEMINI_API_KEY Streamlit Secrets లో లభించలేదు.")
     st.stop()
 
+# సరికొత్త క్లయింట్ సెటప్
 client = genai.Client(api_key=api_key)
 
-# 4. SIDEBAR TOOLS (మైక్ + ఫైల్ అప్‌లోడ్)
-st.sidebar.header("🛠️ మీడియా & ఆడియో టూల్స్")
+# 4. SIDEBAR TOOLS (ఫైల్ & వాయిస్ అప్లోడ్)
+st.sidebar.header("📁 మీడియా & ఆడియో టూల్స్")
 
-# మైక్ ఆప్షన్
+# వాయిస్ ఇన్పుట్
 audio_input = st.sidebar.audio_input("🎙️ వాయిస్ రికార్డ్ చేయండి")
 
-# ఫైల్ అప్‌లోడర్
+# ఫైల్ అప్లోడర్
 uploaded_file = st.sidebar.file_uploader(
-    "📂 వీడియో లేదా ఇమేజ్ అప్‌లోడ్ చేయండి", 
+    "📤 వీడియో లేదా ఇమేజ్ అప్లోడ్ చేయండి",
     type=["mp4", "mov", "avi", "png", "jpg", "jpeg"]
 )
 
@@ -53,48 +54,63 @@ for message in st.session_state.messages:
 # 6. INPUT & RESPONSE PROCESSING
 prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
-# వాయిస్ లేదా టెక్స్ట్ ఇన్పుట్ ఉంటే ప్రాసెస్ చేస్తుంది
+# వాయిస్ లేదా టెక్స్ట్ ఇన్పుట్ చెక్ చేయడం
 if prompt or audio_input or uploaded_file:
-    user_text = prompt if prompt else "ఈ ఆడియో/ఫైల్ ని విశ్లేషించి సమాధానం ఇవ్వండి."
+    user_text = prompt if prompt else "ఈ ఆడియో/ఫైల్ ని విశ్లేషించి సమాధానం ఇవ్వు"
     
     # యూజర్ మెసేజ్ చూపించడం
-    if prompt:
+    if prompt or audio_input:
         st.session_state.messages.append({"role": "user", "content": user_text})
         with st.chat_message("user"):
             st.markdown(user_text)
-
+            
     # AI రెస్పాన్స్
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         
         try:
-            contents_list = [user_text]
+            contents_list = []
             
-            # ఆడియో ఫైల్ ఉంటే
-            if audio_input:
+            # 1. టెక్స్ట్ ప్రాంప్ట్ యాడ్ చేయడం
+            contents_list.append(user_text)
+            
+            # 2. అప్లోడ్ చేసిన ఫైల్ (ఇమేజ్/వీడియో) ప్రాసెస్ చేయడం
+            if uploaded_file is not None:
+                # తాత్కాలిక ఫైల్ క్రియేట్ చేయడం
+                with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
+                    tmp_file.write(uploaded_file.getvalue())
+                    tmp_file_path = tmp_file.name
+                
+                # API కి ఫైల్ అప్లోడ్ చేయడం
+                uploaded_media = client.files.upload(file=tmp_file_path)
+                contents_list.append(uploaded_media)
+                
+                # తాత్కాలిక ఫైల్ ని డిలీట్ చేయడం
+                os.unlink(tmp_file_path)
+
+            # 3. రికార్డ్ చేసిన ఆడియో ప్రాసెస్ చేయడం
+            if audio_input is not None:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_audio:
                     tmp_audio.write(audio_input.getvalue())
-                    audio_ref = client.files.upload(file=tmp_audio.name)
-                    contents_list.append(audio_ref)
-
-            # వీడియో లేదా ఫోటో ఉంటే
-            if uploaded_file is not None:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=f".{uploaded_file.name.split('.')[-1]}") as tmp_file:
-                    tmp_file.write(uploaded_file.getvalue())
-                    file_ref = client.files.upload(file=tmp_file.name)
-                    contents_list.append(file_ref)
-
-            # API Call (gemini-1.5-flash మోడల్ సరిగ్గా పనిచేస్తుంది)
+                    tmp_audio_path = tmp_audio.name
+                
+                uploaded_audio = client.files.upload(file=tmp_audio_path)
+                contents_list.append(uploaded_audio)
+                os.unlink(tmp_audio_path)
+            
+            # జెమిని API కాల్ (కొత్త మోడల్ gemini-2.5-flash తో)
             response = client.models.generate_content(
-                model="gemini-1.5-flash",
-                contents=contents_list,
+                model='gemini-2.5-flash',
+                contents=contents_list
             )
             
+            # సమాధానాన్ని స్క్రీన్ పై చూపించడం
             full_response = response.text
             message_placeholder.markdown(full_response)
             
+            # హిస్టరీలో సేవ్ చేయడం
             st.session_state.messages.append({"role": "assistant", "content": full_response})
-
+            
         except Exception as e:
-            st.error(f"ఎర్రర్ వచ్చింది: {e}")
+            message_placeholder.markdown(f"❌ ఎర్రర్ వచ్చింది: {e}")
