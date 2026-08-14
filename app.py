@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# 2. AURORA AI HEADER (సులువైన పద్ధతి - ఎర్రర్ రాదు)
+# 2. AURORA AI HEADER
 st.title("🌌 Aurora AI")
 st.caption("మీ వ్యక్తిగత AI & వీడియో/ఆడియో అసిస్టెంట్")
 st.markdown("---")
@@ -85,9 +85,9 @@ if prompt or audio_input or uploaded_file:
                     file_ref = client.files.upload(file=tmp_file.name)
                     contents_list.append(file_ref)
 
-            # API Call (gemini-2.5-flash లేటెస్ట్ వర్షన్)
+            # API Call (gemini-1.5-flash మోడల్ సరిగ్గా పనిచేస్తుంది)
             response = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-1.5-flash",
                 contents=contents_list,
             )
             
