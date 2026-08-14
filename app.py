@@ -35,7 +35,7 @@ genai.configure(api_key=api_key)
 
 # Initialize Model
 try:
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-pro')
 except Exception as e:
     st.error(f"మోడల్ లోడ్ చేయడంలో లోపం జరిగింది: {e}")
     st.stop()
