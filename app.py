@@ -44,7 +44,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 6. INPUT & RESPONSE (Interactions API)
+# 6. INPUT & RESPONSE
 prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
 if prompt or audio_input or uploaded_file:
@@ -69,14 +69,20 @@ if prompt or audio_input or uploaded_file:
                     t.write(uploaded_file.getvalue())
                     inputs.append(client.files.upload(path=t.name))
             
-            # Interactions API కొత్త స్టాండర్డ్స్ ప్రకారం కాల్
+            # Interactions API సరిచేసిన పారామీటర్ల నిర్మాణం
             response = client.interactions.create(
-                model="gemini-3-flash", 
-                input=inputs
+                model="models/gemini-2.5-flash", 
+                input=inputs[0] if len(inputs) == 1 else inputs
             )
             
-            # రెస్పాన్స్ అవుట్‌పుట్ సేకరణ
-            result_text = response.outputs[-1].text if response.outputs else "సమాధానం లభించలేదు."
+            # అవుట్‌పుట్ పొందడం
+            result_text = ""
+            if hasattr(response, 'outputs') and response.outputs:
+                result_text = response.outputs[-1].text
+            elif hasattr(response, 'text'):
+                result_text = response.text
+            else:
+                result_text = str(response)
             
             message_placeholder.markdown(result_text)
             st.session_state.messages.append({"role": "assistant", "content": result_text})
