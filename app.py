@@ -21,20 +21,17 @@ st.title("🌌 Aurora AI")
 # 3. API SETUP
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
-    st.error("API Key దొరకలేదు! Secrets సరిచూసుకోండి.")
+    st.error("API Key దొరకలేదు!")
     st.stop()
 
+# Client setup
 client = genai.Client(api_key=api_key)
 
 # 4. SIDEBAR
 st.sidebar.title("🛠️ టూల్స్")
-
 if st.sidebar.button("➕ కొత్త చాట్", use_container_width=True):
     st.session_state.messages = []
     st.rerun()
-
-audio_input = st.sidebar.audio_input("🎙️ మైక్")
-uploaded_file = st.sidebar.file_uploader("📂 మీడియా (ఫోటో/వీడియో)", type=["mp4", "png", "jpg", "jpeg"])
 
 # 5. CHAT HISTORY
 if "messages" not in st.session_state:
@@ -47,35 +44,26 @@ for message in st.session_state.messages:
 # 6. INPUT & RESPONSE
 prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
-if prompt or audio_input or uploaded_file:
-    user_text = prompt if prompt else "ఈ ఫైల్ గురించి వివరించండి."
-    
-    if prompt:
-        st.session_state.messages.append({"role": "user", "content": user_text})
-        with st.chat_message("user"):
-            st.markdown(user_text)
+if prompt:
+    # యూజర్ మెసేజ్ సేవ్ & డిస్‌ప్లే
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
     
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            contents = [user_text]
-            if audio_input:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as t:
-                    t.write(audio_input.getvalue())
-                    contents.append(client.files.upload(path=t.name))
-            if uploaded_file:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp") as t:
-                    t.write(uploaded_file.getvalue())
-                    contents.append(client.files.upload(path=t.name))
-            
-            # ఇక్కడ మోడల్ పేరు మార్చబడింది
-            response = client.models.generate_content(
-                model="gemini-2.0-flash-001", 
-                contents=contents
+            # కొత్త Interactions API పద్ధతి
+            response = client.interactions.create(
+                model="gemini-1.5-flash",
+                input=prompt
             )
             
-            message_placeholder.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
+            # రిజల్ట్ పొందడం
+            reply = response.text
+            message_placeholder.markdown(reply)
+            st.session_state.messages.append({"role": "assistant", "content": reply})
+            
         except Exception as e:
             st.error(f"ఎర్రర్ వచ్చింది: {e}")
