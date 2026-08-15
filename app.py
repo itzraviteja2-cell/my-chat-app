@@ -29,12 +29,12 @@ client = genai.Client(api_key=api_key)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display previous messages only (Welcome message removed)
+# Display previous messages only
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 5. INPUT & RESPONSE HANDLING
+# 5. INPUT & AUTO-MODEL SELECTION HANDLING
 prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
 if prompt:
@@ -46,25 +46,31 @@ if prompt:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         
-        # 404 నివారించడానికి వరుసగా మోడల్స్‌ను చెక్ చేస్తుంది
-        models_to_try = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
-        response_text = None
-        error_msg = None
-        
-        for m in models_to_try:
-            try:
-                response = client.models.generate_content(
-                    model=m,
-                    contents=prompt
-                )
-                response_text = response.text
-                break
-            except Exception as e:
-                error_msg = e
-                continue
+        try:
+            # 1. ఖాతాలో అందుబాటులో ఉన్న మోడల్స్ జాబితాను ఆటోమేటిక్‌గా ఫెచ్ చేయడం
+            working_model = None
+            for m in client.models.list():
+                # generate_content సపోర్ట్ చేసే మోడల్‌ను ఎంచుకోవడం
+                if hasattr(m, 'supported_actions') and 'generateContent' in m.supported_actions:
+                    working_model = m.name
+                    break
+                elif hasattr(m, 'name'):
+                    working_model = m.name
+                    break
 
-        if response_text:
-            message_placeholder.markdown(response_text)
-            st.session_state.messages.append({"role": "assistant", "content": response_text})
-        else:
-            st.error(f"⚠️ ఎర్రర్ వచ్చింది: {error_msg}")
+            # మోడల్ పేరు దొరక్కపోతే డిఫాల్ట్‌గా gemini-2.0-flash వాడటం
+            if not working_model:
+                working_model = "gemini-2.0-flash"
+
+            # 2. రెస్పాన్స్ జనరేట్ చేయడం
+            response = client.models.generate_content(
+                model=working_model,
+                contents=prompt
+            )
+            
+            reply = response.text
+            message_placeholder.markdown(reply)
+            st.session_state.messages.append({"role": "assistant", "content": reply})
+            
+        except Exception as e:
+            st.error(f"⚠️ ఎర్రర్ వచ్చింది: {e}")
