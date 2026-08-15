@@ -38,7 +38,7 @@ if prompt:
         try:
             # మోడల్ పేరును కచ్చితమైన వర్షన్‌తో `models/` ప్రిఫిక్స్‌తో పిలవడం
             response = client.models.generate_content(
-                model="models/gemini-1.5-flash-002",
+                model="gemini-2.5-flash",
                 contents=prompt
             )
             
