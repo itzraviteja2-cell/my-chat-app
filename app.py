@@ -23,24 +23,18 @@ if not api_key:
     st.error("API Key దొరకలేదు! Streamlit Secrets సరిచూసుకోండి.")
     st.stop()
 
-# New Gemini SDK Client initialization
 client = genai.Client(api_key=api_key)
 
 # 4. CHAT HISTORY SETUP
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display welcome message if chat is empty
-if not st.session_state.messages:
-    with st.chat_message("assistant"):
-        st.markdown("✨ **నమస్కారం! నేను Aurora AI** ✨\n\nమీకు ఎలా సహాయం చేయాలి?")
-
-# Display previous messages
+# Display previous messages only (Welcome message removed)
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 5. INPUT & INTERACTIONS API HANDLING
+# 5. INPUT & RESPONSE HANDLING
 prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
 if prompt:
@@ -51,26 +45,26 @@ if prompt:
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
-        try:
-            # Interactions API pattern with latest model
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt
-            )
-            
-            reply = response.text
-            message_placeholder.markdown(reply)
-            st.session_state.messages.append({"role": "assistant", "content": reply})
-            
-        except Exception as e:
-            # Fallback if primary model fails
+        
+        # 404 నివారించడానికి వరుసగా మోడల్స్‌ను చెక్ చేస్తుంది
+        models_to_try = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
+        response_text = None
+        error_msg = None
+        
+        for m in models_to_try:
             try:
                 response = client.models.generate_content(
-                    model="gemini-1.5-flash-latest",
+                    model=m,
                     contents=prompt
                 )
-                reply = response.text
-                message_placeholder.markdown(reply)
-                st.session_state.messages.append({"role": "assistant", "content": reply})
-            except Exception as ex:
-                st.error(f"⚠️ Aurora AI లో సమస్య వచ్చింది: {ex}")
+                response_text = response.text
+                break
+            except Exception as e:
+                error_msg = e
+                continue
+
+        if response_text:
+            message_placeholder.markdown(response_text)
+            st.session_state.messages.append({"role": "assistant", "content": response_text})
+        else:
+            st.error(f"⚠️ ఎర్రర్ వచ్చింది: {error_msg}")
