@@ -2,24 +2,27 @@ import streamlit as st
 from google import genai
 import os
 
-st.set_page_config(page_title="Aurora AI", layout="wide")
-st.title("🌌 Aurora AI")
+st.title("Aurora AI")
 
+# Retrieve API Key
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     st.error("API Key missing! Check Streamlit Secrets.")
     st.stop()
 
-# Initialize official google-genai Client
+# Initialize Google GenAI Client
 client = genai.Client(api_key=api_key)
 
+# Session state setup
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Display Chat History
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+# User Input
 prompt = st.chat_input("Ask Aurora AI anything...")
 
 if prompt:
@@ -29,12 +32,12 @@ if prompt:
     
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
-        message_placeholder.markdown("Thinking... ⏳")
+        message_placeholder.markdown("Thinking...")
         
         try:
-            # Latest standard Gemini model
+            # Generate response using official google-genai SDK
             response = client.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash",
                 contents=prompt
             )
             
