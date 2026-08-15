@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 import os
 
 # 1. PAGE SETTINGS
@@ -10,10 +10,12 @@ st.title("🌌 Aurora AI")
 # 2. API SETUP
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
-    st.error("API Key దొరకలేదు!")
+    st.error("API Key దొరకలేదు! Secrets లో GEMINI_API_KEY ఉందో లేదో సరిచూసుకోండి.")
     st.stop()
 
-client = genai.Client(api_key=api_key)
+# Configure API
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # 3. CHAT HISTORY
 if "messages" not in st.session_state:
@@ -35,16 +37,9 @@ if prompt:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            # కొత్త Interactions API పద్ధతి
-            # మోడల్ పేరును మనం ఖచ్చితంగా ఇవ్వాల్సిన అవసరం లేదు, 
-            # డిఫాల్ట్‌గా ఇది ఉత్తమమైన మోడల్‌ను తీసుకుంటుంది.
-            response = client.interactions.create(
-                model="gemini-2.0-flash", 
-                input=prompt
-            )
-            
-            # రిజల్ట్ పొందడం
+            response = model.generate_content(prompt)
             reply = response.text
+            
             message_placeholder.markdown(reply)
             st.session_state.messages.append({"role": "assistant", "content": reply})
             
