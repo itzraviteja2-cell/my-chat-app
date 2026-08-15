@@ -4,22 +4,14 @@ import os
 
 st.set_page_config(page_title="Aurora AI", page_icon="🌌", layout="centered")
 
-# ChatGPT Style UI (Dark Theme + White Text Visibility)
+# Dark Theme CSS
 st.markdown("""
 <style>
     .stApp { background-color: #212121; color: #ffffff !important; }
     div[data-testid="stChatMessage"] { color: #ffffff !important; }
     div[data-testid="stMarkdownContainer"] p { color: #ffffff !important; }
     header, footer { visibility: hidden; }
-    
-    .main-title { 
-        text-align: center; 
-        font-size: 2.2rem; 
-        font-weight: 600; 
-        color: #ffffff; 
-        margin-bottom: 20px; 
-    }
-    
+    .main-title { text-align: center; font-size: 2.2rem; font-weight: 600; color: #ffffff; margin-bottom: 20px; }
     .stChatInputContainer { border-radius: 20px !important; }
 </style>
 """, unsafe_allow_html=True)
@@ -36,16 +28,14 @@ client = genai.Client(api_key=api_key)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display Messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# --- Buttons Row directly above Chat Input ---
 col_file, col_mic = st.columns([1, 1])
 
 with col_file:
-    uploaded_file = st.file_uploader("➕ Upload Photo/File", type=["png", "jpg", "jpeg", "pdf", "txt"], label_visibility="collapsed")
+    uploaded_file = st.file_uploader("Upload File", type=["png", "jpg", "jpeg", "pdf", "txt"], label_visibility="collapsed")
 
 with col_mic:
     st.components.v1.html("""
@@ -66,7 +56,6 @@ with col_mic:
         </script>
     """, height=40)
 
-# Main Chat Box
 prompt = st.chat_input("Ask Aurora AI anything...")
 
 if prompt:
@@ -79,7 +68,6 @@ if prompt:
         message_placeholder.markdown("Thinking... ⏳")
         
         try:
-            # 100% 404 ఎర్రర్ రాకుండా అందుబాటులో ఉన్న మోడల్‌ను మాత్రమే ఎంచుకుంటుంది
             active_models = [m.name for m in client.models.list() if "generateContent" in m.supported_actions]
             selected_model = active_models[0] if active_models else "gemini-1.5-flash"
             
