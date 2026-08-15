@@ -47,33 +47,29 @@ if prompt:
         message_placeholder.markdown("Thinking... ⏳")
         
         try:
-            # 1. తదుపరి తరం మోడల్స్ వరుస క్రమం
-            models_to_try = [
-                "gemini-2.5-flash",
-                "gemini-2.5-pro",
-                "gemini-1.5-flash-latest"
-            ]
+            # 1. Fetch all models available for your exact API Key
+            available_models = list(client.models.list())
             
-            response_text = None
-            last_error = None
-
-            for m_name in models_to_try:
-                try:
-                    response = client.models.generate_content(
-                        model=m_name,
-                        contents=prompt
-                    )
-                    response_text = response.text
+            # 2. Filter model names that support generation
+            target_model = None
+            for m in available_models:
+                m_name = m.name.replace("models/", "") if hasattr(m, 'name') else str(m)
+                if "flash" in m_name or "pro" in m_name:
+                    target_model = m_name
                     break
-                except Exception as err:
-                    last_error = err
-                    continue
+            
+            if not target_model and len(available_models) > 0:
+                target_model = available_models[0].name.replace("models/", "")
 
-            if response_text:
-                message_placeholder.markdown(response_text)
-                st.session_state.messages.append({"role": "assistant", "content": response_text})
-            else:
-                st.error(f"Error: {last_error}")
+            # 3. Generate response with auto-detected model
+            response = client.models.generate_content(
+                model=target_model,
+                contents=prompt
+            )
+            
+            reply = response.text
+            message_placeholder.markdown(reply)
+            st.session_state.messages.append({"role": "assistant", "content": reply})
             
         except Exception as e:
             st.error(f"Error: {e}")
