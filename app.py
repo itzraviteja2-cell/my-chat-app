@@ -59,8 +59,9 @@ if prompt or audio_input or uploaded_file:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            # ఇక్కడ మోడల్ పేరును తీసివేసాము, ఇది డిఫాల్ట్ సపోర్టెడ్ మోడల్ ని ఉపయోగిస్తుంది
+            # మోడల్ పేరును ప్రెఫిక్స్ (models/) లేకుండా gemini-2.5-flash గా ఇస్తున్నాం
             response = client.interactions.create(
+                model="gemini-2.5-flash",
                 input=user_text
             )
             
