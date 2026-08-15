@@ -26,7 +26,7 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-# 4. SIDEBAR
+# 4. SIDEBAR (➕ కొత్త చాట్, 🎙️ మైక్, 📂 ఫైల్స్)
 st.sidebar.title("🛠️ టూల్స్")
 
 if st.sidebar.button("➕ కొత్త చాట్", use_container_width=True):
@@ -59,14 +59,24 @@ if prompt or audio_input or uploaded_file:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            # మోడల్ పేరును ప్రెఫిక్స్ (models/) లేకుండా gemini-2.5-flash గా ఇస్తున్నాం
-            response = client.interactions.create(
-                model="gemini-2.5-flash",
-                input=user_text
+            # మీడియా & ఆర్డియో ఫైళ్ళ ప్రాసెసింగ్
+            contents = [user_text]
+            if audio_input:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as t:
+                    t.write(audio_input.getvalue())
+                    contents.append(client.files.upload(path=t.name))
+            if uploaded_file:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp") as t:
+                    t.write(uploaded_file.getvalue())
+                    contents.append(client.files.upload(path=t.name))
+
+            # gemini-2.5 మోడల్‌ను డైరెక్ట్‌గా generate_content లో ఉపయోగించడం
+            response = client.models.generate_content(
+                model="gemini-2.5",
+                contents=contents
             )
             
-            reply = response.text if hasattr(response, 'text') else str(response)
-            
+            reply = response.text
             message_placeholder.markdown(reply)
             st.session_state.messages.append({"role": "assistant", "content": reply})
             
