@@ -31,22 +31,13 @@ if prompt:
         message_placeholder.markdown("Thinking... ⏳")
         
         try:
-            # మోడల్స్ జాబితా నుండి పని చేసే మొదటి మోడల్‌ను మాత్రమే ఆటో-సెలెక్ట్ చేస్తుంది
-            valid_models = [
-                m.name for m in genai.list_models() 
-                if 'generateContent' in m.supported_generation_methods
-            ]
+            # ఇక్కడ gemini-1.5-flash ని నేరుగా ఉపయోగిస్తున్నాం
+            model = genai.GenerativeModel('gemini-1.5-flash')
+            response = model.generate_content(prompt)
             
-            if not valid_models:
-                st.error("సరికొత్త API Key ని AI Studio లో జనరేట్ చేయండి.")
-            else:
-                chosen_model = valid_models[0]
-                model = genai.GenerativeModel(chosen_model)
-                response = model.generate_content(prompt)
-                
-                reply = response.text
-                message_placeholder.markdown(reply)
-                st.session_state.messages.append({"role": "assistant", "content": reply})
-                
+            reply = response.text
+            message_placeholder.markdown(reply)
+            st.session_state.messages.append({"role": "assistant", "content": reply})
+            
         except Exception as e:
             st.error(f"Error: {e}")
