@@ -44,7 +44,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 6. INPUT & RESPONSE
+# 6. INPUT & RESPONSE (Interactions API)
 prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
 if prompt or audio_input or uploaded_file:
@@ -59,23 +59,26 @@ if prompt or audio_input or uploaded_file:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            contents = [user_text]
+            inputs = [user_text]
             if audio_input:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as t:
                     t.write(audio_input.getvalue())
-                    contents.append(client.files.upload(path=t.name))
+                    inputs.append(client.files.upload(path=t.name))
             if uploaded_file:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp") as t:
                     t.write(uploaded_file.getvalue())
-                    contents.append(client.files.upload(path=t.name))
+                    inputs.append(client.files.upload(path=t.name))
             
-            # ఇక్కడ సరైన మోడల్ పేరు ఇచ్చాను (gemini-2.5-flash)
-            response = client.models.generate_content(
-                model="gemini-2.5-flash", 
-                contents=contents
+            # Interactions API కొత్త స్టాండర్డ్స్ ప్రకారం కాల్
+            response = client.interactions.create(
+                model="gemini-3-flash", 
+                input=inputs
             )
             
-            message_placeholder.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
+            # రెస్పాన్స్ అవుట్‌పుట్ సేకరణ
+            result_text = response.outputs[-1].text if response.outputs else "సమాధానం లభించలేదు."
+            
+            message_placeholder.markdown(result_text)
+            st.session_state.messages.append({"role": "assistant", "content": result_text})
         except Exception as e:
             st.error(f"ఎర్రర్ వచ్చింది: {e}")
