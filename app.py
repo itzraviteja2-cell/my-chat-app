@@ -69,9 +69,9 @@ if prompt or audio_input or uploaded_file:
                     t.write(uploaded_file.getvalue())
                     contents.append(client.files.upload(path=t.name))
             
-            # ఇక్కడ స్టాండర్డ్ gemini-2.0-flash ని ఉపయోగిస్తున్నాం
+            # ఇక్కడ మోడల్ పేరు మార్చబడింది
             response = client.models.generate_content(
-                model="gemini-2.0-flash", 
+                model="gemini-2.0-flash-001", 
                 contents=contents
             )
             
