@@ -26,21 +26,20 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-# 4. SIDEBAR (➕ కొత్త చాట్, 🎙️ మైక్, 📂 ఫైల్స్)
+# 4. SIDEBAR
 st.sidebar.title("🛠️ టూల్స్")
 
 if st.sidebar.button("➕ కొత్త చాట్", use_container_width=True):
     st.session_state.messages = []
     st.rerun()
 
-audio_input = st.sidebar.audio_input("🎙️ మైక్ ద్వారా చెప్పండి")
+audio_input = st.sidebar.audio_input("🎙️ మైక్ ద్వారా మాట్లాడండి")
 uploaded_file = st.sidebar.file_uploader("📂 ఫోటో / వీడియో అప్‌లోడ్ చేయండి", type=["mp4", "png", "jpg", "jpeg", "mp3", "wav"])
 
 # 5. CHAT HISTORY SETUP
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# చాట్ హిస్టరీ డిస్‌ప్లే
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
@@ -48,7 +47,6 @@ for message in st.session_state.messages:
 # 6. INPUT & RESPONSE HANDLING
 prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
-# యూజర్ టెక్స్ట్ లేదా సైడ్‌బార్ ఇన్ పుట్స్ ఇచ్చినప్పుడు పనిచేస్తుంది
 if prompt or audio_input or uploaded_file:
     user_text = prompt if prompt else "అప్‌లోడ్ చేసిన ఫైల్ వివరాలను తెలపండి."
     
@@ -61,13 +59,11 @@ if prompt or audio_input or uploaded_file:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            # న్యూ Interactions API నిర్మాణం
+            # ఇక్కడ మోడల్ పేరును తీసివేసాము, ఇది డిఫాల్ట్ సపోర్టెడ్ మోడల్ ని ఉపయోగిస్తుంది
             response = client.interactions.create(
-                model="gemini-2.5-flash",
                 input=user_text
             )
             
-            # రెస్పాన్స్ గ్రహించడం
             reply = response.text if hasattr(response, 'text') else str(response)
             
             message_placeholder.markdown(reply)
