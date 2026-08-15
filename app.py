@@ -7,7 +7,7 @@ st.set_page_config(page_title="Aurora AI", layout="wide")
 
 st.title("🌌 Aurora AI")
 
-# API Setup
+# Retrieve API Key
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     st.error("API Key missing! Check Streamlit Secrets.")
@@ -36,21 +36,23 @@ if prompt:
         message_placeholder.markdown("Thinking... ⏳")
         
         try:
-            # 2.5 నిలిపివేసారు కాబట్టి ప్రస్తుత వర్కింగ్ మోడల్ 'gemini-2.0-flash'
-            model = genai.GenerativeModel('gemini-2.0-flash')
-            response = model.generate_content(prompt)
+            # 1. API కీ కి అందుబాటులో ఉన్న ప్రతీ మోడల్‌ను ఆటోమేటిక్‌గా చెక్ చేస్తుంది
+            available_models = []
+            for m in genai.list_models():
+                if 'generateContent' in m.supported_generation_methods:
+                    available_models.append(m.name)
             
-            reply = response.text
-            message_placeholder.markdown(reply)
-            st.session_state.messages.append({"role": "assistant", "content": reply})
-            
-        except Exception as e:
-            # Fallback for standard free model
-            try:
-                model = genai.GenerativeModel('gemini-1.5-flash')
+            if not available_models:
+                st.error("మీ API Key కి ఏ మోడల్ అందుబాటులో లేదు. దయచేసి AI Studio లో కొత్త Key తీసుకోండి.")
+            else:
+                # 2. అందుబాటులో ఉన్న మొదటి మోడల్‌తో రన్ చేస్తుంది
+                selected_model = available_models[0]
+                model = genai.GenerativeModel(selected_model)
                 response = model.generate_content(prompt)
+                
                 reply = response.text
                 message_placeholder.markdown(reply)
                 st.session_state.messages.append({"role": "assistant", "content": reply})
-            except Exception as ex:
-                st.error(f"Error: {ex}")
+                
+        except Exception as e:
+            st.error(f"Error: {e}")
