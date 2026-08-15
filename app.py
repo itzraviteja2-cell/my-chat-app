@@ -59,7 +59,6 @@ if prompt or audio_input or uploaded_file:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            # మీడియా & ఆర్డియో ఫైళ్ళ ప్రాసెసింగ్
             contents = [user_text]
             if audio_input:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as t:
@@ -70,15 +69,27 @@ if prompt or audio_input or uploaded_file:
                     t.write(uploaded_file.getvalue())
                     contents.append(client.files.upload(path=t.name))
 
-            # gemini-2.5 మోడల్‌ను డైరెక్ట్‌గా generate_content లో ఉపయోగించడం
-            response = client.models.generate_content(
-                model="gemini-2.5",
-                contents=contents
-            )
+            # అందుబాటులో ఉన్న మోడల్స్ వరుసగా ట్రై చేస్తుంది
+            working_model = None
+            available_models = ["gemini-1.5-flash-latest", "gemini-1.5-pro-latest", "gemini-pro"]
             
-            reply = response.text
-            message_placeholder.markdown(reply)
-            st.session_state.messages.append({"role": "assistant", "content": reply})
-            
+            for m in available_models:
+                try:
+                    response = client.models.generate_content(
+                        model=m,
+                        contents=contents
+                    )
+                    working_model = m
+                    break
+                except Exception:
+                    continue
+
+            if working_model and response:
+                reply = response.text
+                message_placeholder.markdown(reply)
+                st.session_state.messages.append({"role": "assistant", "content": reply})
+            else:
+                message_placeholder.markdown("మోడల్ అందుబాటులో లేదు. దయచేసి API Key సరిచూసుకోండి.")
+
         except Exception as e:
             st.error(f"ఎర్రర్ వచ్చింది: {e}")
