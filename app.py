@@ -59,8 +59,18 @@ if prompt or audio_input or uploaded_file:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            # క్రొత్త మోడల్ వర్షన్ 'gemini-2.5-flash' వాడటం జరుగుతోంది
-            model = genai.GenerativeModel('gemini-2.5-flash')
+            # అందుబాటులో ఉన్న మోడల్‌ను ఆటోమేటిక్‌గా కనుగొనడం
+            valid_model_name = None
+            for m in genai.list_models():
+                if 'generateContent' in m.supported_generation_methods:
+                    valid_model_name = m.name
+                    break
+
+            if not valid_model_name:
+                st.error("మీ API Key కి సరిపడే మోడల్ అందుబాటులో లేదు.")
+                st.stop()
+
+            model = genai.GenerativeModel(valid_model_name)
             
             contents = [user_text]
             if audio_input:
