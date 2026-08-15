@@ -24,7 +24,6 @@ if not api_key:
     st.error("API Key దొరకలేదు! Secrets సరిచూసుకోండి.")
     st.stop()
 
-# Client setup
 client = genai.Client(api_key=api_key)
 
 # 4. SIDEBAR
@@ -64,19 +63,19 @@ if prompt or audio_input or uploaded_file:
             if audio_input:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as t:
                     t.write(audio_input.getvalue())
-                    # ఫైల్ అప్‌లోడ్ మార్పు
                     contents.append(client.files.upload(path=t.name))
             if uploaded_file:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp") as t:
                     t.write(uploaded_file.getvalue())
-                    # ఫైల్ అప్‌లోడ్ మార్పు
                     contents.append(client.files.upload(path=t.name))
             
-            # ఇక్కడ మోడల్ పేరును మార్చాను
-            response = client.models.generate_content(model="gemini-1.5-flash", contents=contents)
+            # ఇక్కడ సరైన మోడల్ పేరు ఇచ్చాను (gemini-2.5-flash)
+            response = client.models.generate_content(
+                model="gemini-2.5-flash", 
+                contents=contents
+            )
             
             message_placeholder.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
             st.error(f"ఎర్రర్ వచ్చింది: {e}")
-            st.warning("ఒకవేళ మోడల్ ఎర్రర్ వస్తే, దయచేసి API Key చెక్ చేయండి లేదా మోడల్ అందుబాటులో ఉందో లేదో చూడండి.")
