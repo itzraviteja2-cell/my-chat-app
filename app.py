@@ -23,6 +23,7 @@ if not api_key:
     st.error("API Key missing! Check Streamlit Secrets.")
     st.stop()
 
+# Initialize Google GenAI Client
 client = genai.Client(api_key=api_key)
 
 # Initialize Session State
@@ -47,23 +48,9 @@ if prompt:
         message_placeholder.markdown("Thinking... ⏳")
         
         try:
-            # 1. Fetch all models available for your exact API Key
-            available_models = list(client.models.list())
-            
-            # 2. Filter model names that support generation
-            target_model = None
-            for m in available_models:
-                m_name = m.name.replace("models/", "") if hasattr(m, 'name') else str(m)
-                if "flash" in m_name or "pro" in m_name:
-                    target_model = m_name
-                    break
-            
-            if not target_model and len(available_models) > 0:
-                target_model = available_models[0].name.replace("models/", "")
-
-            # 3. Generate response with auto-detected model
+            # Generate content using official google-genai SDK
             response = client.models.generate_content(
-                model=target_model,
+                model="gemini-1.5-flash",
                 contents=prompt
             )
             
