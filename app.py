@@ -2,7 +2,6 @@ import streamlit as st
 from google import genai
 import os
 import tempfile
-import base64
 
 
 # ============================================================
@@ -18,7 +17,7 @@ st.set_page_config(
 
 
 # ============================================================
-# 2. HIDE STREAMLIT TOP BAR
+# 2. STREAMLIT UI CLEANUP
 # ============================================================
 
 st.markdown(
@@ -26,63 +25,59 @@ st.markdown(
     <style>
 
     /* Hide Streamlit top header */
-    [data-testid="stHeader"] {
+    header[data-testid="stHeader"] {
         display: none !important;
     }
 
-    /* Hide top decoration */
-    [data-testid="stDecoration"] {
+    /* Hide decoration */
+    div[data-testid="stDecoration"] {
         display: none !important;
     }
 
-    /* Remove extra top space */
+    /* Page spacing */
     .block-container {
         padding-top: 1rem !important;
         padding-bottom: 5rem !important;
     }
 
-    /* Main background */
-    .stApp {
-        background: #ffffff;
-    }
-
-    /* Aurora logo */
-    .aurora-header {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 25px;
-        padding: 5px 0;
-    }
-
-    .aurora-logo {
-        width: 58px;
-        height: 58px;
-        min-width: 58px;
-        border-radius: 16px;
-        background:
-            radial-gradient(circle at 25% 25%, #ffffff 0%, transparent 18%),
-            linear-gradient(135deg, #5427ff, #8b5cf6, #06b6d4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 31px;
-        box-shadow: 0 8px 25px rgba(83, 39, 255, 0.30);
-    }
-
+    /* Aurora title */
     .aurora-title {
         font-size: 42px;
         font-weight: 800;
         margin: 0;
-        background: linear-gradient(90deg, #5527ff, #8b5cf6, #00a6d6);
+        background: linear-gradient(
+            90deg,
+            #5427ff,
+            #8b5cf6,
+            #00a6d6
+        );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .aurora-subtitle {
-        font-size: 14px;
         color: #777777;
-        margin-top: -4px;
+        font-size: 14px;
+        margin-top: -5px;
+        margin-bottom: 25px;
+    }
+
+    /* Logo */
+    .aurora-logo {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        background: linear-gradient(
+            135deg,
+            #5427ff,
+            #8b5cf6,
+            #06b6d4
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        box-shadow: 0 7px 25px rgba(84, 39, 255, 0.30);
     }
 
     /* Chat input */
@@ -91,19 +86,7 @@ st.markdown(
     }
 
     [data-testid="stChatInput"] textarea {
-        border-radius: 18px !important;
         font-size: 16px !important;
-    }
-
-    /* Chat messages */
-    [data-testid="stChatMessage"] {
-        border-radius: 18px;
-        margin-bottom: 10px;
-    }
-
-    /* Hide sidebar when not needed */
-    section[data-testid="stSidebar"] {
-        background: #fafafa;
     }
 
     </style>
@@ -113,12 +96,17 @@ st.markdown(
 
 
 # ============================================================
-# 3. AURORA AI HEADER / LOGO
+# 3. AURORA AI HEADER
 # ============================================================
 
 st.markdown(
     """
-    <div class="aurora-header">
+    <div style="
+        display:flex;
+        align-items:center;
+        gap:14px;
+        margin-bottom:25px;
+    ">
 
         <div class="aurora-logo">
             🌌
@@ -149,14 +137,13 @@ api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     st.error(
         "⚠️ GEMINI_API_KEY కనబడలేదు. "
-        "Streamlit Secrets లో GEMINI_API_KEY పెట్టండి."
+        "Streamlit Secrets లో GEMINI_API_KEY ఉందో చూడండి."
     )
     st.stop()
 
 
 client = genai.Client(api_key=api_key)
 
-# Stable Gemini model
 MODEL_NAME = "gemini-2.5-flash"
 
 
@@ -180,22 +167,28 @@ with st.sidebar:
 
     st.markdown(
         """
-        **Features**
+        ### Features
 
-        💬 AI Chat  
-        📎 File Upload  
-        🎤 Voice Input  
-        🖼️ Image Understanding  
-        🎬 Video Understanding  
-        📄 PDF / Text  
-        🧠 Gemini 2.5 Flash  
+        💬 AI Chat
+
+        📎 File Upload
+
+        🎤 Voice Input
+
+        🖼️ Image Understanding
+
+        🎬 Video Understanding
+
+        📄 PDF / Text
+
+        🧠 Gemini 2.5 Flash
         """
     )
 
     st.markdown("---")
 
     if st.button(
-        "🗑️ చాట్ మొత్తం క్లియర్ చేయండి",
+        "🗑️ చాట్ క్లియర్ చేయండి",
         use_container_width=True
     ):
         st.session_state.messages = []
@@ -203,102 +196,82 @@ with st.sidebar:
 
 
 # ============================================================
-# 7. DISPLAY OLD CHAT
+# 7. SHOW OLD CHAT
 # ============================================================
 
 for message in st.session_state.messages:
 
-    role = message["role"]
-    content = message["content"]
+    with st.chat_message(message["role"]):
 
-    with st.chat_message(role):
-        st.markdown(content)
+        st.markdown(message["content"])
 
 
 # ============================================================
-# 8. FILE TYPE SETTINGS
+# 8. CHAT INPUT
 # ============================================================
 
-allowed_file_types = [
-    "png",
-    "jpg",
-    "jpeg",
-    "webp",
-    "heic",
-    "heif",
-
-    "mp4",
-    "mov",
-    "avi",
-
-    "mp3",
-    "wav",
-    "m4a",
-    "flac",
-
-    "pdf",
-    "txt",
-    "csv"
-]
-
-
-# ============================================================
-# 9. CHAT INPUT
-# ============================================================
-
-prompt_data = st.chat_input(
+chat_data = st.chat_input(
     "Aurora AI ని ఏమైనా అడగండి...",
     accept_file=True,
     accept_audio=True,
-    file_type=allowed_file_types,
+    file_type=[
+        "png",
+        "jpg",
+        "jpeg",
+        "webp",
+        "heic",
+        "heif",
+        "mp4",
+        "mov",
+        "avi",
+        "mp3",
+        "wav",
+        "m4a",
+        "flac",
+        "pdf",
+        "txt",
+        "csv"
+    ],
     max_upload_size=200,
     audio_sample_rate=16000
 )
 
 
 # ============================================================
-# 10. PROCESS USER MESSAGE
+# 9. WHEN USER SENDS MESSAGE
 # ============================================================
 
-if prompt_data:
+if chat_data:
 
     # --------------------------------------------------------
-    # Get text
+    # TEXT
     # --------------------------------------------------------
 
-    user_text = prompt_data.get("text", "")
-
-    if user_text is None:
-        user_text = ""
-
-    user_text = user_text.strip()
+    user_text = chat_data.text or ""
 
 
     # --------------------------------------------------------
-    # Get uploaded files
+    # FILES
     # --------------------------------------------------------
 
-    uploaded_files = prompt_data.get("files", [])
-
-    if uploaded_files is None:
-        uploaded_files = []
+    uploaded_files = chat_data.files or []
 
 
     # --------------------------------------------------------
-    # Get microphone audio
+    # AUDIO
     # --------------------------------------------------------
 
-    audio_input = prompt_data.get("audio", None)
+    audio_input = chat_data.audio
 
 
     # --------------------------------------------------------
-    # Check if anything was submitted
+    # NOTHING?
     # --------------------------------------------------------
 
     if (
-        not user_text
+        not user_text.strip()
         and not uploaded_files
-        and not audio_input
+        and audio_input is None
     ):
         st.stop()
 
@@ -307,30 +280,41 @@ if prompt_data:
     # USER DISPLAY MESSAGE
     # ========================================================
 
-    display_text = user_text
+    display_text = user_text.strip()
+
 
     if uploaded_files:
 
-        file_names = ", ".join(
+        names = ", ".join(
             file.name for file in uploaded_files
         )
 
         if display_text:
-            display_text += f"\n\n📎 **Files:** {file_names}"
+
+            display_text += (
+                f"\n\n📎 Files: {names}"
+            )
+
         else:
-            display_text = f"📎 **Files:** {file_names}"
+
+            display_text = (
+                f"📎 Files: {names}"
+            )
 
 
-    if audio_input:
+    if audio_input is not None:
 
         if display_text:
-            display_text += "\n\n🎤 **Voice message**"
+
+            display_text += "\n\n🎤 Voice message"
+
         else:
-            display_text = "🎤 **Voice message**"
+
+            display_text = "🎤 Voice message"
 
 
     # ========================================================
-    # SHOW USER MESSAGE
+    # SAVE USER MESSAGE
     # ========================================================
 
     st.session_state.messages.append(
@@ -341,16 +325,20 @@ if prompt_data:
     )
 
 
+    # ========================================================
+    # SHOW USER MESSAGE
+    # ========================================================
+
     with st.chat_message("user"):
 
         st.markdown(display_text)
 
-        # Show uploaded images
         for file in uploaded_files:
 
-            mime = file.type or ""
+            mime_type = file.type or ""
 
-            if mime.startswith("image/"):
+            if mime_type.startswith("image/"):
+
                 st.image(
                     file,
                     caption=file.name,
@@ -359,90 +347,91 @@ if prompt_data:
 
 
     # ========================================================
-    # AI RESPONSE
+    # AI MESSAGE
     # ========================================================
 
     with st.chat_message("assistant"):
 
-        message_placeholder = st.empty()
+        placeholder = st.empty()
 
-        message_placeholder.markdown(
+        placeholder.markdown(
             "⏳ **Aurora AI ఆలోచిస్తోంది...**"
         )
 
 
+        temporary_files = []
+
+
         try:
 
-            # ------------------------------------------------
-            # Gemini contents
-            # ------------------------------------------------
+            # =================================================
+            # GEMINI CONTENTS
+            # =================================================
 
             contents = []
 
 
-            # ------------------------------------------------
-            # User text
-            # ------------------------------------------------
+            # -------------------------------------------------
+            # TEXT
+            # -------------------------------------------------
 
-            if user_text:
+            if user_text.strip():
 
-                contents.append(user_text)
+                contents.append(
+                    user_text.strip()
+                )
 
             else:
 
                 contents.append(
-                    "ఈ ఫైల్/ఆడియోను పరిశీలించి, "
-                    "వినియోగదారుడికి తెలుగులో సహాయం చేయండి."
+                    "ఈ ఫైల్ లేదా ఆడియోను పరిశీలించి "
+                    "వినియోగదారుడికి తెలుగులో సమాధానం ఇవ్వండి."
                 )
 
 
             # =================================================
-            # UPLOAD FILES TO GEMINI
+            # FILE UPLOAD
             # =================================================
-
-            temporary_files = []
-
 
             for uploaded_file in uploaded_files:
 
-                suffix = ""
+                file_name = uploaded_file.name or "file"
 
-                if uploaded_file.name:
-                    _, ext = os.path.splitext(
-                        uploaded_file.name
-                    )
-
-                    suffix = ext
-
-
-                # Create temporary file
-                temp = tempfile.NamedTemporaryFile(
-                    delete=False,
-                    suffix=suffix
+                _, extension = os.path.splitext(
+                    file_name
                 )
 
-                temp.write(
+                temp_file = tempfile.NamedTemporaryFile(
+                    delete=False,
+                    suffix=extension
+                )
+
+                temp_file.write(
                     uploaded_file.getvalue()
                 )
 
-                temp.close()
+                temp_file.close()
 
-                temporary_files.append(temp.name)
+                temporary_files.append(
+                    temp_file.name
+                )
 
 
                 # Upload to Gemini
                 gemini_file = client.files.upload(
-                    file=temp.name
+                    file=temp_file.name
                 )
 
-                contents.append(gemini_file)
+                contents.append(
+                    gemini_file
+                )
 
 
             # =================================================
-            # MICROPHONE AUDIO
+            # AUDIO UPLOAD
             # =================================================
 
-            if audio_input:
+            if audio_input is not None:
 
                 temp_audio = tempfile.NamedTemporaryFile(
                     delete=False,
@@ -464,7 +453,9 @@ if prompt_data:
                     file=temp_audio.name
                 )
 
-                contents.append(audio_file)
+                contents.append(
+                    audio_file
+                )
 
 
             # =================================================
@@ -478,28 +469,29 @@ if prompt_data:
 
 
             # =================================================
-            # RESPONSE TEXT
+            # RESPONSE
             # =================================================
 
             reply = response.text
 
+
             if not reply:
 
                 reply = (
-                    "క్షమించండి, ప్రస్తుతం సమాధానం "
+                    "క్షమించండి. ప్రస్తుతం సమాధానం "
                     "రాలేదు. మళ్లీ ప్రయత్నించండి."
                 )
 
 
             # =================================================
-            # SHOW RESPONSE
+            # SHOW AI RESPONSE
             # =================================================
 
-            message_placeholder.markdown(reply)
+            placeholder.markdown(reply)
 
 
             # =================================================
-            # SAVE RESPONSE
+            # SAVE AI RESPONSE
             # =================================================
 
             st.session_state.messages.append(
@@ -510,35 +502,32 @@ if prompt_data:
             )
 
 
-            # =================================================
-            # DELETE TEMPORARY FILES
-            # =================================================
-
-            for temp_path in temporary_files:
-
-                try:
-                    os.remove(temp_path)
-
-                except Exception:
-                    pass
-
-
         except Exception as e:
 
-            message_placeholder.empty()
+            placeholder.empty()
 
             st.error(
                 "⚠️ Aurora AI లో సమస్య వచ్చింది."
             )
 
+            # Actual error for debugging
             st.code(
                 str(e)
             )
 
-            st.session_state.messages.append(
-                {
-                    "role": "assistant",
-                    "content":
-                    "⚠️ ప్రస్తుతం AIకి కనెక్ట్ అవ్వడంలో సమస్య వచ్చింది."
-                }
-            )
+
+        finally:
+
+            # =================================================
+            # DELETE TEMP FILES
+            # =================================================
+
+            for path in temporary_files:
+
+                try:
+
+                    os.remove(path)
+
+                except Exception:
+
+                    pass
