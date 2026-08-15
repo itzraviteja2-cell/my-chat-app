@@ -1,5 +1,5 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 import os
 
 st.set_page_config(page_title="Aurora AI", layout="wide")
@@ -10,7 +10,8 @@ if not api_key:
     st.error("API Key missing! Check Streamlit Secrets.")
     st.stop()
 
-genai.configure(api_key=api_key)
+# Initialize official google-genai Client
+client = genai.Client(api_key=api_key)
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -31,9 +32,11 @@ if prompt:
         message_placeholder.markdown("Thinking... ⏳")
         
         try:
-            # ఇక్కడ gemini-1.5-flash ని నేరుగా ఉపయోగిస్తున్నాం
-            model = genai.GenerativeModel('gemini-1.5-flash')
-            response = model.generate_content(prompt)
+            # Latest standard Gemini model
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt
+            )
             
             reply = response.text
             message_placeholder.markdown(reply)
