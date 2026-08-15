@@ -47,15 +47,33 @@ if prompt:
         message_placeholder.markdown("Thinking... ⏳")
         
         try:
-            # Using latest active model
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt
-            )
+            # 1. తదుపరి తరం మోడల్స్ వరుస క్రమం
+            models_to_try = [
+                "gemini-2.5-flash",
+                "gemini-2.5-pro",
+                "gemini-1.5-flash-latest"
+            ]
             
-            reply = response.text
-            message_placeholder.markdown(reply)
-            st.session_state.messages.append({"role": "assistant", "content": reply})
+            response_text = None
+            last_error = None
+
+            for m_name in models_to_try:
+                try:
+                    response = client.models.generate_content(
+                        model=m_name,
+                        contents=prompt
+                    )
+                    response_text = response.text
+                    break
+                except Exception as err:
+                    last_error = err
+                    continue
+
+            if response_text:
+                message_placeholder.markdown(response_text)
+                st.session_state.messages.append({"role": "assistant", "content": response_text})
+            else:
+                st.error(f"Error: {last_error}")
             
         except Exception as e:
             st.error(f"Error: {e}")
