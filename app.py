@@ -59,32 +59,23 @@ if prompt or audio_input or uploaded_file:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            inputs = [user_text]
+            contents = [user_text]
             if audio_input:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as t:
                     t.write(audio_input.getvalue())
-                    inputs.append(client.files.upload(path=t.name))
+                    contents.append(client.files.upload(path=t.name))
             if uploaded_file:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp") as t:
                     t.write(uploaded_file.getvalue())
-                    inputs.append(client.files.upload(path=t.name))
+                    contents.append(client.files.upload(path=t.name))
             
-            # Interactions API సరిచేసిన పారామీటర్ల నిర్మాణం
-            response = client.interactions.create(
-                model="models/gemini-2.5-flash", 
-                input=inputs[0] if len(inputs) == 1 else inputs
+            # ఇక్కడ స్టాండర్డ్ gemini-2.0-flash ని ఉపయోగిస్తున్నాం
+            response = client.models.generate_content(
+                model="gemini-2.0-flash", 
+                contents=contents
             )
             
-            # అవుట్‌పుట్ పొందడం
-            result_text = ""
-            if hasattr(response, 'outputs') and response.outputs:
-                result_text = response.outputs[-1].text
-            elif hasattr(response, 'text'):
-                result_text = response.text
-            else:
-                result_text = str(response)
-            
-            message_placeholder.markdown(result_text)
-            st.session_state.messages.append({"role": "assistant", "content": result_text})
+            message_placeholder.markdown(response.text)
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
             st.error(f"ఎర్రర్ వచ్చింది: {e}")
