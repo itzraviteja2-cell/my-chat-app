@@ -1,24 +1,13 @@
 import streamlit as st
 from google import genai
 import os
-import tempfile
 
 # 1. PAGE SETTINGS
-st.set_page_config(page_title="Aurora AI", layout="wide", initial_sidebar_state="expanded")
-
-# 2. HIDE STREAMLIT MENU & FOOTER
-hide_style = """
-<style>
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
-</style>
-"""
-st.markdown(hide_style, unsafe_allow_html=True)
+st.set_page_config(page_title="Aurora AI", layout="wide")
 
 st.title("🌌 Aurora AI")
 
-# 3. API SETUP
+# 2. API SETUP
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     st.error("API Key దొరకలేదు!")
@@ -27,13 +16,7 @@ if not api_key:
 # Client setup
 client = genai.Client(api_key=api_key)
 
-# 4. SIDEBAR
-st.sidebar.title("🛠️ టూల్స్")
-if st.sidebar.button("➕ కొత్త చాట్", use_container_width=True):
-    st.session_state.messages = []
-    st.rerun()
-
-# 5. CHAT HISTORY
+# 3. CHAT HISTORY
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -41,11 +24,10 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 6. INPUT & RESPONSE
+# 4. INPUT & RESPONSE
 prompt = st.chat_input("Aurora AI ని ఏదైనా అడగండి...")
 
 if prompt:
-    # యూజర్ మెసేజ్ సేవ్ & డిస్‌ప్లే
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -54,13 +36,12 @@ if prompt:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            # కొత్త Interactions API పద్ధతి
-            response = client.interactions.create(
-                model="gemini-1.5-flash",
-                input=prompt
+            # మోడల్ పేరును 'models/' లేకుండా కేవలం gemini-2.5-flash అని మాత్రమే ఇవ్వండి
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt
             )
             
-            # రిజల్ట్ పొందడం
             reply = response.text
             message_placeholder.markdown(reply)
             st.session_state.messages.append({"role": "assistant", "content": reply})
