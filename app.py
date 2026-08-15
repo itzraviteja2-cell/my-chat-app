@@ -13,7 +13,6 @@ if not api_key:
     st.error("API Key దొరకలేదు!")
     st.stop()
 
-# Client setup
 client = genai.Client(api_key=api_key)
 
 # 3. CHAT HISTORY
@@ -36,12 +35,15 @@ if prompt:
         message_placeholder = st.empty()
         message_placeholder.markdown("ఆలోచిస్తోంది... ⏳")
         try:
-            # మోడల్ పేరును 'models/' లేకుండా కేవలం gemini-2.5-flash అని మాత్రమే ఇవ్వండి
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt
+            # కొత్త Interactions API పద్ధతి
+            # మోడల్ పేరును మనం ఖచ్చితంగా ఇవ్వాల్సిన అవసరం లేదు, 
+            # డిఫాల్ట్‌గా ఇది ఉత్తమమైన మోడల్‌ను తీసుకుంటుంది.
+            response = client.interactions.create(
+                model="gemini-2.0-flash", 
+                input=prompt
             )
             
+            # రిజల్ట్ పొందడం
             reply = response.text
             message_placeholder.markdown(reply)
             st.session_state.messages.append({"role": "assistant", "content": reply})
