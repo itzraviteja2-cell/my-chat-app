@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora AI</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 100%);
+            --text: #282123;
+            --sidebar: #ffffff;
+            --hover: #f0f4f9;
+            --border: #e0e0e0;
+            --welcome: #023123;
+            --user: #03f2fd;
+            --bot: #ffffff;
+            --input: #ffffff;
+            --tool: #656368;
+        }
+
+        [data-theme="dark"] {
+            --bg: linear-gradient(180deg, #121212 0%, #1e1e1e 100%);
+            --text: #e3e3e3;
+            --sidebar: #1e1e1e;
+            --hover: #2d2d2d;
+            --border: #444;
+            --welcome: #8ab4f8;
+            --user: #004a77;
+            --bot: #2d2d2d;
+            --input: #2d2d2d;
+            --tool: #aaa;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        html, body {
+            margin: 0;
+            height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .icon-btn {
+            border: none;
+            background: transparent;
+            color: var(--tool);
+            font-size: 18px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+        }
+
+        .icon-btn:hover {
+            background: var(--hover);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--sidebar);
+            z-index: 10;
+            transition: left .3s;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-content {
+            padding: 15px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .new-chat {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            background: var(--hover);
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .history-title {
+            margin: 20px 0 8px;
+            font-size: 12px;
+            color: var(--tool);
+        }
+
+        .history-item {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .history-item:hover {
+            background: var(--hover);
+        }
+
+        .sidebar-footer {
+            padding: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .profile {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            width: 100%;
+            margin: auto;
+            min-height: 0;
+        }
+
+        .welcome {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .sparkle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background: linear-gradient(135deg, #4285f4, #9b72cb);
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
+
+        .welcome h1 {
+            color: var(--welcome);
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .messages.active {
+            display: flex;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .row.user {
+            justify-content: flex-end;
+        }
+
+        .row.bot {
+            justify-content: flex-start;
+        }
+
+        .message-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .user-avatar {
+            background: #4285f4;
+        }
+
+        .bot-avatar {
+            background: linear-gradient(135deg, #4285f4, #9b72cb);
+        }
+
+        .bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .user .bubble {
+            background: var(--user);
+        }
+
+        .bot .bubble {
+            background: var(--bot);
+            border: 1px solid var(--border);
+        }
+
+        .bot-wrapper {
+            max-width: 75%;
+        }
+
+        .bot-wrapper .bubble {
+            max-width: 100%;
+        }
+
+        .actions {
+            margin-top: 5px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            border: none;
+            background: transparent;
+            color: var(--tool);
+            padding: 5px;
+        }
+
+        .input-area {
+            padding: 10px 20px 30px;
+        }
+
+        .input-box {
+            display: flex;
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 6px;
+        }
+
+        input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 10px 14px;
+            font-size: 16px;
+            color: var(--text);
+        }
+
+        .send {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: #1a73e8;
+            color: white;
+        }
+
+        @media(max-width:600px) {
+            .bubble, .bot-wrapper {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+
+<body data-theme="light">
+
+    <div class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <b>Aurora AI</b>
+
+            <button class="icon-btn" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-content">
+
+            <button class="new-chat" onclick="newChat()">
+                <i class="fa-solid fa-plus"></i>
+                New chat
+            </button>
+
+            <div class="history-title">
+                RECENT
+            </div>
+
+            <div id="history"></div>
+
+        </div>
+
+        <div class="sidebar-footer">
+
+            <div class="profile">
+
+                <div class="avatar-small">I</div>
+
+                <span>Itz Raviteja</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="header">
+
+        <div class="header-left">
+
+            <button class="icon-btn" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="title">
+                Aurora AI
+            </div>
+
+        </div>
+
+        <button class="icon-btn" onclick="toggleTheme()">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+
+    </div>
+
+
+    <div class="main">
+
+        <div class="welcome" id="welcome">
+
+            <div class="sparkle">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+
+            <h1>హాయ్ రవి, ఈరోజు ఏం చేయాలి?</h1>
+
+        </div>
+
+
+        <div class="messages" id="messages"></div>
+
+
+        <div class="input-area">
+
+            <div class="input-box">
+
+                <input
+                    id="input"
+                    placeholder="Ask Aurora AI"
+                    onkeydown="handleKey(event)"
+                >
+
+                <button class="send" onclick="sendMessage()">
+                    <i class="fa-solid fa-arrow-up"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+<script>
+
+const chats = [];
+
+let currentChat = null;
+
+
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList
+        .toggle("show");
+
+}
+
+
+function toggleTheme() {
+
+    const body = document.body;
+
+    const theme =
+        body.getAttribute("data-theme");
+
+    if (theme === "light") {
+
+        body.setAttribute("data-theme","dark");
+
+        document
+            .getElementById("themeIcon")
+            .className =
+            "fa-solid fa-sun";
+
+    } else {
+
+        body.setAttribute("data-theme","light");
+
+        document
+            .getElementById("themeIcon")
+            .className =
+            "fa-solid fa-moon";
+
+    }
+
+}
+
+
+function newChat() {
+
+    currentChat = {
+        title: "New Chat",
+        messages: []
+    };
+
+    chats.unshift(currentChat);
+
+    document
+        .getElementById("messages")
+        .innerHTML = "";
+
+    document
+        .getElementById("welcome")
+        .style.display = "flex";
+
+    document
+        .getElementById("messages")
+        .classList.remove("active");
+
+    renderHistory();
+
+}
+
+
+function renderHistory() {
+
+    const history =
+        document.getElementById("history");
+
+    history.innerHTML = "";
+
+    chats.forEach(chat => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "history-item";
+
+        item.innerText =
+            chat.title;
+
+        item.onclick = () => {
+
+            currentChat = chat;
+
+            loadChat();
+
+            toggleSidebar();
+
+        };
+
+        history.appendChild(item);
+
+    });
+
+}
+
+
+function loadChat() {
+
+    const container =
+        document.getElementById("messages");
+
+    container.innerHTML = "";
+
+    currentChat.messages.forEach(msg => {
+
+        appendMessage(
+            msg.text,
+            msg.role
+        );
+
+    });
+
+}
+
+
+function appendMessage(text, role) {
+
+    const container =
+        document.getElementById("messages");
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "row " + role;
+
+
+    if (role === "user") {
+
+        row.innerHTML = `
+            <div class="bubble"></div>
+        `;
+
+        row
+            .querySelector(".bubble")
+            .innerText = text;
+
+    } else {
+
+        row.innerHTML = `
+
+            <div class="message-avatar bot-avatar">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+
+            <div class="bot-wrapper">
+
+                <div class="bubble"></div>
+
+                <div class="actions">
+
+                    <button class="action-btn">
+                        <i class="fa-solid fa-volume-high"></i>
+                        విను
+                    </button>
+
+                    <button class="action-btn">
+                        <i class="fa-solid fa-copy"></i>
+                        కాపీ
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+        row
+            .querySelector(".bubble")
+            .innerText = text;
+
+
+        const buttons =
+            row.querySelectorAll(".action-btn");
+
+
+        buttons[0].onclick = () => {
+
+            const speech =
+                new SpeechSynthesisUtterance(text);
+
+            speech.lang = "te-IN";
+
+            speechSynthesis.speak(speech);
+
+        };
+
+
+        buttons[1].onclick = () => {
+
+            navigator.clipboard.writeText(text);
+
+        };
+
+    }
+
+
+    container.appendChild(row);
+
+    document
+        .getElementById("welcome")
+        .style.display = "none";
+
+    container
+        .classList
+        .add("active");
+
+    container.scrollTop =
+        container.scrollHeight;
+
+}
+
+
+function handleKey(event) {
+
+    if (event.key === "Enter") {
+
+        sendMessage();
+
+    }
+
+}
+
+
+async function sendMessage() {
+
+    const input =
+        document.getElementById("input");
+
+    const message =
+        input.value.trim();
+
+
+    if (!message) return;
+
+
+    if (!currentChat) {
+
+        currentChat = {
+            title:
+                message.substring(0,30),
+            messages: []
+        };
+
+        chats.unshift(currentChat);
+
+        renderHistory();
+
+    }
+
+
+    appendMessage(
+        message,
+        "user"
+    );
+
+
+    currentChat.messages.push({
+        role:"user",
+        text:message
+    });
+
+
+    input.value = "";
+
+
+    const loading =
+        document.createElement("div");
+
+    loading.className =
+        "row bot";
+
+    loading.id =
+        "loading";
+
+    loading.innerHTML = `
+        <div class="message-avatar bot-avatar">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+
+        <div class="bot-wrapper">
+
+            <div class="bubble">
+                ఆలోచిస్తోంది...
+            </div>
+
+        </div>
+    `;
+
+
+    document
+        .getElementById("messages")
+        .appendChild(loading);
+
+
+    try {
+
+        const response =
+            await fetch("/chat", {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body:JSON.stringify({
+
+                    message:message
+
+                })
+
+            });
+
+
+        const data =
+            await response.json();
+
+
+        document
+            .getElementById("loading")
+            ?.remove();
+
+
+        if (
+            response.ok &&
+            data.reply
+        ) {
+
+            appendMessage(
+                data.reply,
+                "bot"
+            );
+
+
+            currentChat.messages.push({
+
+                role:"bot",
+                text:data.reply
+
+            });
+
+        }
+
+        else {
+
+            appendMessage(
+                "ఎర్రర్: " +
+                (data.detail ||
+                "సమాధానం రాలేదు"),
+                "bot"
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        document
+            .getElementById("loading")
+            ?.remove();
+
+
+        appendMessage(
+            "నెట్‌వర్క్ లోపం: " +
+            error.message,
+            "bot"
+        );
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
