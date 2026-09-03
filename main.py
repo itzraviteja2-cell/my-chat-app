@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from openai import OpenAI
+from google import genai
 
 
 app = FastAPI(
@@ -22,8 +22,8 @@ app.add_middleware(
 )
 
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
 )
 
 
@@ -46,20 +46,20 @@ def health():
 @app.post("/chat")
 def chat(request: ChatRequest):
 
-    if not os.getenv("OPENAI_API_KEY"):
+    if not os.getenv("GEMINI_API_KEY"):
         raise HTTPException(
             status_code=500,
-            detail="OPENAI_API_KEY is not configured"
+            detail="GEMINI_API_KEY is not configured"
         )
 
     try:
-        response = client.responses.create(
-            model="gpt-5.6-luna",
-            input=request.message
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=request.message
         )
 
         return {
-            "reply": response.output_text
+            "reply": response.text
         }
 
     except Exception as e:
