@@ -1,13 +1,17 @@
 import os
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from openai import OpenAI
+
 
 app = FastAPI(
     title="Aurora AI",
     version="1.0.0"
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,6 +20,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
@@ -28,10 +33,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 def home():
-    return {
-        "app": "Aurora AI",
-        "status": "online"
-    }
+    return FileResponse("index.html")
 
 
 @app.get("/health")
