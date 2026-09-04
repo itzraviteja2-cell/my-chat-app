@@ -1,0 +1,15 @@
+{
+  "name": "Aurora Smart AI",
+  "short_name": "Aurora AI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f2ff",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/static/aurora-logo-small.jpg",
+      "sizes": "any",
+      "type": "image/jpeg"
+    }
+  ]
+}
