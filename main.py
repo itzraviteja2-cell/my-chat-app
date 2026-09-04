@@ -81,7 +81,7 @@ def logo_test():
         "logo_exists": os.path.exists(
             os.path.join(
                 BASE_DIR,
-                "aurora-logo-small.png"
+                "aurora-logo-small.jpg"
             )
         )
     }
