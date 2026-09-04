@@ -979,7 +979,54 @@
 
 </div>
 
+<!-- SETTINGS PANEL -->
 
+<div class="settings-panel" id="settingsPanel">
+
+    <div class="settings-header">
+
+        <h3>Settings</h3>
+
+        <button
+            class="icon-btn"
+            onclick="toggleSettings()"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+
+    <div class="settings-content">
+
+        <div class="setting-item">
+
+            <div>
+
+                <strong>Dark Mode</strong>
+
+                <p>
+                    Switch between Light and Dark mode
+                </p>
+
+            </div>
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="darkModeToggle"
+                    onchange="changeTheme()"
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+    </div>
+
+</div>
 <div
     class="toast"
     id="toast"
