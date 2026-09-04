@@ -13,7 +13,22 @@ app = FastAPI(
     title="Aurora Smart AI",
     version="2.0.0"
 )
-app.mount("/static", StaticFiles(directory="."), name="static")
+
+
+# STATIC FILES (LOGO / IMAGES)
+
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
+
+app.mount(
+    "/static",
+    StaticFiles(directory=BASE_DIR),
+    name="static"
+)
+
+
+# CORS
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,22 +39,37 @@ app.add_middleware(
 )
 
 
+# GEMINI CLIENT
+
 client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
 )
 
 
+# TEXT CHAT REQUEST
+
 class ChatRequest(BaseModel):
     message: str
 
 
+# HOME PAGE
+
 @app.get("/")
 def home():
-    return FileResponse("index.html")
 
+    return FileResponse(
+        os.path.join(
+            BASE_DIR,
+            "index.html"
+        )
+    )
+
+
+# HEALTH CHECK
 
 @app.get("/health")
 def health():
+
     return {
         "status": "healthy"
     }
@@ -51,6 +81,7 @@ def health():
 def chat(request: ChatRequest):
 
     if not os.getenv("GEMINI_API_KEY"):
+
         raise HTTPException(
             status_code=500,
             detail="GEMINI_API_KEY is not configured"
@@ -59,19 +90,27 @@ def chat(request: ChatRequest):
     try:
 
         response = client.models.generate_content(
+
             model="gemini-3.6-flash",
+
             contents=request.message
+
         )
 
         return {
+
             "reply": response.text
+
         }
 
     except Exception as e:
 
         raise HTTPException(
+
             status_code=500,
+
             detail=str(e)
+
         )
 
 
@@ -89,8 +128,11 @@ async def chat_image(
     if not os.getenv("GEMINI_API_KEY"):
 
         raise HTTPException(
+
             status_code=500,
+
             detail="GEMINI_API_KEY is not configured"
+
         )
 
 
