@@ -13,7 +13,7 @@ app = FastAPI(
     title="Aurora Smart AI",
     version="2.0.0"
 )
-
+app.mount("/static", StaticFiles(directory="."), name="static")
 
 app.add_middleware(
     CORSMiddleware,
