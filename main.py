@@ -73,7 +73,18 @@ def health():
     return {
         "status": "healthy"
     }
+@app.get("/logo-test")
+def logo_test():
 
+    return {
+        "base_dir": BASE_DIR,
+        "logo_exists": os.path.exists(
+            os.path.join(
+                BASE_DIR,
+                "aurora-logo-small.png"
+            )
+        )
+    }
 
 # TEXT CHAT
 
