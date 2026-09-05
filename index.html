@@ -2331,23 +2331,56 @@ renderHistory();
         }
 
 
-        if (
+                if (
             selectedImage
         ) {
 
             removeImage();
-const savedTheme =
-    localStorage.getItem("auroraTheme");
 
-if (savedTheme) {
-
-    document.body.setAttribute(
-        "data-theme",
-        savedTheme
-    );
-        
+        }
 
     }
-renderHistory();
-</script></body>
+
+
+    /* LOAD SAVED THEME */
+
+    const savedTheme =
+        localStorage.getItem(
+            "auroraTheme"
+        );
+
+
+    if (
+        savedTheme
+    ) {
+
+        document.body.setAttribute(
+            "data-theme",
+            savedTheme
+        );
+
+        const darkModeToggle =
+            document.getElementById(
+                "darkModeToggle"
+            );
+
+
+        if (
+            darkModeToggle
+        ) {
+
+            darkModeToggle.checked =
+                savedTheme === "dark";
+
+        }
+
+    }
+
+
+    renderHistory();
+
+</script>
+
+</body>
+
 </html>
