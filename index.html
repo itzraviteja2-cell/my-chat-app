@@ -1986,11 +1986,15 @@ function loadChat() {
 
 
             chats.unshift(
-                currentChat
-            );
+    currentChat
+);
 
+localStorage.setItem(
+    "auroraChats",
+    JSON.stringify(chats)
+);
 
-            renderHistory();
+renderHistory();
 
         }
 
