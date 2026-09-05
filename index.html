@@ -2327,7 +2327,12 @@ function clearChatHistory() {
                             data.reply
 
                     });
+localStorage.setItem(
+    "auroraChats",
+    JSON.stringify(chats)
+);
 
+renderHistory();
             }
 
             else {
