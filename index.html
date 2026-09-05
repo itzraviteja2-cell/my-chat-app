@@ -1404,52 +1404,25 @@ function changeTheme() {
 
     function newChat() {
 
-        currentChat = {
+    currentChat = null;
 
-            title:
-                "New Chat",
+    document
+        .getElementById("messages")
+        .innerHTML = "";
 
-            messages:
-                []
+    document
+        .getElementById("messages")
+        .classList
+        .remove("active");
 
-        };
+    document
+        .getElementById("welcome")
+        .style
+        .display = "flex";
 
+    toggleSidebar();
 
-        chats.unshift(
-            currentChat
-        );
-
-
-        document
-            .getElementById(
-                "messages"
-            )
-            .innerHTML =
-            "";
-
-
-        document
-            .getElementById(
-                "welcome"
-            )
-            .style.display =
-            "flex";
-
-
-        document
-            .getElementById(
-                "messages"
-            )
-            .classList
-            .remove("active");
-
-
-        renderHistory();
-
-
-        toggleSidebar();
-
-    }
+}
 
 
     /* HISTORY */
