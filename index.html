@@ -1423,7 +1423,31 @@ function changeTheme() {
     toggleSidebar();
 
 }
+function clearChatHistory() {
 
+    chats.length = 0;
+
+    currentChat = null;
+
+    localStorage.removeItem("auroraChats");
+
+    document.getElementById("history").innerHTML = "";
+
+    document.getElementById("messages").innerHTML = "";
+
+    document
+        .getElementById("messages")
+        .classList
+        .remove("active");
+
+    document
+        .getElementById("welcome")
+        .style
+        .display = "flex";
+
+    showToast("Chat history cleared");
+
+}
 
     /* HISTORY */
 
