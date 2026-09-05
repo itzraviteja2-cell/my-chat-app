@@ -1215,7 +1215,9 @@ function changeTheme() {
     }
 
 }
-    const chats = [];
+    let chats = JSON.parse(
+    localStorage.getItem("auroraChats")
+) || [];
 
     let currentChat = null;
 
