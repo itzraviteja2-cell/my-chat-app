@@ -1251,43 +1251,25 @@ function changeTheme() {
 
     function toggleTheme() {
 
-        const body =
-            document.body;
+    const body = document.body;
 
-        const icon =
-            document
-            .getElementById(
-                "themeIcon"
-            );
+    const currentTheme =
+        body.getAttribute("data-theme");
 
+    const newTheme =
+        currentTheme === "light"
+            ? "dark"
+            : "light";
 
-        if (
-            body.getAttribute(
-                "data-theme"
-            ) === "light"
-        ) {
+    body.setAttribute(
+        "data-theme",
+        newTheme
+    );
 
-            body.setAttribute(
-                "data-theme",
-                "dark"
-            );
-
-            icon.className =
-                "fa-solid fa-sun";
-
-        }
-
-        else {
-
-            body.setAttribute(
-                "data-theme",
-                "light"
-            );
-
-            icon.className =
-                "fa-solid fa-moon";
-
-        }
+    localStorage.setItem(
+        "auroraTheme",
+        newTheme
+    );
 
     }
 
