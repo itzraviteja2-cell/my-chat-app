@@ -1410,181 +1410,26 @@ function clearChatHistory() {
 
     /* HISTORY */
 
-    function renderHistory() {
+function renderHistory() {
 
-    const history =
+    // నేను ఇచ్చిన మొత్తం
+    // renderHistory code ఇక్కడ ఉంటుంది
+
+}
+
+
+/* LOAD CHAT */
+
+function loadChat() {
+
+    const container =
         document
-        .getElementById("history");
-
-    history.innerHTML = "";
-
-
-    chats.forEach(chat => {
-
-        const item =
-            document.createElement("div");
-
-        item.className =
-            "history-item";
-
-
-        const title =
-            document.createElement("span");
-
-        title.innerText =
-            chat.title;
-
-
-        title.onclick = () => {
-
-            currentChat = chat;
-
-            loadChat();
-
-            toggleSidebar();
-
-        };
-
-
-        const actions =
-            document.createElement("div");
-
-        actions.className =
-            "history-actions";
-
-
-        const renameBtn =
-            document.createElement("button");
-
-        renameBtn.innerHTML =
-            '<i class="fa-solid fa-pen"></i>';
-
-
-        renameBtn.onclick = event => {
-
-            event.stopPropagation();
-
-            const newTitle =
-                prompt(
-                    "Enter new chat title:",
-                    chat.title
-                );
-
-            if (
-                newTitle &&
-                newTitle.trim()
-            ) {
-
-                chat.title =
-                    newTitle.trim();
-
-                localStorage.setItem(
-                    "auroraChats",
-                    JSON.stringify(chats)
-                );
-
-                renderHistory();
-
-            }
-
-        };
-
-
-        const deleteBtn =
-            document.createElement("button");
-
-        deleteBtn.innerHTML =
-            '<i class="fa-solid fa-trash"></i>';
-
-
-        deleteBtn.onclick = event => {
-
-            event.stopPropagation();
-
-
-            const confirmDelete =
-                confirm(
-                    "Delete this chat?"
-                );
-
-
-            if (!confirmDelete)
-                return;
-
-
-            const index =
-                chats.indexOf(chat);
-
-
-            if (index !== -1) {
-
-                chats.splice(
-                    index,
-                    1
-                );
-
-            }
-
-
-            if (
-                currentChat === chat
-            ) {
-
-                currentChat = null;
-
-
-                document
-                    .getElementById("messages")
-                    .innerHTML = "";
-
-
-                document
-                    .getElementById("messages")
-                    .classList
-                    .remove("active");
-
-
-                document
-                    .getElementById("welcome")
-                    .style
-                    .display = "flex";
-
-            }
-
-
-            localStorage.setItem(
-                "auroraChats",
-                JSON.stringify(chats)
-            );
-
-
-            renderHistory();
-
-
-            showToast(
-                "Chat deleted"
-            );
-
-        };
-
-
-        actions.appendChild(renameBtn);
-
-        actions.appendChild(deleteBtn);
-
-
-        item.appendChild(title);
-
-        item.appendChild(actions);
-
-
-        history.appendChild(item);
-
-    });
-
-
-    }
-
+        .getElementById(
+            "messages"
+        );
+
+    // మీ మిగతా loadChat code...
+}
     function loadChat() {
 
         const container =
