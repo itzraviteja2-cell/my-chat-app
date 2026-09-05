@@ -2359,7 +2359,15 @@ renderHistory();
         ) {
 
             removeImage();
+const savedTheme =
+    localStorage.getItem("auroraTheme");
 
+if (savedTheme) {
+
+    document.body.setAttribute(
+        "data-theme",
+        savedTheme
+    );
         }
 
     }
