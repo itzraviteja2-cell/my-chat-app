@@ -2367,12 +2367,15 @@ showTyping();
 
                             body:
 
-                                JSON.stringify({
+    JSON.stringify({
 
-                                    message:
-                                        message
+        message:
+            message,
 
-                                })
+        history:
+            currentChat.messages
+
+    })
 
                         }
 
