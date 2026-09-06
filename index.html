@@ -2234,11 +2234,33 @@ renderHistory();
         }
 
 
-        appendMessage(
-            message ||
-            "📷 Image uploaded",
-            "user"
-        );
+        if (
+    imageToSend
+) {
+
+    appendMessage(
+        {
+            image:
+                URL.createObjectURL(
+                    imageToSend
+                ),
+
+            message:
+                message
+        },
+        "user"
+    );
+
+}
+
+else {
+
+    appendMessage(
+        message,
+        "user"
+    );
+
+}
 
 
         currentChat.messages
