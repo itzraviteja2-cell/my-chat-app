@@ -91,3 +91,4 @@ def chat(request: ChatRequest):
             status_code=500,
             detail=str(e)
         )
+        
