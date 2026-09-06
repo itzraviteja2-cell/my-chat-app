@@ -2263,7 +2263,11 @@ else {
 }
 
 
-        currentChat.messages
+        const imageToSend =
+    selectedImage;
+
+
+currentChat.messages
     .push({
 
         role:
@@ -2291,12 +2295,8 @@ else {
     });
 
 
-        input.value =
+input.value =
     "";
-
-
-const imageToSend =
-    selectedImage;
 
 
 showTyping();
