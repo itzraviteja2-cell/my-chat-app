@@ -77,3 +77,4 @@ def chat(request: ChatRequest):
             detail=str(e)
 
         )
+        
