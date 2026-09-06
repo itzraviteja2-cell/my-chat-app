@@ -2269,29 +2269,10 @@ else {
 
 currentChat.messages
     .push({
-
-        role:
-            "user",
-
+        role: "user",
         text:
-
-            imageToSend
-            ?
-
-            {
-                image:
-                    URL.createObjectURL(
-                        imageToSend
-                    ),
-
-                message:
-                    message
-            }
-
-            :
-
-            message
-
+            message ||
+            "📷 Image uploaded"
     });
 
 
