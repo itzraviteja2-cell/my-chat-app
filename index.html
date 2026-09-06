@@ -1684,21 +1684,69 @@ function renderHistory() {
 
 
         if (
-            role === "user"
+    role === "user"
+) {
+
+    row.innerHTML =
+        `
+        <div class="bubble"></div>
+        `;
+
+
+    const bubble =
+        row.querySelector(
+            ".bubble"
+        );
+
+
+    if (
+        typeof text === "object" &&
+        text.image
+    ) {
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+        image.src =
+            text.image;
+
+        image.className =
+            "chat-image";
+
+
+        bubble.appendChild(
+            image
+        );
+
+
+        if (
+            text.message
         ) {
 
-            row.innerHTML =
-                `
-                <div class="bubble"></div>
-                `;
+            const messageText =
+                document.createElement(
+                    "div"
+                );
 
+            messageText.innerText =
+                text.message;
 
-            row
-                .querySelector(
-                    ".bubble"
-                )
-                .innerText =
-                text;
+            bubble.appendChild(
+                messageText
+            );
+
+        }
+
+    }
+
+    else {
+
+        bubble.innerText =
+            text;
+
+    }
 
         }
 
