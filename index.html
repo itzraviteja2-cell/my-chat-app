@@ -2375,48 +2375,112 @@ showTyping();
 
             }
 
-            else {
+            else if (
 
-                response =
-                    await fetch(
+    message.toLowerCase().includes(
+        "ఫోటో కావాలి"
+    ) ||
 
-                        "/chat",
+    message.toLowerCase().includes(
+        "ఫోటో తయారు చేయి"
+    ) ||
 
-                        {
+    message.toLowerCase().includes(
+        "చిత్రం కావాలి"
+    ) ||
 
-                            method:
-                                "POST",
+    message.toLowerCase().includes(
+        "image కావాలి"
+    ) ||
 
-                            headers: {
+    message.toLowerCase().includes(
+        "generate image"
+    ) ||
 
-                                "Content-Type":
-                                    "application/json"
+    message.toLowerCase().includes(
+        "create image"
+    ) ||
 
-                            },
+    message.toLowerCase().includes(
+        "photo generate"
+    )
 
-                            body:
+) {
 
-    JSON.stringify({
+    response =
+        await fetch(
 
-    message:
-        message,
+            "/generate-image",
 
-    history:
-        currentChat.messages
-            .slice(-10, -1),
+            {
 
-    memory:
-        localStorage.getItem(
-            "auroraMemory"
-        ) || ""
+                method:
+                    "POST",
 
-})
+                headers: {
 
-                        }
+                    "Content-Type":
+                        "application/json"
 
-                    );
+                },
+
+                body:
+
+                    JSON.stringify({
+
+                        prompt:
+                            message
+
+                    })
 
             }
+
+        );
+
+}
+
+else {
+
+    response =
+        await fetch(
+
+            "/chat",
+
+            {
+
+                method:
+                    "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+
+                    JSON.stringify({
+
+                        message:
+                            message,
+
+                        history:
+                            currentChat.messages
+                                .slice(-10, -1),
+
+                        memory:
+                            localStorage.getItem(
+                                "auroraMemory"
+                            ) || ""
+
+                    })
+
+            }
+
+        );
+
+}
 
 
             const data =
