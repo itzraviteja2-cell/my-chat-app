@@ -2492,52 +2492,94 @@ else {
 
 
             if (
-                response.ok &&
+    response.ok &&
+    data.image
+) {
+
+    appendMessage(
+        {
+            image:
+                "data:image/png;base64," +
+                data.image,
+            message:
+                ""
+        },
+        "bot"
+    );
+
+
+    currentChat.messages
+        .push({
+
+            role:
+                "bot",
+
+            image:
+                "data:image/png;base64," +
+                data.image
+
+        });
+
+
+    localStorage.setItem(
+        "auroraChats",
+        JSON.stringify(chats)
+    );
+
+    renderHistory();
+
+}
+
+
+else if (
+    response.ok &&
+    data.reply
+) {
+
+    appendMessage(
+        data.reply,
+        "bot"
+    );
+
+
+    currentChat.messages
+        .push({
+
+            role:
+                "bot",
+
+            text:
                 data.reply
-            ) {
 
-                appendMessage(
-                    data.reply,
-                    "bot"
-                );
+        });
 
 
-                currentChat.messages
-                    .push({
+    localStorage.setItem(
+        "auroraChats",
+        JSON.stringify(chats)
+    );
 
-                        role:
-                            "bot",
+    renderHistory();
 
-                        text:
-                            data.reply
+}
 
-                    });
-localStorage.setItem(
-    "auroraChats",
-    JSON.stringify(chats)
-);
 
-renderHistory();
-            }
+else {
 
-            else {
+    appendMessage(
 
-                appendMessage(
+        "Error: " +
 
-                    "Error: " +
+        (
+            data.detail ||
+            "No response received"
+        ),
 
-                    (
-                        data.detail ||
-                        "No response received"
-                    ),
+        "bot"
 
-                    "bot"
+    );
 
-                );
-
-            }
-
-        }
+}
 
 
         catch(error) {
