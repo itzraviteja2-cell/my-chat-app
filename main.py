@@ -150,16 +150,18 @@ def chat(request: ChatRequest):
             })
 
 # CURRENT MESSAGE
-contents.append({
-    "role": "user",
-    "parts": [
-        {
-            "text": request.message
+     contents.append({
+         "role": "user",
+         "parts": [
+             {
+                 "text": 
+    request.message
         }
     ]
 })
 
-response = client.models.generate_content(
+response = 
+client.models.generate_content(
     model="gemini-3.6-flash",
     contents=contents
 )
