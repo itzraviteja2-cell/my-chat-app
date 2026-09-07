@@ -124,27 +124,30 @@ def chat(request: ChatRequest):
 
       # Image objects skip
       if not isinstance(text, str):
-          continue
+              continue
 
-    if role == "user":
-        contents.append({
-            "role": "user",
-            "parts": [
-                {
-                    "text": text
-                }
-            ]
-        })
+         if role == "user":
+             contents.append({
+              "role": "user",
+              "parts": [
+                  {
+                      "text": 
+  text
+                  }
+               ]
+            
+            })
 
-    elif role == "bot":
-        contents.append({
-            "role": "model",
-            "parts": [
-                {
-                    "text": text
-                }
-            ]
-        })
+        elif role == "bot":
+            contents.append({
+                "role": "model",
+                "parts": [
+                    {
+                        "text": 
+ text
+                    }
+                ]
+            })
 
 # CURRENT MESSAGE
 contents.append({
