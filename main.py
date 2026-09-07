@@ -96,56 +96,63 @@ def chat(request: ChatRequest):
             detail="GEMINI_API_KEY is not configured"
         )
 
+    try:
+        contents = []
 
-try:
-    contents = []
-
-    if request.memory:
-        contents.append({
-            "role": "user",
-            "parts": [
-                {
-                    "text": "Important user memory: " + request.memory
-                }
-            ]
-        })
-
-    for item in request.history:
-        role = item.get(
-            "role",
-            ""
-        )
-
-        text = item.get(
-            "text",
-            ""
-        )
-
-        # Image objects skip
-        if not isinstance(text, str):
-            continue
-
-        if role == "user":
+        if request.memory:
             contents.append({
                 "role": "user",
                 "parts": [
                     {
-                        "text": text
+                        "text": (
+                            "Important user memory: "
+                            + request.memory
+                        )
                     }
                 ]
             })
 
-        elif role == "bot":
-            contents.append({
-                "role": "model",
-                "parts": [
-                    {
-                        "text": text
-                    }
-                ]
-            })
+        for item in request.history:
 
-                    # CURRENT MESSAGE
+            role = item.get(
+                "role",
+                ""
+            )
+
+            text = item.get(
+                "text",
+                ""
+            )
+
+            # Image objects skip
+            if not isinstance(text, str):
+                continue
+
+            if role == "user":
+
+                contents.append({
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": text
+                        }
+                    ]
+                })
+
+            elif role == "bot":
+
+                contents.append({
+                    "role": "model",
+                    "parts": [
+                        {
+                            "text": text
+                        }
+                    ]
+                })
+
+
+        # CURRENT MESSAGE
+
         contents.append({
             "role": "user",
             "parts": [
@@ -155,16 +162,23 @@ try:
             ]
         })
 
+
+        # GEMINI RESPONSE
+
         response = client.models.generate_content(
             model="gemini-3.6-flash",
             contents=contents
         )
 
+
         return {
             "reply": response.text
         }
-except Exception as e:
-    raise HTTPException(
-        status_code=500,
-        detail=str(e)
-    )
+
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
