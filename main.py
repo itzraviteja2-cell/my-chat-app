@@ -122,9 +122,9 @@ def chat(request: ChatRequest):
         ""
       )
 
-    # Image objects skip
-    if not isinstance(text, str):
-        continue
+      # Image objects skip
+      if not isinstance(text, str):
+          continue
 
     if role == "user":
         contents.append({
