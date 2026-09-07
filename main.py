@@ -121,11 +121,6 @@ def chat(request: ChatRequest):
             ""
         )
 
-            text = item.get(
-                "text",
-                ""
-            )
-
 
             # Image objects skip
             if not isinstance(
