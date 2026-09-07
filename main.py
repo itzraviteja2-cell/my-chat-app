@@ -57,7 +57,8 @@ class ChatRequest(BaseModel):
     message: str
     history: list = []
     memory: str = ""
-
+class ImageRequest(BaseModel):
+    prompt: str
 
 # HOME PAGE
 
@@ -178,6 +179,30 @@ def chat(request: ChatRequest):
 
     except Exception as e:
 
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+@app.post("/generate-image")
+def generate_image(request: ImageRequest):
+
+    try:
+        interaction = client.interactions.create(
+            model="gemini-3.1-flash-image",
+            input=request.prompt
+        )
+
+        if not interaction.output_image:
+            raise HTTPException(
+                status_code=500,
+                detail="Image was not generated"
+            )
+
+        return {
+            "image": interaction.output_image.data
+        }
+
+    except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=str(e)
