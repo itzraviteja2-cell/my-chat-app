@@ -111,7 +111,7 @@ def chat(request: ChatRequest):
                 ]
             })
 
-for item in request.history:
+    for item in request.history:
     role = item.get(
         "role",
         ""
