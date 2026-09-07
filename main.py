@@ -116,6 +116,11 @@ def chat(request: ChatRequest):
             ""
         )
 
+        text = item.get(
+            "text",
+            ""
+        )
+
             text = item.get(
                 "text",
                 ""
