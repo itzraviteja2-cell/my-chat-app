@@ -112,15 +112,15 @@ def chat(request: ChatRequest):
             })
 
     for item in request.history:
-    role = item.get(
-        "role",
-        ""
-    )
+        role = item.get(
+            "role",
+            ""
+       )
 
-    text = item.get(
+       text = item.get(
         "text",
         ""
-    )
+      )
 
     # Image objects skip
     if not isinstance(text, str):
