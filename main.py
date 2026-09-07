@@ -155,7 +155,7 @@ try:
             ]
         })
 
-                response = client.models.generate_content(
+        response = client.models.generate_content(
             model="gemini-3.6-flash",
             contents=contents
         )
