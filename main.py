@@ -104,10 +104,12 @@ def chat(request: ChatRequest):
                 "role": "user",
                 "parts": [
                     {
-                        "text": "Important user memory: " + request.memory
-            }
-        ]
-    })
+                        "text": 
+    "Important user memory: " + 
+    request.memory
+                    }
+                ]
+            })
 
 for item in request.history:
     role = item.get(
