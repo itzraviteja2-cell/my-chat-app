@@ -103,8 +103,8 @@ def chat(request: ChatRequest):
             contents.append({
                 "role": "user",
                 "parts": [
-            {
-                "text": "Important user memory: " + request.memory
+                    {
+                        "text": "Important user memory: " + request.memory
             }
         ]
     })
