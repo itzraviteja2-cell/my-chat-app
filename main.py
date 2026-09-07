@@ -155,17 +155,17 @@ try:
         ]
     })
 
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=contents
-    )
+            response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=contents
+        )
 
-    return {
-        "reply": response.text
-    }
+        return {
+            "reply": response.text
+        }
 
-except Exception as e:
-    raise HTTPException(
-        status_code=500,
-        detail=str(e)
-    )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
