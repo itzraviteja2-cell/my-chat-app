@@ -100,7 +100,20 @@ def chat(request: ChatRequest):
     try:
 
         contents = []
+if request.memory:
 
+    contents.append(
+        {
+            "role": "user",
+            "parts": [
+                {
+                    "text":
+                        "Important user memory: "
+                        + request.memory
+                }
+            ]
+        }
+    )
 
         # PREVIOUS CHAT HISTORY
 
