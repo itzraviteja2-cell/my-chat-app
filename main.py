@@ -121,134 +121,64 @@ def chat(request: ChatRequest):
             ""
         )
 
+        # Image objects skip
+        if not isinstance(
+            text,
+            str
+        ):
+            continue
 
-            # Image objects skip
-            if not isinstance(
-                text,
-                str
-            ):
-                continue
+        if role == "user":
 
+            contents.append(
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": text
+                        }
+                    ]
+                }
+            )
 
-            if role == "user":
+        elif role == "bot":
 
-                contents.append(
-                    {
-                        "role": "user",
-                        "parts": [
-                            {
-                                "text": text
-                            }
-                        ]
-                    }
-                )
+            contents.append(
+                {
+                    "role": "model",
+                    "parts": [
+                        {
+                            "text": text
+                        }
+                    ]
+                }
+            )
 
+    # CURRENT MESSAGE
 
-            elif role == "bot":
-
-                contents.append(
-                    {
-                        "role": "model",
-                        "parts": [
-                            {
-                                "text": text
-                            }
-                        ]
-                    }
-                )
-
-
-        # CURRENT MESSAGE
-
-        contents.append(
-            {
-                "role": "user",
-                "parts": [
-                    {
-                        "text": request.message
-                    }
-                ]
-            }
-        )
-
-
-        response = client.models.generate_content(
-
-            model="gemini-3.6-flash",
-
-            contents=contents
-
-        )
-
-
-        return {
-            "reply": response.text
-        }
-
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
-
-
-# IMAGE CHAT
-
-@app.post("/chat-image")
-async def chat_image(
-
-    message: str = Form(...),
-
-    image: UploadFile = File(...)
-
-):
-
-    if not os.getenv(
-        "GEMINI_API_KEY"
-    ):
-
-        raise HTTPException(
-            status_code=500,
-            detail="GEMINI_API_KEY is not configured"
-        )
-
-
-    try:
-
-        image_data = await image.read()
-
-
-        image_part = types.Part.from_bytes(
-
-            data=image_data,
-
-            mime_type=image.content_type
-
-        )
-
-
-        response = client.models.generate_content(
-
-            model="gemini-3.6-flash",
-
-            contents=[
-                image_part,
-                message
+    contents.append(
+        {
+            "role": "user",
+            "parts": [
+                {
+                    "text": request.message
+                }
             ]
-
-        )
-
-
-        return {
-            "reply": response.text
         }
+    )
 
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=contents
+    )
 
-    except Exception as e:
+    return {
+        "reply": response.text
+    }
 
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
+except Exception as e:
+
+    raise HTTPException(
+        status_code=500,
+        detail=str(e)
+    )
