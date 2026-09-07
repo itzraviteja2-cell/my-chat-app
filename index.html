@@ -2309,7 +2309,20 @@ currentChat.messages
             "📷 Image uploaded"
     });
 
+// PERMANENT MEMORY
 
+if (
+    message
+        .toLowerCase()
+        .includes("నా పేరు")
+) {
+
+    localStorage.setItem(
+        "auroraMemory",
+        message
+    );
+
+}
 input.value =
     "";
 
