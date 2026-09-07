@@ -1,5 +1,5 @@
 import os
-
+import base64
 from fastapi import (
     FastAPI,
     HTTPException,
