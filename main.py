@@ -97,45 +97,42 @@ def chat(request: ChatRequest):
         )
 
 
-    try:
-        contents = []
-        if request.memory:
-            contents.append({
-                "role": "user",
-                "parts": [
-                    {
-                        "text": 
-    "Important user memory: " + 
-    request.memory
-                    }
-                ]
-            })
+try:
+contents = []
+
+    if request.memory:
+        contents.append({
+            "role": "user",
+            "parts": [
+                {
+                    "text": "Important user memory: " + request.memory
+                }
+            ]
+        })
 
     for item in request.history:
         role = item.get(
             "role",
             ""
-       )
+        )
 
-       text = item.get(
-        "text",
-        ""
-      )
+        text = item.get(
+            "text",
+            ""
+        )
 
-      # Image objects skip
-      if not isinstance(text, str):
-              continue
+        # Image objects skip
+        if not isinstance(text, str):
+            continue
 
-         if role == "user":
-             contents.append({
-              "role": "user",
-              "parts": [
-                  {
-                      "text": 
-  text
-                  }
-               ]
-            
+        if role == "user":
+            contents.append({
+                "role": "user",
+                "parts": [
+                    {
+                        "text": text
+                    }
+                ]
             })
 
         elif role == "bot":
@@ -143,41 +140,32 @@ def chat(request: ChatRequest):
                 "role": "model",
                 "parts": [
                     {
-                        "text": 
- text
+                        "text": text
                     }
                 ]
             })
 
-# CURRENT MESSAGE
-     contents.append({
-         "role": "user",
-         "parts": [
-             {
-                 "text": 
-    request.message
-        }
-    ]
-})
+    # CURRENT MESSAGE
+    contents.append({
+        "role": "user",
+        "parts": [
+            {
+                "text": request.message
+            }
+        ]
+    })
 
-response = 
-client.models.generate_content(
-    model="gemini-3.6-flash",
-    contents=contents
-)
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=contents
+    )
 
-return {
-    "reply": response.text
-}
-
-except Exception as e:
-raise HTTPException(
-status_code=500,
-detail=str(e)
-)
+    return {
+        "reply": response.text
+    }
 
 except Exception as e:
     raise HTTPException(
         status_code=500,
         detail=str(e)
-)
+    )
