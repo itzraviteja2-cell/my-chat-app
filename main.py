@@ -54,10 +54,9 @@ client = genai.Client(
 # CHAT REQUEST
 
 class ChatRequest(BaseModel):
-
     message: str
-
     history: list = []
+    memory: str = ""
 
 
 # HOME PAGE
