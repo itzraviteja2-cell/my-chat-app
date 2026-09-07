@@ -99,26 +99,24 @@ def chat(request: ChatRequest):
 
     try:
 
-        contents = []
+    contents = []
 
-if request.memory:
+    if request.memory:
 
- contents.append(
-        {
-            "role": "user",
-            "parts": [
-                {
-                    "text":
-                        "Important user memory: "
-                        + request.memory
-                }
-            ]
-        }
-    )
+        contents.append(
+            {
+                "role": "user",
+                "parts": [
+                    {
+                        "text":
+                            "Important user memory: "
+                            + request.memory
+                    }
+                ]
+            }
+        )
 
-        # PREVIOUS CHAT HISTORY
-
-        for item in request.history:
+    for item in request.history:
 
             role = item.get(
                 "role",
