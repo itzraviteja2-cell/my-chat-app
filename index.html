@@ -1883,28 +1883,44 @@ image.style.height = "180px";
 
 
             listenBtn.onclick =
-                () => {
+    () => {
 
-                    speechSynthesis
-                        .cancel();
-
-
-                    const speech =
-                        new SpeechSynthesisUtterance(
-                            text
-                        );
+        window.speechSynthesis.cancel();
 
 
-                    speech.lang =
-                        "en-US";
+        const speech =
+            new SpeechSynthesisUtterance(
+                text
+            );
 
 
-                    speechSynthesis
-                        .speak(
-                            speech
-                        );
+        speech.lang =
+            "en-US";
 
-                };
+
+        speech.rate =
+            1;
+
+
+        speech.pitch =
+            1;
+
+
+        window.speechSynthesis.resume();
+
+
+        setTimeout(
+            () => {
+
+                window.speechSynthesis.speak(
+                    speech
+                );
+
+            },
+            100
+        );
+
+    };
 
 
             copyBtn.onclick =
