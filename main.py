@@ -98,11 +98,11 @@ def chat(request: ChatRequest):
 
 
     try:
-    contents = []
+        contents = []
 
-    for item in request.history:
+        for item in request.history:
 
-            role = item.get(
+                    role = item.get(
                 "role",
                 ""
             )
