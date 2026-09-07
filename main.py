@@ -101,6 +101,7 @@ def chat(request: ChatRequest):
 
     contents = []
 
+    
     if request.memory:
 
         contents.append(
