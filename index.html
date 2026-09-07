@@ -2398,13 +2398,19 @@ showTyping();
 
     JSON.stringify({
 
-        message:
-            message,
+    message:
+        message,
 
-        history:
-            currentChat.messages
-.slice(-10, -1)
-    })
+    history:
+        currentChat.messages
+            .slice(-10, -1),
+
+    memory:
+        localStorage.getItem(
+            "auroraMemory"
+        ) || ""
+
+})
 
                         }
 
