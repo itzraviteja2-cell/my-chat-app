@@ -100,9 +100,10 @@ def chat(request: ChatRequest):
     try:
 
         contents = []
+
 if request.memory:
 
-    contents.append(
+ contents.append(
         {
             "role": "user",
             "parts": [
