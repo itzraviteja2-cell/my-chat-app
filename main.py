@@ -178,8 +178,15 @@ def chat(request: ChatRequest):
             try:
 
                 response = client.models.generate_content(
-                    model="gemini-3.6-flash",
-                    contents=contents
+    model="gemini-3.6-flash",
+    contents=contents,
+    config=types.GenerateContentConfig(
+        tools=[
+            types.Tool(
+                google_search=types.GoogleSearch()
+            )
+        ]
+    )
                 )
 
                 break
