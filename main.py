@@ -164,12 +164,42 @@ def chat(request: ChatRequest):
         })
 
 
-        # GEMINI RESPONSE
+                # GEMINI RESPONSE WITH RETRY
 
-        response = client.models.generate_content(
-            model="gemini-3.6-flash",
-            contents=contents
-        )
+        import time
+
+
+        response = None
+        last_error = None
+
+
+        for attempt in range(3):
+
+            try:
+
+                response = client.models.generate_content(
+                    model="gemini-3.6-flash",
+                    contents=contents
+                )
+
+                break
+
+
+            except Exception as e:
+
+                last_error = e
+
+
+                if attempt < 2:
+
+                    time.sleep(
+                        2
+                    )
+
+
+        if response is None:
+
+            raise last_error
 
 
         return {
