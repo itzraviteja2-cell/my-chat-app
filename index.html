@@ -2468,33 +2468,48 @@ showTyping();
 
             }
 
-    catch {
-
-        savedMemories = [];
-
     }
 
+else {
 
-    savedMemories.push(
-        message
-    );
+    response =
+        await fetch(
 
+            "/chat",
 
-    savedMemories =
-        savedMemories.slice(
-            -20
+            {
+
+                method:
+                    "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+
+                    JSON.stringify({
+
+                        message:
+                            message,
+
+                        history:
+                            currentChat.messages
+                                .slice(-10, -1),
+
+                        memory:
+                            localStorage.getItem(
+                                "auroraMemory"
+                            ) || ""
+
+                    })
+
+            }
+
         );
-
-
-    localStorage.setItem(
-
-        "auroraMemory",
-
-        JSON.stringify(
-            savedMemories
-        )
-
-    );
 
 }
 
