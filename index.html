@@ -2308,35 +2308,90 @@ currentChat.messages
             message ||
             "📷 Image uploaded"
     });
+// SMART PERMANENT MEMORY
+
 const memoryTriggers = [
+
     "నా పేరు",
+
     "my name is",
+
     "నా భాష",
+
     "నాకు ఇష్టం",
-    "i like"
+
+    "నాకు నచ్చుతుంది",
+
+    "i like",
+
+    "i love",
+
+    "remember this",
+
+    "గుర్తు పెట్టుకో",
+
+    "ఇది గుర్తు పెట్టుకో"
+
 ];
 
+
+const lowerMessage =
+    message.toLowerCase();
+
+
 if (
+
     memoryTriggers.some(
         trigger =>
-            message.toLowerCase().includes(
+            lowerMessage.includes(
                 trigger
             )
     )
+
 ) {
 
-    const previousMemory =
-        localStorage.getItem(
-            "auroraMemory"
-        ) || "";
+    let memories;
+
+
+    try {
+
+        memories =
+            JSON.parse(
+                localStorage.getItem(
+                    "auroraMemory"
+                ) || "[]"
+            );
+
+    }
+
+    catch {
+
+        memories = [];
+
+    }
+
+
+    memories.push(
+        message
+    );
+
+
+    // Keep only last 20 memories
+
+    memories =
+        memories.slice(
+            -20
+        );
+
 
     localStorage.setItem(
+
         "auroraMemory",
-        previousMemory
-            ? previousMemory +
-              "\n" +
-              message
-            : message
+
+        JSON.stringify(
+            memories
+        )
+
     );
 
 }
