@@ -2375,112 +2375,84 @@ showTyping();
 
             }
 
-            else if (
+            // PERMANENT MEMORY
 
-    message.toLowerCase().includes(
-        "ఫోటో కావాలి"
-    ) ||
-   message.toLowerCase().includes(
-    "photo కావాలి"
-    ) ||
-    message.toLowerCase().includes(
-        "ఫోటో తయారు చేయి"
-    ) ||
+const memoryKeywords = [
 
-    message.toLowerCase().includes(
-        "చిత్రం కావాలి"
-    ) ||
+    "నా పేరు",
 
-    message.toLowerCase().includes(
-        "image కావాలి"
-    ) ||
+    "నాకు ఇష్టం",
 
-    message.toLowerCase().includes(
-        "generate image"
-    ) ||
+    "నాకు నచ్చుతుంది",
 
-    message.toLowerCase().includes(
-        "create image"
-    ) ||
+    "నా భాష",
 
-    message.toLowerCase().includes(
-        "photo generate"
-    )
+    "i like",
 
+    "my name",
+
+    "remember"
+
+];
+
+
+const shouldSaveMemory =
+    memoryKeywords.some(
+        keyword =>
+            message
+            .toLowerCase()
+            .includes(
+                keyword
+            )
+    );
+
+
+if (
+    shouldSaveMemory
 ) {
 
-    response =
-        await fetch(
+    let savedMemories;
 
-            "/generate-image",
+    try {
 
-            {
+        savedMemories =
+            JSON.parse(
 
-                method:
-                    "POST",
+                localStorage.getItem(
+                    "auroraMemory"
+                ) || "[]"
 
-                headers: {
+            );
 
-                    "Content-Type":
-                        "application/json"
+    }
 
-                },
+    catch {
 
-                body:
+        savedMemories = [];
 
-                    JSON.stringify({
+    }
 
-                        prompt:
-                            message
 
-                    })
+    savedMemories.push(
+        message
+    );
 
-            }
 
+    savedMemories =
+        savedMemories.slice(
+            -20
         );
 
-}
 
-else {
+    localStorage.setItem(
 
-    response =
-        await fetch(
+        "auroraMemory",
 
-            "/chat",
+        JSON.stringify(
+            savedMemories
+        )
 
-            {
-
-                method:
-                    "POST",
-
-                headers: {
-
-                    "Content-Type":
-                        "application/json"
-
-                },
-
-                body:
-
-                    JSON.stringify({
-
-                        message:
-                            message,
-
-                        history:
-                            currentChat.messages
-                                .slice(-10, -1),
-
-                        memory:
-                            localStorage.getItem(
-                                "auroraMemory"
-                            ) || ""
-
-                    })
-
-            }
-
-        );
+    );
 
 }
 
