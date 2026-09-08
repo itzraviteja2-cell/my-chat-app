@@ -2311,15 +2311,81 @@ currentChat.messages
 
 // PERMANENT MEMORY
 
+const memoryKeywords = [
+
+    "నా పేరు",
+
+    "నాకు ఇష్టం",
+
+    "నాకు నచ్చుతుంది",
+
+    "నా భాష",
+
+    "i like",
+
+    "my name",
+
+    "remember"
+
+];
+
+
+const shouldSaveMemory =
+    memoryKeywords.some(
+        keyword =>
+            message
+            .toLowerCase()
+            .includes(
+                keyword
+            )
+    );
+
+
 if (
-    message
-        .toLowerCase()
-        .includes("నా పేరు")
+    shouldSaveMemory
 ) {
 
-    localStorage.setItem(
-        "auroraMemory",
+    let savedMemories;
+
+    try {
+
+        savedMemories =
+            JSON.parse(
+
+                localStorage.getItem(
+                    "auroraMemory"
+                ) || "[]"
+
+            );
+
+    }
+
+    catch {
+
+        savedMemories = [];
+
+    }
+
+
+    savedMemories.push(
         message
+    );
+
+
+    savedMemories =
+        savedMemories.slice(
+            -20
+        );
+
+
+    localStorage.setItem(
+
+        "auroraMemory",
+
+        JSON.stringify(
+            savedMemories
+        )
+
     );
 
 }
