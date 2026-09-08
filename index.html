@@ -214,13 +214,19 @@
     }
 
     .history-item {
-        padding: 11px 12px;
-        margin-bottom: 6px;
-        border-radius: 12px;
-        cursor: pointer;
-        white-space: normal;
-overflow-wrap: break-word;
-        transition: 0.2s;
+    padding: 11px 12px;
+    margin-bottom: 6px;
+    border-radius: 12px;
+    cursor: pointer;
+
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    max-width: 100%;
+    box-sizing: border-box;
+
+    transition: 0.2s;
     }
 
     .history-item:hover {
