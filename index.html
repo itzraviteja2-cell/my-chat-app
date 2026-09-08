@@ -2375,56 +2375,76 @@ showTyping();
 
             }
 
-            // PERMANENT MEMORY
+            else if (
 
-const memoryKeywords = [
+    message.toLowerCase().includes(
+        "ఫోటో కావాలి"
+    ) ||
 
-    "నా పేరు",
+    message.toLowerCase().includes(
+        "photo కావాలి"
+    ) ||
 
-    "నాకు ఇష్టం",
+    message.toLowerCase().includes(
+        "ఫోటో తయారు చేయి"
+    ) ||
 
-    "నాకు నచ్చుతుంది",
+    message.toLowerCase().includes(
+        "photo తయారు చేయి"
+    ) ||
 
-    "నా భాష",
+    message.toLowerCase().includes(
+        "చిత్రం కావాలి"
+    ) ||
 
-    "i like",
+    message.toLowerCase().includes(
+        "image కావాలి"
+    ) ||
 
-    "my name",
+    message.toLowerCase().includes(
+        "generate image"
+    ) ||
 
-    "remember"
+    message.toLowerCase().includes(
+        "create image"
+    ) ||
 
-];
+    message.toLowerCase().includes(
+        "photo generate"
+    )
 
-
-const shouldSaveMemory =
-    memoryKeywords.some(
-        keyword =>
-            message
-            .toLowerCase()
-            .includes(
-                keyword
-            )
-    );
-
-
-if (
-    shouldSaveMemory
 ) {
 
-    let savedMemories;
+    response =
+        await fetch(
 
-    try {
+            "/generate-image",
 
-        savedMemories =
-            JSON.parse(
+            {
 
-                localStorage.getItem(
-                    "auroraMemory"
-                ) || "[]"
+                method:
+                    "POST",
 
-            );
+                headers: {
 
-    }
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        prompt:
+                            message
+
+                    })
+
+            }
+
+        );
+
+            }
 
     catch {
 
