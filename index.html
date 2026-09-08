@@ -2308,7 +2308,38 @@ currentChat.messages
             message ||
             "📷 Image uploaded"
     });
+const memoryTriggers = [
+    "నా పేరు",
+    "my name is",
+    "నా భాష",
+    "నాకు ఇష్టం",
+    "i like"
+];
 
+if (
+    memoryTriggers.some(
+        trigger =>
+            message.toLowerCase().includes(
+                trigger
+            )
+    )
+) {
+
+    const previousMemory =
+        localStorage.getItem(
+            "auroraMemory"
+        ) || "";
+
+    localStorage.setItem(
+        "auroraMemory",
+        previousMemory
+            ? previousMemory +
+              "\n" +
+              message
+            : message
+    );
+
+}
 
 input.value =
     "";
