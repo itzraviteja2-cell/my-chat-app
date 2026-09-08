@@ -237,3 +237,108 @@ def generate_image(request: ImageRequest):
             status_code=500,
             detail=str(e)
         )
+# PHOTO BACKGROUND CHANGE / IMAGE EDIT
+
+@app.post("/chat-image")
+async def chat_image(
+
+    message: str = Form(...),
+
+    image: UploadFile = File(...)
+
+):
+
+    try:
+
+        image_bytes = await image.read()
+
+
+        prompt = (
+            "Edit the uploaded image according to this instruction: "
+            + message +
+            ". Preserve the main person or subject unless the user "
+            "explicitly asks to change it. If the user asks to change "
+            "the background, change only the background and keep the "
+            "main subject natural."
+        )
+
+
+        response = client.models.generate_content(
+
+            model="gemini-3.1-flash-image",
+
+            contents=[
+
+                types.Content(
+
+                    role="user",
+
+                    parts=[
+
+                        types.Part.from_bytes(
+
+                            data=image_bytes,
+
+                            mime_type=(
+                                image.content_type
+                                or "image/jpeg"
+                            )
+
+                        ),
+
+                        types.Part.from_text(
+                            text=prompt
+                        )
+
+                    ]
+
+                )
+
+            ]
+
+        )
+
+
+        for candidate in response.candidates:
+
+            for part in candidate.content.parts:
+
+                if part.inline_data:
+
+                    return {
+
+                        "image":
+                            base64.b64encode(
+
+                                part.inline_data.data
+
+                            ).decode(
+                                "utf-8"
+                            )
+
+                    }
+
+
+        raise HTTPException(
+
+            status_code=500,
+
+            detail="Edited image was not generated"
+
+        )
+
+
+    except HTTPException:
+
+        raise
+
+
+    except Exception as e:
+
+        raise HTTPException(
+
+            status_code=500,
+
+            detail=str(e)
+
+        )
