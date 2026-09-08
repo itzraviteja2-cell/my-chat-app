@@ -2187,7 +2187,21 @@ image.style.height = "180px";
 
     }
 
+function setQuickTool(
+    prompt
+) {
 
+    const input =
+        document.getElementById(
+            "input"
+        );
+
+    input.value =
+        prompt;
+
+    input.focus();
+
+}
     /* VOICE */
 
     function startVoice() {
