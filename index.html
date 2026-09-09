@@ -2592,23 +2592,29 @@ renderHistory();
         const imageToSend =
     selectedImage;
 
+if (!isRegenerate) {
 
-if (
-    imageToSend
-) {
-
-    appendMessage(
-        {
-            image:
-                URL.createObjectURL(
-                    imageToSend
-                ),
-
-            message:
-                message
-        },
-        "user"
-    );
+    if (
+        imageToSend
+    ) {
+        appendMessage(
+            {
+                image:
+                    URL.createObjectURL(
+                        imageToSend
+                    ),
+                message:
+                    message
+            },
+            "user"
+        );
+    }
+    else {
+        appendMessage(
+            message,
+            "user"
+        );
+    }
 
 }
 
