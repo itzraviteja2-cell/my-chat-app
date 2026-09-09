@@ -1112,19 +1112,37 @@ flex-shrink: 0;
 
 
             <button
-                class="add-btn"
-                onclick="
-                document
-                .getElementById(
-                'imageInput'
-                )
-                .click()
-                "
-            >
-                <i
-                    class="fa-solid fa-plus"
-                ></i>
-            </button>
+    class="add-btn"
+    onclick="toggleUploadMenu()"
+>
+    <i class="fa-solid fa-plus"></i>
+</button>
+
+
+<div
+    class="upload-menu"
+    id="uploadMenu"
+>
+
+    <button
+        onclick="openCamera()"
+    >
+        📷 Camera
+    </button>
+
+    <button
+        onclick="openGallery()"
+    >
+        🖼️ Photo Upload
+    </button>
+
+    <button
+        onclick="openFiles()"
+    >
+        📁 Files
+    </button>
+
+</div>
 
 
             <input
