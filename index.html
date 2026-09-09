@@ -470,15 +470,19 @@
     }
 
     .bot-wrapper {
-        max-width: 76%;
-    }
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+}
 
-    .bot-wrapper .bubble {
-        max-width: 100%;
-        background: var(--bot);
-        border: 1px solid var(--border);
-        border-bottom-left-radius: 5px;
-    }
+.bot-wrapper .bubble {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    background: var(--bot);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 5px;
+}
 
     .actions {
         display: flex;
