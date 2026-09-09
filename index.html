@@ -673,8 +673,8 @@ flex-shrink: 0;
 
     #input {
     flex: 1;
-    width: 0;
     min-width: 0;
+    max-height: 120px;
     border: none;
     outline: none;
     padding: 12px 10px;
@@ -682,7 +682,10 @@ flex-shrink: 0;
     color: var(--text);
     background: transparent;
     box-sizing: border-box;
-}
+    resize: none;
+    overflow-y: auto;
+    font-family: inherit;
+    }
 
     .add-btn,
     .mic,
