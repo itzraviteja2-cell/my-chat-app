@@ -2470,6 +2470,61 @@ function setQuickTool(
 
     /* SEND MESSAGE */
 
+function regenerateResponse() {
+
+    if (
+        !currentChat ||
+        !currentChat.messages ||
+        currentChat.messages.length === 0
+    ) {
+        return;
+    }
+
+
+    let lastUserMessage = null;
+
+
+    for (
+        let i =
+            currentChat.messages.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        if (
+            currentChat.messages[i].role ===
+            "user"
+        ) {
+
+            lastUserMessage =
+                currentChat.messages[i].text;
+
+            break;
+
+        }
+
+    }
+
+
+    if (
+        !lastUserMessage
+    ) {
+        return;
+    }
+
+
+    document
+        .getElementById("input")
+        .value =
+        lastUserMessage;
+
+
+    sendMessage();
+
+}
+    
     async function sendMessage() {
 
         const input =
