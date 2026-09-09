@@ -1397,7 +1397,28 @@ function openCamera() {
 }
 
 
+function openCamera() {
+
+    document
+        .getElementById("uploadMenu")
+        .classList
+        .remove("show");
+
+    document
+        .getElementById(
+            "cameraInput"
+        )
+        .click();
+
+}
+
+
 function openGallery() {
+
+    document
+        .getElementById("uploadMenu")
+        .classList
+        .remove("show");
 
     document
         .getElementById(
@@ -1409,6 +1430,11 @@ function openGallery() {
 
 
 function openFiles() {
+
+    document
+        .getElementById("uploadMenu")
+        .classList
+        .remove("show");
 
     document
         .getElementById(
