@@ -2473,7 +2473,63 @@ function setQuickTool(
 
     }
 
+function regenerateResponse() {
 
+    if (
+        !currentChat ||
+        !currentChat.messages ||
+        currentChat.messages.length === 0
+    ) {
+        return;
+    }
+
+    let lastUserIndex = -1;
+
+    for (
+        let i = currentChat.messages.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        if (
+            currentChat.messages[i].role === "user"
+        ) {
+            lastUserIndex = i;
+            break;
+        }
+
+    }
+
+    if (lastUserIndex === -1) {
+        return;
+    }
+
+    const lastUserMessage =
+        currentChat.messages[lastUserIndex].text;
+
+    currentChat.messages =
+        currentChat.messages.slice(
+            0,
+            lastUserIndex + 1
+        );
+
+    const container =
+        document.getElementById("messages");
+
+    const rows =
+        container.querySelectorAll(".row");
+
+    if (rows.length > 0) {
+        rows[rows.length - 1]?.remove();
+    }
+
+    document.getElementById("input").value =
+        lastUserMessage;
+
+    sendMessage(true);
+
+}
+    
     /* SEND MESSAGE */
     
     async function sendMessage(isRegenerate = false) {
