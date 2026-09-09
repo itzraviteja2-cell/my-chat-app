@@ -610,6 +610,46 @@ flex-shrink: 0;
         pointer;
 
 }
+    /* UPLOAD MENU */
+
+.input-box {
+    position: relative;
+}
+
+.upload-menu {
+    display: none;
+    position: absolute;
+    bottom: 58px;
+    left: 6px;
+    width: 190px;
+    padding: 8px;
+    border-radius: 16px;
+    background: var(--input);
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    z-index: 9999;
+}
+
+.upload-menu.show {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.upload-menu button {
+    border: none;
+    padding: 11px 12px;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.upload-menu button:hover {
+    background: var(--hover);
+}
     /* INPUT */
 
     .input-area {
