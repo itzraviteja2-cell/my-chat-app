@@ -2566,13 +2566,18 @@ else {
 }
 
 
-currentChat.messages
-    .push({
-        role: "user",
-        text:
-            message ||
-            "📷 Image uploaded"
-    });
+if (!isRegenerate) {
+
+    currentChat.messages
+        .push({
+            role: "user",
+            text:
+                message ||
+                "📷 Image uploaded"
+        });
+
+}
+
 // SMART PERMANENT MEMORY
 
 const memoryTriggers = [
