@@ -1153,7 +1153,42 @@ flex-shrink: 0;
                 onchange="previewImage(event)"
             >
 
+<input
+    type="file"
+    id="imageInput"
+    accept="image/*"
+    hidden
+    onchange="previewImage(event)"
+>
 
+
+<!-- CAMERA -->
+
+<input
+    type="file"
+    id="cameraInput"
+    accept="image/*"
+    capture="environment"
+    hidden
+    onchange="previewImage(event)"
+>
+
+
+<!-- FILES -->
+
+<input
+    type="file"
+    id="fileInput"
+    hidden
+    onchange="previewImage(event)"
+>
+
+
+<input
+    id="input"
+    placeholder="Message Aurora..."
+    onkeydown="handleKey(event)"
+>
             <input
                 id="input"
                 placeholder="Message Aurora..."
