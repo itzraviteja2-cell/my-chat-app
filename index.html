@@ -672,15 +672,17 @@ flex-shrink: 0;
     }
 
     #input {
-        flex: 1;
-        min-width: 0;
-        border: none;
-        outline: none;
-        padding: 12px 10px;
-        font-size: 16px;
-        color: var(--text);
-        background: transparent;
-    }
+    flex: 1;
+    width: 0;
+    min-width: 0;
+    border: none;
+    outline: none;
+    padding: 12px 10px;
+    font-size: 16px;
+    color: var(--text);
+    background: transparent;
+    box-sizing: border-box;
+}
 
     .add-btn,
     .mic,
