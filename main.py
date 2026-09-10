@@ -89,7 +89,64 @@ def health():
     return {
         "status": "healthy"
     }
+    
+# TINYFISH WEB SEARCH
 
+from urllib.parse import quote
+from urllib.request import Request, urlopen
+import json
+
+
+@app.get("/web-search")
+def web_search(query: str):
+
+    api_key = os.getenv("TINYFISH_API_KEY")
+
+    if not api_key:
+
+        raise HTTPException(
+            status_code=500,
+            detail="TINYFISH_API_KEY is not configured"
+        )
+
+    if not query.strip():
+
+        raise HTTPException(
+            status_code=400,
+            detail="Search query is required"
+        )
+
+    try:
+
+        url = (
+            "https://api.search.tinyfish.ai?query="
+            + quote(query.strip())
+        )
+
+        request = Request(
+            url,
+            headers={
+                "X-API-Key": api_key
+            }
+        )
+
+        with urlopen(
+            request,
+            timeout=20
+        ) as response:
+
+            data = json.loads(
+                response.read().decode("utf-8")
+            )
+
+        return data
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 
 # TEXT CHAT
 
