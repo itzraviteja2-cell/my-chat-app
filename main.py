@@ -57,6 +57,7 @@ class ChatRequest(BaseModel):
     message: str
     history: list = []
     memory: str = ""
+        regenerate: bool = False
 class ImageRequest(BaseModel):
     prompt: str
 
