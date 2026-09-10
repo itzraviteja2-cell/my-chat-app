@@ -155,21 +155,11 @@ def chat(request: ChatRequest):
 
         # CURRENT MESSAGE
 
-current_message = request.message
-
-if request.regenerate:
-    current_message = (
-        request.message
-        + "\n\nPlease give a fresh alternative answer. "
-          "Do not repeat your previous answer. "
-          "Use different wording, examples, or approach."
-    )
-
 contents.append({
     "role": "user",
     "parts": [
         {
-            "text": current_message
+            "text": request.message
         }
     ]
 })
