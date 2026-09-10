@@ -99,9 +99,11 @@ def chat(request: ChatRequest):
         )
 
     try:
+
         contents = []
 
         if request.memory:
+
             contents.append({
                 "role": "user",
                 "parts": [
@@ -113,6 +115,7 @@ def chat(request: ChatRequest):
                     }
                 ]
             })
+
 
         for item in request.history:
 
@@ -126,9 +129,12 @@ def chat(request: ChatRequest):
                 ""
             )
 
-            # Image objects skip
-            if not isinstance(text, str):
+            if not isinstance(
+                text,
+                str
+            ):
                 continue
+
 
             if role == "user":
 
@@ -140,6 +146,7 @@ def chat(request: ChatRequest):
                         }
                     ]
                 })
+
 
             elif role == "bot":
 
@@ -153,13 +160,28 @@ def chat(request: ChatRequest):
                 })
 
 
-                # CURRENT MESSAGE
+        # CURRENT MESSAGE
+
+        current_message = request.message
+
+
+        if request.regenerate:
+
+            current_message = (
+                request.message
+                + "\n\n"
+                + "Give a fresh alternative answer. "
+                + "Do not repeat your previous answer. "
+                + "Use different wording, examples, "
+                + "or approach."
+            )
+
 
         contents.append({
             "role": "user",
             "parts": [
                 {
-                    "text": request.message
+                    "text": current_message
                 }
             ]
         })
@@ -172,6 +194,7 @@ def chat(request: ChatRequest):
         response = None
         last_error = None
 
+
         for attempt in range(3):
 
             try:
@@ -182,6 +205,7 @@ def chat(request: ChatRequest):
                 )
 
                 break
+
 
             except Exception as e:
 
