@@ -453,3 +453,76 @@ def generate_image(
             status_code=500,
             detail=str(e)
         )
+# WEB SEARCH
+@app.post("/search")
+def web_search(request: ChatRequest):
+    import json
+    import urllib.request
+    import urllib.error
+
+    api_key = os.getenv("TAVILY_API_KEY")
+
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="TAVILY_API_KEY is not configured"
+        )
+
+    try:
+        payload = {
+            "api_key": api_key,
+            "query": request.message,
+            "search_depth": "basic",
+            "max_results": 5,
+            "include_answer": True
+        }
+
+        data = json.dumps(payload).encode("utf-8")
+
+        req = urllib.request.Request(
+            "https://api.tavily.com/search",
+            data=data,
+            headers={
+                "Content-Type": "application/json"
+            },
+            method="POST"
+        )
+
+        with urllib.request.urlopen(
+            req,
+            timeout=20
+        ) as response:
+            result = json.loads(
+                response.read().decode("utf-8")
+            )
+
+        results = []
+
+        for item in result.get("results", []):
+            results.append({
+                "title": item.get("title", ""),
+                "url": item.get("url", ""),
+                "content": item.get("content", "")
+            })
+
+        return {
+            "answer": result.get("answer", ""),
+            "results": results
+        }
+
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode(
+            "utf-8",
+            errors="ignore"
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Tavily search error: " + error_body
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Web search failed: " + str(e)
+            )
