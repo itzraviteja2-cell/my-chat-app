@@ -2539,6 +2539,123 @@ function regenerateResponse() {
     sendMessage(true);
 
 }
+
+    /* WEB SEARCH */
+
+async function webSearch() {
+
+    const query = prompt(
+        "What do you want to search?"
+    );
+
+    if (!query || !query.trim()) {
+        return;
+    }
+
+    showTyping();
+
+    try {
+
+        const response =
+            await fetch(
+                "/web-search?query=" +
+                encodeURIComponent(
+                    query.trim()
+                )
+            );
+
+        const data =
+            await response.json();
+
+        hideTyping();
+
+        if (!response.ok) {
+
+            appendMessage(
+                "Search error: " +
+                (
+                    data.detail ||
+                    "Search failed"
+                ),
+                "bot"
+            );
+
+            return;
+        }
+
+        if (
+            !data.results ||
+            data.results.length === 0
+        ) {
+
+            appendMessage(
+                "No search results found.",
+                "bot"
+            );
+
+            return;
+        }
+
+        let resultText =
+            "🔎 Search results for: " +
+            query.trim() +
+            "\n\n";
+
+        data.results.forEach(
+            (item, index) => {
+
+                resultText +=
+                    (
+                        index + 1
+                    ) +
+                    ". " +
+                    (
+                        item.title ||
+                        "Untitled"
+                    ) +
+                    "\n";
+
+                if (item.snippet) {
+
+                    resultText +=
+                        item.snippet +
+                        "\n";
+
+                }
+
+                if (item.url) {
+
+                    resultText +=
+                        item.url +
+                        "\n";
+
+                }
+
+                resultText += "\n";
+
+            }
+        );
+
+        appendMessage(
+            resultText,
+            "bot"
+        );
+
+    }
+
+    catch (error) {
+
+        hideTyping();
+
+        appendMessage(
+            "Search error: " +
+            error.message,
+            "bot"
+        );
+
+    }
+
+}
     
     /* SEND MESSAGE */
     
