@@ -308,7 +308,7 @@ async def chat_image(
 
         response = client.models.generate_content(
 
-            model="gemini-3.1-flash-image",
+            model="gemini-3.6-flash",
 
             contents=[
 
