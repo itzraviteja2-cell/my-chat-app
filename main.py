@@ -1,5 +1,7 @@
 import os
 import base64
+import time
+
 from fastapi import (
     FastAPI,
     HTTPException,
@@ -58,8 +60,13 @@ class ChatRequest(BaseModel):
     history: list = []
     memory: str = ""
     regenerate: bool = False
+
+
+# IMAGE REQUEST
+
 class ImageRequest(BaseModel):
     prompt: str
+
 
 # HOME PAGE
 
@@ -102,6 +109,8 @@ def chat(request: ChatRequest):
 
         contents = []
 
+        # MEMORY
+
         if request.memory:
 
             contents.append({
@@ -116,6 +125,8 @@ def chat(request: ChatRequest):
                 ]
             })
 
+
+        # CHAT HISTORY
 
         for item in request.history:
 
@@ -165,6 +176,8 @@ def chat(request: ChatRequest):
         current_message = request.message
 
 
+        # REGENERATE
+
         if request.regenerate:
 
             current_message = (
@@ -189,8 +202,6 @@ def chat(request: ChatRequest):
 
         # GEMINI RESPONSE WITH RETRY
 
-        import time
-
         response = None
         last_error = None
 
@@ -213,9 +224,7 @@ def chat(request: ChatRequest):
 
                 if attempt < 2:
 
-                    time.sleep(
-                        2
-                    )
+                    time.sleep(2)
 
 
         if response is None:
@@ -226,6 +235,216 @@ def chat(request: ChatRequest):
         return {
             "reply": response.text
         }
+
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+
+# IMAGE CHAT
+# PHOTO + TEXT
+
+@app.post("/chat-image")
+async def chat_image(
+    message: str = Form(...),
+    image: UploadFile = File(...)
+):
+
+    if not os.getenv(
+        "GEMINI_API_KEY"
+    ):
+
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured"
+        )
+
+
+    try:
+
+        # READ IMAGE
+
+        image_bytes = await image.read()
+
+
+        if not image_bytes:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Image file is empty"
+            )
+
+
+        # MIME TYPE
+
+        mime_type = (
+            image.content_type
+            or "image/jpeg"
+        )
+
+
+        # USER INSTRUCTION
+
+        user_message = (
+            message.strip()
+            if message
+            else "Analyze this image"
+        )
+
+
+        prompt = (
+            "Look at the uploaded image carefully "
+            "and respond to the user's request.\n\n"
+            "User request:\n"
+            + user_message
+        )
+
+
+        # SEND IMAGE + TEXT TO GEMINI
+
+        response = client.models.generate_content(
+
+            model="gemini-3.1-flash-image",
+
+            contents=[
+
+                types.Content(
+
+                    role="user",
+
+                    parts=[
+
+                        types.Part.from_bytes(
+
+                            data=image_bytes,
+
+                            mime_type=mime_type
+
+                        ),
+
+                        types.Part.from_text(
+
+                            text=prompt
+
+                        )
+
+                    ]
+
+                )
+
+            ]
+
+        )
+
+
+        # CHECK RESPONSE
+
+        for candidate in response.candidates:
+
+            if not candidate.content:
+
+                continue
+
+
+            for part in candidate.content.parts:
+
+
+                # TEXT RESPONSE
+
+                if part.text:
+
+                    return {
+                        "reply": part.text
+                    }
+
+
+                # IMAGE RESPONSE
+
+                if part.inline_data:
+
+                    image_data = (
+                        part.inline_data.data
+                    )
+
+
+                    return {
+                        "image":
+                            base64.b64encode(
+                                image_data
+                            ).decode("utf-8")
+                    }
+
+
+        raise HTTPException(
+            status_code=500,
+            detail="No response generated from image"
+        )
+
+
+    except HTTPException:
+
+        raise
+
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+
+# IMAGE GENERATION
+
+@app.post("/generate-image")
+def generate_image(
+    request: ImageRequest
+):
+
+    if not os.getenv(
+        "GEMINI_API_KEY"
+    ):
+
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured"
+        )
+
+
+    try:
+
+        interaction = client.interactions.create(
+
+            model="gemini-3.1-flash-image",
+
+            input=request.prompt
+
+        )
+
+
+        if not interaction.output_image:
+
+            raise HTTPException(
+                status_code=500,
+                detail="Image was not generated"
+            )
+
+
+        return {
+
+            "image":
+                interaction.output_image.data
+
+        }
+
+
+    except HTTPException:
+
+        raise
 
 
     except Exception as e:
