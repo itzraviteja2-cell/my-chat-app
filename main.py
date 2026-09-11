@@ -3,7 +3,6 @@ import base64
 import time
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Header
-)
 
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
