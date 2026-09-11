@@ -73,7 +73,18 @@ def home():
             "index.html"
         )
     )
+    
+# POLLINATIONS CALLBACK
 
+@app.get("/pollinations/callback")
+def pollinations_callback():
+
+    return FileResponse(
+        os.path.join(
+            BASE_DIR,
+            "index.html"
+        )
+    )
 
 # HEALTH CHECK
 
