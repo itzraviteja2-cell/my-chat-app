@@ -3209,24 +3209,29 @@ else {
 
     }
     
-    function connectPollinations() {
+    // POLLINATIONS AUTH KEY
 
-        const clientId = "pk_4F4rveLoLzVTLf22";
+const pollinationsParams =
+    new URLSearchParams(
+        window.location.hash.slice(1)
+    );
 
-        const redirectUri =
-            window.location.origin +
-            "/pollinations/callback";
+const pollinationsKey =
+    pollinationsParams.get("api_key");
 
-        const authUrl =
-            "https://enter.pollinations.ai/authorize" +
-            "?redirect_uri=" +
-            encodeURIComponent(redirectUri) +
-            "&client_id=" +
-            encodeURIComponent(clientId) +
-            "&scope=usage";
+if (pollinationsKey) {
 
-        window.location.href = authUrl;
-    }
+    sessionStorage.setItem(
+        "pollinationsKey",
+        pollinationsKey
+    );
+
+    history.replaceState(
+        null,
+        "",
+        window.location.pathname
+    );
+}
 
 
     renderHistory();
