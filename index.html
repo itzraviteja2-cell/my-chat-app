@@ -2546,7 +2546,10 @@ async function webSearch() {
         "What do you want to search?"
     );
 
-    if (!query || !query.trim()) {
+    if (
+        !query ||
+        !query.trim()
+    ) {
         return;
     }
 
@@ -2613,7 +2616,31 @@ async function webSearch() {
                     ) +
                     "\n";
 
-                if (item.snippet) {
+                if (
+                    item.date
+                ) {
+
+                    resultText +=
+                        "🕒 " +
+                        item.date +
+                        "\n";
+
+                }
+
+                if (
+                    item.site_name
+                ) {
+
+                    resultText +=
+                        "🌐 " +
+                        item.site_name +
+                        "\n";
+
+                }
+
+                if (
+                    item.snippet
+                ) {
 
                     resultText +=
                         item.snippet +
@@ -2621,7 +2648,9 @@ async function webSearch() {
 
                 }
 
-                if (item.url) {
+                if (
+                    item.url
+                ) {
 
                     resultText +=
                         item.url +
@@ -2629,7 +2658,8 @@ async function webSearch() {
 
                 }
 
-                resultText += "\n";
+                resultText +=
+                    "\n";
 
             }
         );
