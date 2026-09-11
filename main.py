@@ -118,8 +118,6 @@ def web_search(query: str):
 
     try:
 
-        # SEARCH THE WEB
-
         url = (
             "https://api.search.tinyfish.ai?query="
             + quote(query.strip())
@@ -134,71 +132,14 @@ def web_search(query: str):
 
         with urlopen(
             request,
-            timeout=20
+            timeout=10
         ) as response:
 
             search_data = json.loads(
                 response.read().decode("utf-8")
             )
 
-
-        # PREPARE SEARCH RESULTS FOR GEMINI
-
-        search_text = json.dumps(
-            search_data,
-            ensure_ascii=False
-        )
-
-        search_text = search_text[:12000]
-
-
-        # ASK GEMINI TO SUMMARIZE THE SEARCH RESULTS
-
-        prompt = f"""
-You are Aurora Smart AI.
-
-Answer the user's search query using ONLY the web search
-results provided below.
-
-User's search query:
-{query.strip()}
-
-Web search results:
-{search_text}
-
-Instructions:
-
-- Give the user a clear and useful answer.
-- Prefer the newest information available in the search results.
-- Do not present old information as breaking or latest news.
-- If dates are available, mention them.
-- Do not invent facts.
-- If the search results are insufficient, clearly say so.
-- For news, summarize the important points.
-- Keep the answer easy to understand.
-"""
-
-
-        response = client.models.generate_content(
-
-            model="gemini-3.6-flash",
-
-            contents=prompt
-
-        )
-
-
-        reply = response.text
-
-
-        return {
-            "reply": reply,
-            "results": search_data.get(
-                "results",
-                []
-            )
-        }
-
+        return search_data
 
     except Exception as e:
 
