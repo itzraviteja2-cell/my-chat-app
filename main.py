@@ -471,6 +471,12 @@ def generate_image(
             detail="GEMINI_API_KEY is not configured"
         )
 
+    if not request.prompt.strip():
+
+        raise HTTPException(
+            status_code=400,
+            detail="Image prompt is required"
+        )
 
     try:
 
@@ -478,10 +484,14 @@ def generate_image(
 
             model="gemini-3.1-flash-image",
 
-            input=request.prompt
+            input=request.prompt.strip(),
+
+            response_format={
+                "type": "image",
+                "mime_type": "image/png"
+            }
 
         )
-
 
         if not interaction.output_image:
 
@@ -490,19 +500,24 @@ def generate_image(
                 detail="Image was not generated"
             )
 
+        image_data = (
+            interaction.output_image.data
+        )
+
+        if not image_data:
+
+            raise HTTPException(
+                status_code=500,
+                detail="Generated image data is empty"
+            )
 
         return {
-
-            "image":
-                interaction.output_image.data
-
+            "image": image_data
         }
-
 
     except HTTPException:
 
         raise
-
 
     except Exception as e:
 
