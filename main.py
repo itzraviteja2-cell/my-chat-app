@@ -450,20 +450,32 @@ async def chat_image(
         )
 
 
-# IMAGE GENERATION
+# IMAGE GENERATION - POLLINATIONS BYOP
+
+from urllib.parse import quote
+from urllib.request import Request as URLRequest, urlopen
+
 
 @app.post("/generate-image")
 def generate_image(
-    request: ImageRequest
+    request: ImageRequest,
+    authorization: str = Header(default="")
 ):
 
-    if not os.getenv(
-        "GEMINI_API_KEY"
-    ):
+    if not authorization.startswith("Bearer "):
 
         raise HTTPException(
-            status_code=500,
-            detail="GEMINI_API_KEY is not configured"
+            status_code=401,
+            detail="Connect your Pollinations account first"
+        )
+
+    pollinations_key = authorization[7:].strip()
+
+    if not pollinations_key:
+
+        raise HTTPException(
+            status_code=401,
+            detail="Pollinations authorization key is missing"
         )
 
     if not request.prompt.strip():
@@ -475,39 +487,52 @@ def generate_image(
 
     try:
 
-        interaction = client.interactions.create(
-
-            model="gemini-3.1-flash-image",
-
-            input=request.prompt.strip(),
-
-            response_format={
-                "type": "image",
-                "mime_type": "image/jpeg"
-            }
-
+        prompt = quote(
+            request.prompt.strip(),
+            safe=""
         )
 
-        if not interaction.output_image:
+        url = (
+            "https://gen.pollinations.ai/image/"
+            + prompt
+            + "?model=flux"
+        )
 
-            raise HTTPException(
-                status_code=500,
-                detail="Image was not generated"
+        api_request = URLRequest(
+            url,
+            headers={
+                "Authorization":
+                "Bearer "
+                + pollinations_key
+            }
+        )
+
+        with urlopen(
+            api_request,
+            timeout=60
+        ) as response:
+
+            image_bytes = response.read()
+
+            mime_type = response.headers.get(
+                "Content-Type",
+                "image/jpeg"
             )
 
-        image_data = (
-            interaction.output_image.data
-        )
-
-        if not image_data:
+        if not image_bytes:
 
             raise HTTPException(
                 status_code=500,
                 detail="Generated image data is empty"
             )
 
+        image_data = base64.b64encode(
+            image_bytes
+        ).decode("utf-8")
+
         return {
-            "image": image_data
+            "image": image_data,
+            "mime_type": mime_type
         }
 
     except HTTPException:
