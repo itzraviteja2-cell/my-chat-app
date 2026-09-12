@@ -678,16 +678,31 @@
     #input {
     flex: 1;
     min-width: 0;
+    width: 100%;
+    min-height: 42px;
     max-height: 120px;
+
     border: none;
     outline: none;
-    padding: 12px 10px;
-    font-size: 16px;
+
+    padding: 11px 10px;
+
+    font-size: 15px;
+    line-height: 1.45;
+
     color: var(--text);
     background: transparent;
+
     box-sizing: border-box;
     resize: none;
+
     overflow-y: auto;
+    overflow-x: hidden;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
     font-family: inherit;
     }
 
