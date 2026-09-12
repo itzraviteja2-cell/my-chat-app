@@ -2820,473 +2820,499 @@ async function webSearch() {
 }
     
     /* SEND MESSAGE */
-    
-    async function sendMessage(isRegenerate = false) {
 
-        const input =
-            document
-            .getElementById(
-                "input"
+async function sendMessage(isRegenerate = false) {
+
+    const input =
+        document.getElementById("input");
+
+    const message =
+        input.value.trim();
+
+    if (!message && !selectedImage)
+        return;
+
+
+    /* CREATE CHAT */
+
+    if (!currentChat) {
+
+        currentChat = {
+
+            title:
+                message
+                ? message.substring(0, 30)
+                : "Image Chat",
+
+            messages: []
+
+        };
+
+        chats.unshift(currentChat);
+
+        localStorage.setItem(
+            "auroraChats",
+            JSON.stringify(chats)
+        );
+
+        renderHistory();
+    }
+
+
+    const imageToSend =
+        selectedImage;
+
+
+    /* SHOW USER MESSAGE */
+
+    if (!isRegenerate) {
+
+        if (imageToSend) {
+
+            appendMessage(
+                {
+                    image:
+                        URL.createObjectURL(
+                            imageToSend
+                        ),
+                    message:
+                        message
+                },
+                "user"
             );
 
+        } else {
 
-        const message =
-            input.value
-            .trim();
-
-
-        if (
-            !message &&
-            !selectedImage
-        )
-            return;
-
-
-        if (
-            !currentChat
-        ) {
-
-            currentChat = {
-
-                title:
-                    message
-                    ?
-                    message.substring(
-                        0,
-                        30
-                    )
-                    :
-                    "Image Chat",
-
-                messages:
-                    []
-
-            };
-
-
-            chats.unshift(
-    currentChat
-);
-
-localStorage.setItem(
-    "auroraChats",
-    JSON.stringify(chats)
-);
-
-renderHistory();
+            appendMessage(
+                message,
+                "user"
+            );
 
         }
-
-
-        const imageToSend =
-    selectedImage;
-
-if (!isRegenerate) {
-
-    if (
-        imageToSend
-    ) {
-        appendMessage(
-            {
-                image:
-                    URL.createObjectURL(
-                        imageToSend
-                    ),
-                message:
-                    message
-            },
-            "user"
-        );
-    }
-    else {
-        appendMessage(
-            message,
-            "user"
-        );
     }
 
-}
 
+    /* SAVE USER MESSAGE */
 
-if (!isRegenerate) {
+    if (!isRegenerate) {
 
-    currentChat.messages
-        .push({
+        currentChat.messages.push({
+
             role: "user",
+
             text:
                 message ||
                 "📷 Image uploaded"
+
         });
 
-}
-
-// SMART PERMANENT MEMORY
-
-const memoryTriggers = [
-
-    "నా పేరు",
-
-    "my name is",
-
-    "నా భాష",
-
-    "నాకు ఇష్టం",
-
-    "నాకు నచ్చుతుంది",
-
-    "i like",
-
-    "i love",
-
-    "remember this",
-
-    "గుర్తు పెట్టుకో",
-
-    "ఇది గుర్తు పెట్టుకో"
-
-];
+    }
 
 
-const lowerMessage =
-    message.toLowerCase();
+    /* MEMORY */
+
+    const memoryTriggers = [
+
+        "నా పేరు",
+        "my name is",
+        "నా భాష",
+        "నాకు ఇష్టం",
+        "నాకు నచ్చుతుంది",
+        "i like",
+        "i love",
+        "remember this",
+        "గుర్తు పెట్టుకో",
+        "ఇది గుర్తు పెట్టుకో"
+
+    ];
 
 
-if (
+    const lowerMessage =
+        message.toLowerCase();
 
-    memoryTriggers.some(
-        trigger =>
-            lowerMessage.includes(
-                trigger
-            )
-    )
 
-) {
+    if (
+        memoryTriggers.some(
+            trigger =>
+                lowerMessage.includes(trigger)
+        )
+    ) {
 
-    let memories;
+        let memories;
+
+        try {
+
+            memories =
+                JSON.parse(
+                    localStorage.getItem(
+                        "auroraMemory"
+                    ) || "[]"
+                );
+
+        } catch {
+
+            memories = [];
+
+        }
+
+        memories.push(message);
+
+        memories =
+            memories.slice(-20);
+
+        localStorage.setItem(
+            "auroraMemory",
+            JSON.stringify(memories)
+        );
+
+    }
+
+
+    /* QUICK TOOL SHORT MODE */
+
+    let aiMessage =
+        message;
+
+
+    if (
+        message.startsWith(
+            "నా WhatsApp message కి చిన్న, natural reply మాత్రమే ఇవ్వు:"
+        )
+    ) {
+
+        aiMessage =
+            "IMPORTANT: This is WhatsApp Reply mode. " +
+            "Give ONLY one short, natural reply. " +
+            "Do not give options. " +
+            "Do not explain. " +
+            "Do not add headings. " +
+            "Keep it conversational and concise.\n\n" +
+            message;
+
+    }
+
+
+    else if (
+        message.startsWith(
+            "నా business కోసం చిన్న, ఆకర్షణీయమైన advertisement మాత్రమే ఇవ్వు:"
+        )
+    ) {
+
+        aiMessage =
+            "IMPORTANT: This is Business Ad mode. " +
+            "Give ONLY one short advertisement. " +
+            "Do not give multiple versions. " +
+            "No explanation. " +
+            "Keep it concise and attractive.\n\n" +
+            message;
+
+    }
+
+
+    else if (
+        message.startsWith(
+            "ఈ విషయం కోసం చిన్న Instagram caption మరియు 5–8 hashtags మాత్రమే ఇవ్వు:"
+        )
+    ) {
+
+        aiMessage =
+            "IMPORTANT: This is Instagram Caption mode. " +
+            "Give ONLY ONE short Instagram caption. " +
+            "Then give 5 to 8 hashtags. " +
+            "Do NOT give 3 options. " +
+            "Do NOT explain. " +
+            "Do NOT add headings. " +
+            "Keep the caption short and natural.\n\n" +
+            message;
+
+    }
+
+
+    else if (
+        message.startsWith(
+            "ఈ వివరాలతో short professional letter లేదా application మాత్రమే ఇవ్వు:"
+        )
+    ) {
+
+        aiMessage =
+            "IMPORTANT: This is Letter mode. " +
+            "Give ONLY one short professional letter/application. " +
+            "Do not give options. " +
+            "Do not explain.\n\n" +
+            message;
+
+    }
+
+
+    else if (
+        message.startsWith(
+            "ఈ విషయం గురించి short creative content మాత్రమే ఇవ్వు:"
+        )
+    ) {
+
+        aiMessage =
+            "IMPORTANT: This is Creative mode. " +
+            "Give ONLY one short creative response. " +
+            "Do not give options. " +
+            "Do not explain. " +
+            "Keep it concise.\n\n" +
+            message;
+
+    }
+
+
+    /* CLEAR INPUT */
+
+    input.value = "";
+
+    input.style.height =
+        "42px";
+
+    input.style.overflowY =
+        "hidden";
+
+
+    showTyping();
 
 
     try {
 
-        memories =
-            JSON.parse(
-                localStorage.getItem(
-                    "auroraMemory"
-                ) || "[]"
+        let response;
+
+
+        /* IMAGE CHAT */
+
+        if (imageToSend) {
+
+            const formData =
+                new FormData();
+
+            formData.append(
+                "message",
+                message ||
+                "Analyze this image"
             );
 
-    }
+            formData.append(
+                "image",
+                imageToSend
+            );
 
-    catch {
-
-        memories = [];
-
-    }
-
-
-    memories.push(
-        message
-    );
-
-
-    // Keep only last 20 memories
-
-    memories =
-        memories.slice(
-            -20
-        );
-
-
-    localStorage.setItem(
-
-        "auroraMemory",
-
-        JSON.stringify(
-            memories
-        )
-
-    );
-
-}
-
-input.value =
-    "";
-
-
-showTyping();
-
-
-        try {
-
-            let response;
-
-
-            if (
-    imageToSend
-)  {
-
-                const formData =
-                    new FormData();
-
-
-                formData.append(
-                    "message",
-                    message ||
-                    "Analyze this image"
+            response =
+                await fetch(
+                    "/chat-image",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
                 );
 
+        }
 
-                formData.append(
-                    "image",
-                    imageToSend
+
+        /* IMAGE GENERATION */
+
+        else if (
+
+            lowerMessage.includes("ఫోటో కావాలి") ||
+            lowerMessage.includes("photo కావాలి") ||
+            lowerMessage.includes("ఫోటో తయారు చేయి") ||
+            lowerMessage.includes("photo తయారు చేయి") ||
+            lowerMessage.includes("చిత్రం కావాలి") ||
+            lowerMessage.includes("image కావాలి") ||
+            lowerMessage.includes("generate image") ||
+            lowerMessage.includes("create image") ||
+            lowerMessage.includes("photo generate")
+
+        ) {
+
+            const pollinationsKey =
+                sessionStorage.getItem(
+                    "pollinationsKey"
                 );
 
+            if (!pollinationsKey) {
 
-                response =
-                    await fetch(
+                hideTyping();
 
-                        "/chat-image",
+                appendMessage(
+                    "Connect Images నొక్కి Pollinations account connect చేయండి.",
+                    "bot"
+                );
 
-                        {
-
-                            method:
-                                "POST",
-
-                            body:
-                                formData
-
-                        }
-
-                    );
-
+                return;
             }
 
-            else if (
 
-    message.toLowerCase().includes(
-        "ఫోటో కావాలి"
-    ) ||
+            response =
+                await fetch(
+                    "/generate-image",
+                    {
+                        method: "POST",
 
-    message.toLowerCase().includes(
-        "photo కావాలి"
-    ) ||
+                        headers: {
+                            "Content-Type":
+                                "application/json",
 
-    message.toLowerCase().includes(
-        "ఫోటో తయారు చేయి"
-    ) ||
+                            "Authorization":
+                                "Bearer " +
+                                pollinationsKey
+                        },
 
-    message.toLowerCase().includes(
-        "photo తయారు చేయి"
-    ) ||
+                        body:
+                            JSON.stringify({
+                                prompt:
+                                    message
+                            })
+                    }
+                );
 
-    message.toLowerCase().includes(
-        "చిత్రం కావాలి"
-    ) ||
+        }
 
-    message.toLowerCase().includes(
-        "image కావాలి"
-    ) ||
 
-    message.toLowerCase().includes(
-        "generate image"
-    ) ||
+        /* NORMAL CHAT */
 
-    message.toLowerCase().includes(
-        "create image"
-    ) ||
+        else {
 
-    message.toLowerCase().includes(
-        "photo generate"
-    )
+            response =
+                await fetch(
+                    "/chat",
+                    {
+                        method: "POST",
 
-) {
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
 
-    response =
-        await fetch(
+                        body:
+                            JSON.stringify({
 
-            "/generate-image",
+                                message:
+                                    aiMessage,
 
-            {
+                                history:
+                                    currentChat.messages
+                                        .slice(-10, -1),
 
-                method:
-                    "POST",
+                                regenerate:
+                                    isRegenerate,
 
-                headers: {
+                                memory:
+                                    localStorage.getItem(
+                                        "auroraMemory"
+                                    ) || ""
 
-                    "Content-Type":
-                        "application/json"
+                            })
+                    }
+                );
 
-                },
+        }
 
-                body:
-                    JSON.stringify({
 
-                        prompt:
-                            message
+        const data =
+            await response.json();
 
-                    })
 
-            }
+        hideTyping();
 
-        );
 
-            }
+        /* GENERATED IMAGE */
 
-    
+        if (
+            response.ok &&
+            data.image
+        ) {
 
-else {
+            const mimeType =
+                data.mime_type ||
+                "image/jpeg";
 
-    response =
-        await fetch(
 
-            "/chat",
-
-            {
-
-                method:
-                    "POST",
-
-                headers: {
-
-                    "Content-Type":
-                        "application/json"
-
-                },
-
-                body:
-
-                    JSON.stringify({
-
-                        message:
-                            message,
-
-                        history:
-                            currentChat.messages
-                                .slice(-10, -1),
-                        regenerate:
-    isRegenerate,
-
-                        memory:
-                            localStorage.getItem(
-                                "auroraMemory"
-                            ) || ""
-
-                    })
-
-            }
-
-        );
-
-}
-
-
-            const data =
-                await response
-                .json();
-
-
-            hideTyping();
-
-
-            if (
-    response.ok &&
-    data.image
-) {
-
-    appendMessage(
-        {
-            image:
-                "data:image/png;base64," +
-                data.image,
-            message:
-                ""
-        },
-        "bot"
-    );
-
-
-    currentChat.messages
-        .push({
-
-            role:
-                "bot",
-
-            image:
-                "data:image/jpeg;base64," +
-                data.image
-
-        });
-
-
-    localStorage.setItem(
-        "auroraChats",
-        JSON.stringify(chats)
-    );
-
-    renderHistory();
-
-}
-
-
-else if (
-    response.ok &&
-    data.reply
-) {
-
-    appendMessage(
-        data.reply,
-        "bot"
-    );
-
-
-    currentChat.messages
-        .push({
-
-            role:
-                "bot",
-
-            text:
-                data.reply
-
-        });
-
-
-    localStorage.setItem(
-        "auroraChats",
-        JSON.stringify(chats)
-    );
-
-    renderHistory();
-
-}
-
-
-else {
-
-    appendMessage(
-
-        "Error: " +
-
-        (
-            data.detail ||
-            "No response received"
-        ),
-
-        "bot"
-
-    );
-
-}
-
-        }           
-        catch(error) {
-
-            hideTyping();
+            const imageData =
+                "data:" +
+                mimeType +
+                ";base64," +
+                data.image;
 
 
             appendMessage(
+                {
+                    image:
+                        imageData,
+                    message:
+                        ""
+                },
+                "bot"
+            );
 
-                "Network error: " +
-                error.message,
+
+            currentChat.messages.push({
+
+                role:
+                    "bot",
+
+                image:
+                    imageData
+
+            });
+
+
+            localStorage.setItem(
+                "auroraChats",
+                JSON.stringify(chats)
+            );
+
+            renderHistory();
+
+        }
+
+
+        /* TEXT RESPONSE */
+
+        else if (
+            response.ok &&
+            data.reply
+        ) {
+
+            appendMessage(
+                data.reply,
+                "bot"
+            );
+
+
+            currentChat.messages.push({
+
+                role:
+                    "bot",
+
+                text:
+                    data.reply
+
+            });
+
+
+            localStorage.setItem(
+                "auroraChats",
+                JSON.stringify(chats)
+            );
+
+            renderHistory();
+
+        }
+
+
+        /* ERROR */
+
+        else {
+
+            appendMessage(
+
+                "Error: " +
+                (
+                    data.detail ||
+                    "No response received"
+                ),
 
                 "bot"
 
@@ -3295,15 +3321,33 @@ else {
         }
 
 
-                if (
-            selectedImage
-        ) {
+    }
 
-            removeImage();
+    catch (error) {
 
-        }
+        hideTyping();
+
+        appendMessage(
+
+            "Network error: " +
+            error.message,
+
+            "bot"
+
+        );
 
     }
+
+
+    /* REMOVE IMAGE */
+
+    if (selectedImage) {
+
+        removeImage();
+
+    }
+
+}
 
 
     /* LOAD SAVED THEME */
