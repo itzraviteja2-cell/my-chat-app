@@ -2680,10 +2680,7 @@ async function webSearch() {
         "What do you want to search?"
     );
 
-    if (
-        !query ||
-        !query.trim()
-    ) {
+    if (!query || !query.trim()) {
         return;
     }
 
@@ -2691,23 +2688,19 @@ async function webSearch() {
 
     try {
 
-        const response =
-            await fetch(
-                "/web-search?query=" +
-                encodeURIComponent(
-                    query.trim()
-                )
-            );
+        const response = await fetch(
+            "/web-search?query=" +
+            encodeURIComponent(query.trim())
+        );
 
-        const data =
-            await response.json();
+        const data = await response.json();
 
         hideTyping();
 
         if (!response.ok) {
 
             appendMessage(
-                "Search error: " +
+                "🔍 Search error: " +
                 (
                     data.detail ||
                     "Search failed"
@@ -2724,79 +2717,91 @@ async function webSearch() {
         ) {
 
             appendMessage(
-                "No search results found.",
+                "🔍 No search results found.",
                 "bot"
             );
 
             return;
         }
 
+
+        /* PROFESSIONAL SEARCH RESULT */
+
         let resultText =
             "🔎 Search results for: " +
             query.trim() +
             "\n\n";
 
-        data.results.forEach(
-            (item, index) => {
 
-                resultText +=
-                    (
-                        index + 1
-                    ) +
-                    ". " +
-                    (
-                        item.title ||
-                        "Untitled"
-                    ) +
-                    "\n";
-
-                if (
-                    item.date
-                ) {
+        data.results
+            .slice(0, 6)
+            .forEach(
+                (item, index) => {
 
                     resultText +=
-                        "🕒 " +
-                        item.date +
+                        "━━━━━━━━━━━━━━\n";
+
+                    resultText +=
+                        "🔹 " +
+                        (index + 1) +
+                        ". " +
+                        (
+                            item.title ||
+                            "Untitled"
+                        ) +
+                        "\n";
+
+
+                    if (item.site_name) {
+
+                        resultText +=
+                            "🌐 " +
+                            item.site_name +
+                            "\n";
+
+                    }
+
+
+                    if (item.date) {
+
+                        resultText +=
+                            "🕒 " +
+                            item.date +
+                            "\n";
+
+                    }
+
+
+                    if (item.snippet) {
+
+                        resultText +=
+                            item.snippet +
+                            "\n";
+
+                    }
+
+
+                    if (item.url) {
+
+                        resultText +=
+                            "🔗 " +
+                            item.url +
+                            "\n";
+
+                    }
+
+
+                    resultText +=
                         "\n";
 
                 }
+            );
 
-                if (
-                    item.site_name
-                ) {
 
-                    resultText +=
-                        "🌐 " +
-                        item.site_name +
-                        "\n";
+        resultText +=
+            "━━━━━━━━━━━━━━\n" +
+            "ℹ️ Showing the most relevant results.";
 
-                }
-
-                if (
-                    item.snippet
-                ) {
-
-                    resultText +=
-                        item.snippet +
-                        "\n";
-
-                }
-
-                if (
-                    item.url
-                ) {
-
-                    resultText +=
-                        item.url +
-                        "\n";
-
-                }
-
-                resultText +=
-                    "\n";
-
-            }
-        );
 
         appendMessage(
             resultText,
@@ -2805,12 +2810,13 @@ async function webSearch() {
 
     }
 
+
     catch (error) {
 
         hideTyping();
 
         appendMessage(
-            "Search error: " +
+            "🔍 Search error: " +
             error.message,
             "bot"
         );
@@ -2818,6 +2824,7 @@ async function webSearch() {
     }
 
 }
+
     
     /* SEND MESSAGE */
 
