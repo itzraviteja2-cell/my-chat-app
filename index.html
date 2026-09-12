@@ -580,39 +580,39 @@
 /* QUICK TOOLS */
 
 .quick-tools {
-
-    display:
-        flex;
-
-    gap:
-        8px;
-
-    overflow-x:
-        auto;
-
-    padding:
-        10px 20px;
-flex-shrink: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    width: 100%;
+    padding: 8px 12px;
+    flex-shrink: 0;
 }
 
-
 .quick-tools button {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    border-radius: 14px;
+    padding: 9px 5px;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
 
-    border:
-        none;
+@media (max-width: 600px) {
 
-    border-radius:
-        20px;
+    .quick-tools {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        padding: 7px 8px;
+    }
 
-    padding:
-        8px 14px;
-
-    white-space:
-        nowrap;
-
-    cursor:
-        pointer;
-
+    .quick-tools button {
+        padding: 8px 3px;
+        font-size: 10px;
+    }
 }
     /* UPLOAD MENU */
 
