@@ -3209,29 +3209,6 @@ else {
 
     }
 
-    // POLLINATIONS AUTH KEY
-
-const pollinationsParams =
-    new URLSearchParams(
-        window.location.hash.slice(1)
-    );
-
-const pollinationsKey =
-    pollinationsParams.get("pk_4F4rveLoLzVTLf22");
-
-if (pollinationsKey) {
-
-    sessionStorage.setItem(
-        "pollinationsKey",
-        pollinationsKey
-    );
-
-    history.replaceState(
-        null,
-        "",
-        window.location.pathname
-    );
-}
     
     // POLLINATIONS AUTH KEY
 
