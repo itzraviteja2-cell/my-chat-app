@@ -2516,8 +2516,21 @@ function setQuickTool(
             "input"
         );
 
-    input.value =
-        prompt;
+    input.value = prompt;
+
+    /* Auto resize */
+    input.style.height = "auto";
+
+    input.style.height =
+        Math.min(
+            input.scrollHeight,
+            120
+        ) + "px";
+
+    input.style.overflowY =
+        input.scrollHeight > 120
+            ? "auto"
+            : "hidden";
 
     input.focus();
 
