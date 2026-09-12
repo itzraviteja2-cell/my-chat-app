@@ -3208,7 +3208,27 @@ else {
         }
 
     }
+    
+// POLLINATIONS CONNECT
 
+function connectPollinations() {
+
+    const clientId = "pk_4F4rveLoLzVTLf22";
+
+    const redirectUri =
+        window.location.origin +
+        "/pollinations/callback";
+
+    const authUrl =
+        "https://enter.pollinations.ai/authorize" +
+        "?redirect_uri=" +
+        encodeURIComponent(redirectUri) +
+        "&client_id=" +
+        encodeURIComponent(clientId) +
+        "&scope=usage";
+
+    window.location.href = authUrl;
+    }
     
     // POLLINATIONS AUTH KEY
 
