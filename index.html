@@ -1642,7 +1642,7 @@ document
     .getElementById("pdfInput")
     .addEventListener(
         "change",
-        function(event) {
+        async function(event) {
 
             const pdfFile =
                 event.target.files[0];
@@ -1654,11 +1654,73 @@ document
             selectedPDF =
                 pdfFile;
 
-            showToast(
-                "📄 PDF ready. You can ask questions."
+            showTyping();
+
+            const formData =
+                new FormData();
+
+            formData.append(
+                "pdf",
+                selectedPDF
             );
 
-            event.target.value = "";
+            formData.append(
+                "message",
+                "ఈ PDFలో ఏముంది? ముఖ్యమైన విషయాలను సులభంగా summarize చేయండి."
+            );
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/chat-pdf",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                hideTyping();
+
+                if (!response.ok) {
+
+                    appendMessage(
+                        "📄 PDF error: " +
+                        (
+                            data.detail ||
+                            "PDF upload failed"
+                        ),
+                        "bot"
+                    );
+
+                    return;
+                }
+
+                appendMessage(
+                    "📄 PDF Summary\n\n" +
+                    (
+                        data.reply ||
+                        "PDF summary అందుబాటులో లేదు."
+                    ),
+                    "bot"
+                );
+
+            }
+
+            catch (error) {
+
+                hideTyping();
+
+                appendMessage(
+                    "📄 PDF error: " +
+                    error.message,
+                    "bot"
+                );
+
+            }
 
         }
     );
