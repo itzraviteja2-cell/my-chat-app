@@ -1249,23 +1249,54 @@
 <div class="quick-tools">
 
     <button onclick="setQuickTool('నా WhatsApp message కి చిన్న, natural reply మాత్రమే ఇవ్వు: ')">
-        💬 WhatsApp Reply
+        <svg viewBox="0 0 24 24" class="tool-icon whatsapp-icon">
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.46 3.43 1.27 4.89L2 22l5.27-1.27A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/>
+            <path d="M16.4 13.9c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1-.1.2-.6.7-.7.8-.1.1-.3.1-.5 0-1.4-.7-2.3-1.3-3.2-2.9-.2-.3.2-.3.5-1 .1-.2.1-.3 0-.5 0-.1-.5-1.2-.7-1.6-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.1 1.6 2.5 4 3.5 1.5.6 2 .7 2.7.6.5-.1 1.2-.5 1.4-1 .2-.5.2-.9.1-1-.1-.1-.2-.2-.5-.3z"/>
+        </svg>
+        WhatsApp Reply
     </button>
 
     <button onclick="setQuickTool('నా business కోసం చిన్న, ఆకర్షణీయమైన advertisement మాత్రమే ఇవ్వు: ')">
-        📢 Business Ad
+        <svg viewBox="0 0 24 24" class="tool-icon">
+            <path d="M4 9v6h3l4 4V5L7 9H4z" fill="currentColor"/>
+            <path d="M15 8.5c1.2.8 2 2.1 2 3.5s-.8 2.7-2 3.5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M17.5 6c2 1.4 3.2 3.5 3.2 6s-1.2 4.6-3.2 6" fill="none" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Business Ad
     </button>
 
     <button onclick="setQuickTool('ఈ విషయం కోసం చిన్న Instagram caption మరియు 5–8 hashtags మాత్రమే ఇవ్వు: ')">
-        📱 Instagram Caption
+        <svg viewBox="0 0 24 24" class="tool-icon instagram-icon">
+            <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+        </svg>
+        Instagram Caption
     </button>
 
     <button onclick="setQuickTool('ఈ వివరాలతో short professional letter లేదా application మాత్రమే ఇవ్వు: ')">
-        📝 Letter
+        <svg viewBox="0 0 24 24" class="tool-icon">
+            <rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Letter
     </button>
 
     <button onclick="setQuickTool('ఈ విషయం గురించి short creative content మాత్రమే ఇవ్వు: ')">
-        ✨ Creative
+        <svg viewBox="0 0 24 24" class="tool-icon">
+            <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" fill="currentColor"/>
+            <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z" fill="currentColor"/>
+        </svg>
+        Creative
+    </button>
+
+    <button onclick="openPDF()">
+        <svg viewBox="0 0 24 24" class="tool-icon pdf-icon">
+            <path d="M5 2h9l5 5v15H5V2z" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M14 2v6h6" fill="none" stroke="currentColor" stroke-width="2"/>
+            <text x="6.5" y="18" font-size="5.2" font-weight="bold" fill="currentColor">PDF</text>
+        </svg>
+        PDF
     </button>
 
     <button onclick="webSearch()">
