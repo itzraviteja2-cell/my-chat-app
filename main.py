@@ -551,3 +551,125 @@ def generate_image(
             status_code=500,
             detail=str(e)
         )
+
+# PDF CHAT
+
+@app.post("/chat-pdf")
+async def chat_pdf(
+    message: str = Form(...),
+    pdf: UploadFile = File(...)
+):
+
+    if not os.getenv(
+        "GEMINI_API_KEY"
+    ):
+
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured"
+        )
+
+    try:
+
+        # READ PDF
+
+        pdf_bytes = await pdf.read()
+
+        if not pdf_bytes:
+
+            raise HTTPException(
+                status_code=400,
+                detail="PDF file is empty"
+            )
+
+        # CHECK PDF TYPE
+
+        mime_type = (
+            pdf.content_type
+            or "application/pdf"
+        )
+
+        if mime_type != "application/pdf":
+
+            raise HTTPException(
+                status_code=400,
+                detail="Please upload a PDF file"
+            )
+
+        # USER QUESTION
+
+        user_message = (
+            message.strip()
+            if message.strip()
+            else "Summarize this PDF"
+        )
+
+        prompt = (
+            "Read the uploaded PDF carefully. "
+            "Answer the user's question using "
+            "the information contained in the PDF. "
+            "Do not invent information that is not "
+            "present in the PDF.\n\n"
+            "User question:\n"
+            + user_message
+        )
+
+        # SEND PDF + QUESTION TO GEMINI
+
+        response = client.models.generate_content(
+
+            model="gemini-3.6-flash",
+
+            contents=[
+
+                types.Content(
+
+                    role="user",
+
+                    parts=[
+
+                        types.Part.from_bytes(
+
+                            data=pdf_bytes,
+
+                            mime_type="application/pdf"
+
+                        ),
+
+                        types.Part.from_text(
+
+                            text=prompt
+
+                        )
+
+                    ]
+
+                )
+
+            ]
+
+        )
+
+        # RESPONSE
+
+        if response.text:
+
+            return {
+                "reply": response.text
+            }
+
+        raise HTTPException(
+            status_code=500,
+            detail="No response generated from PDF"
+        )
+
+    except HTTPException:
+
+        raise
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
