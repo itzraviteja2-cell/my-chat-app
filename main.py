@@ -605,11 +605,14 @@ async def chat_pdf(
         )
 
         prompt = (
-            "Read the uploaded PDF carefully. "
-            "Answer the user's question using "
-            "the information contained in the PDF. "
-            "Do not invent information that is not "
-            "present in the PDF.\n\n"
+            "You are answering questions about the "
+            "uploaded PDF.\n\n"
+            "Read the PDF carefully and answer ONLY "
+            "using information from the PDF.\n"
+            "If the answer is not present in the PDF, "
+            "clearly say that it is not mentioned in "
+            "the PDF.\n"
+            "Do not invent information.\n\n"
             "User question:\n"
             + user_message
         )
