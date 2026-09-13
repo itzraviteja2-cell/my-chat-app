@@ -3339,44 +3339,71 @@ async function sendMessage(isRegenerate = false) {
         }
 
 
-        /* NORMAL CHAT */
+        /* PDF CHAT / NORMAL CHAT */
 
-        else {
+else if (selectedPDF) {
 
-            response =
-                await fetch(
-                    "/chat",
-                    {
-                        method: "POST",
+    const formData =
+        new FormData();
 
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
+    formData.append(
+        "message",
+        message ||
+        "Summarize this PDF"
+    );
 
-                        body:
-                            JSON.stringify({
+    formData.append(
+        "pdf",
+        selectedPDF
+    );
 
-                                message:
-                                    aiMessage,
+    response =
+        await fetch(
+            "/chat-pdf",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
 
-                                history:
-                                    currentChat.messages
-                                        .slice(-10, -1),
+}
 
-                                regenerate:
-                                    isRegenerate,
+else {
 
-                                memory:
-                                    localStorage.getItem(
-                                        "auroraMemory"
-                                    ) || ""
+    response =
+        await fetch(
+            "/chat",
+            {
+                method: "POST",
 
-                            })
-                    }
-                );
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-        }
+                body:
+                    JSON.stringify({
+
+                        message:
+                            aiMessage,
+
+                        history:
+                            currentChat.messages
+                                .slice(-10, -1),
+
+                        regenerate:
+                            isRegenerate,
+
+                        memory:
+                            localStorage.getItem(
+                                "auroraMemory"
+                            ) || ""
+
+                    })
+            }
+        );
+
+}
 
 
         const data =
