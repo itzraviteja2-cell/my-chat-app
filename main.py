@@ -547,7 +547,7 @@ def generate_image(
 
         except Exception as e:
 
-        error_detail = str(e)
+            error_detail = str(e)
 
         try:
 
