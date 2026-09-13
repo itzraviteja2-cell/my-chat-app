@@ -1623,8 +1623,6 @@ function openFiles() {
 
 }
 
-/* PDF UPLOAD */
-
 function openPDF() {
 
     document
@@ -1635,8 +1633,35 @@ function openPDF() {
     document
         .getElementById("pdfInput")
         .click();
-
 }
+
+
+/* PDF SELECT */
+
+document
+    .getElementById("pdfInput")
+    .addEventListener(
+        "change",
+        function(event) {
+
+            const pdfFile =
+                event.target.files[0];
+
+            if (!pdfFile) {
+                return;
+            }
+
+            selectedPDF =
+                pdfFile;
+
+            showToast(
+                "📄 PDF ready. You can ask questions."
+            );
+
+            event.target.value = "";
+
+        }
+    );
 
     document
     .getElementById("pdfInput")
