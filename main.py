@@ -545,13 +545,19 @@ def generate_image(
             "mime_type": mime_type
         }
 
-    except HTTPException:
-
-        raise
-
     except Exception as e:
 
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
+    error_detail = str(e)
+
+    try:
+        if hasattr(e, "read"):
+            error_body = e.read().decode("utf-8")
+            if error_body:
+                error_detail = error_body
+    except:
+        pass
+
+    raise HTTPException(
+        status_code=500,
+        detail=error_detail
+    )
