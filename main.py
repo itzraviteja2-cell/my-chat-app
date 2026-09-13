@@ -462,10 +462,6 @@ async def chat_image(
 
 # IMAGE GENERATION - POLLINATIONS BYOP
 
-from urllib.parse import quote
-from urllib.request import Request as URLRequest, urlopen
-
-
 @app.post("/generate-image")
 def generate_image(
     request: ImageRequest,
@@ -508,12 +504,12 @@ def generate_image(
             + "?model=flux"
         )
 
-        api_request = URLRequest(
+        api_request = Request(
             url,
             headers={
                 "Authorization":
-                "Bearer "
-                + pollinations_key
+                "Bearer " +
+                pollinations_key
             }
         )
 
@@ -545,25 +541,13 @@ def generate_image(
             "mime_type": mime_type
         }
 
-        except Exception as e:
+    except HTTPException:
 
-            error_detail = str(e)
+        raise
 
-        try:
-
-            if hasattr(e, "read"):
-
-                error_body = e.read().decode("utf-8")
-
-                if error_body:
-
-                    error_detail = error_body
-
-        except Exception:
-
-            pass
+    except Exception as e:
 
         raise HTTPException(
             status_code=500,
-            detail=error_detail
+            detail=str(e)
         )
