@@ -605,16 +605,35 @@ async def chat_pdf(
         )
 
         prompt = (
-            "You are answering questions about the "
-            "uploaded PDF.\n\n"
-            "Read the PDF carefully and answer ONLY "
-            "using information from the PDF.\n"
-            "If the answer is not present in the PDF, "
-            "clearly say that it is not mentioned in "
-            "the PDF.\n"
-            "Do not invent information.\n\n"
-            "User question:\n"
-            + user_message
+    "You are answering questions about the uploaded PDF.\n\n"
+
+    "Read the PDF carefully and answer ONLY using information "
+    "from the PDF.\n"
+
+    "If the answer is not present in the PDF, clearly say that "
+    "it is not mentioned in the PDF.\n"
+
+    "Do not invent information.\n\n"
+
+    "LANGUAGE RULE:\n"
+    "Answer in ONLY ONE language.\n"
+
+    "If the user's question is mainly in Telugu, "
+    "answer ONLY in Telugu.\n"
+
+    "If the user's question is mainly in English, "
+    "answer ONLY in English.\n"
+
+    "If the user's question contains both Telugu and English, "
+    "answer ONLY in Telugu.\n"
+
+    "NEVER provide the same answer twice.\n"
+    "NEVER provide a Telugu answer followed by an English translation.\n"
+    "NEVER provide an English answer followed by a Telugu translation.\n"
+    "Do not repeat or translate the answer into another language.\n\n"
+
+    "User question:\n"
+    + user_message
         )
 
         # SEND PDF + QUESTION TO GEMINI
