@@ -1774,13 +1774,13 @@ document
 
         } catch (error) {
 
-            hideTyping();
+    hideTyping();
 
-            appendMessage(
-                "📄 PDF upload error: " +
-                error.message,
-                "bot"
-            );
+    appendMessage(
+        "🔄 Retry",
+        "bot"
+    );
+
         }
 
         event.target.value = "";
