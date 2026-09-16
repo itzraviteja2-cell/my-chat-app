@@ -287,37 +287,109 @@
     }
 
     .welcome-card {
-        width: min(100%, 560px);
-        padding: 36px 28px;
-        text-align: center;
-        border-radius: 32px;
-        color: white;
-        background:
-            linear-gradient(
-                145deg,
-                rgba(96,48,170,0.95),
-                rgba(125,60,205,0.92),
-                rgba(187,75,220,0.90)
-            );
-        box-shadow:
-            0 25px 80px rgba(109,55,190,0.38),
-            inset 0 1px 1px rgba(255,255,255,0.20);
-        border: 1px solid rgba(255,255,255,0.22);
-        position: relative;
-        overflow: hidden;
-    }
+    width: min(100%, 560px);
+    padding: 38px 28px;
+    text-align: center;
+    border-radius: 32px;
+    color: #ffffff;
 
-    .welcome-card::before {
-        content: "";
-        position: absolute;
-        width: 260px;
-        height: 260px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.13);
-        top: -140px;
-        right: -90px;
-        filter: blur(10px);
-    }
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(168, 85, 247, 0.32),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(18, 12, 48, 0.98),
+            rgba(54, 22, 105, 0.97),
+            rgba(89, 32, 139, 0.95),
+            rgba(42, 20, 91, 0.98)
+        );
+
+    border: 1px solid
+        rgba(216, 180, 254, 0.30);
+
+    box-shadow:
+        0 30px 90px
+        rgba(58, 22, 110, 0.48),
+
+        0 0 45px
+        rgba(139, 92, 246, 0.18),
+
+        inset 0 1px 0
+        rgba(255,255,255,0.16),
+
+        inset 0 -1px 0
+        rgba(0,0,0,0.20);
+
+    position: relative;
+    overflow: hidden;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+/* PREMIUM AURORA GLOW */
+
+.welcome-card::before {
+    content: "";
+    position: absolute;
+
+    width: 320px;
+    height: 320px;
+
+    top: -180px;
+    right: -100px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(196, 181, 253, 0.28),
+            rgba(139, 92, 246, 0.12),
+            transparent 70%
+        );
+
+    filter: blur(8px);
+    pointer-events: none;
+}
+
+
+/* SECONDARY LIGHT */
+
+.welcome-card::after {
+    content: "";
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    bottom: -160px;
+    left: -100px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(56, 189, 248, 0.16),
+            transparent 70%
+        );
+
+    filter: blur(12px);
+    pointer-events: none;
+}
+
+
+/* KEEP CONTENT ABOVE THE GLOW */
+
+.welcome-card > * {
+    position: relative;
+    z-index: 2;
+}
 
     .app-logo {
         width: 108px;
