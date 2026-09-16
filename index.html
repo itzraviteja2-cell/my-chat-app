@@ -1297,25 +1297,8 @@ header,
     }
 }
 
-    /* QUICK TOOLS PREMIUM TEST */
-
-.quick-tools {
-    background: rgba(12, 8, 32, 0.92) !important;
-    border: 1px solid rgba(168, 85, 247, 0.45) !important;
-    border-radius: 20px !important;
-    padding: 10px !important;
-    box-shadow: 0 0 25px rgba(124, 58, 237, 0.18) !important;
-}
-
-.quick-tools button {
-    background: rgba(124, 58, 237, 0.16) !important;
-    border: 1px solid rgba(168, 85, 247, 0.30) !important;
-    border-radius: 16px !important;
-    color: #f5f3ff !important;
-}
-
     /* =========================================
-   AURORA SMART AI — QUICK TOOLS 2.0
+   AURORA SMART AI — QUICK TOOLS FINAL
    ========================================= */
 
 .quick-tools {
@@ -1323,7 +1306,10 @@ header,
     align-items: center !important;
     gap: 10px !important;
 
-    padding: 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+
+    padding: 10px !important;
 
     background:
         linear-gradient(
@@ -1332,14 +1318,16 @@ header,
             rgba(9, 14, 38, 0.96)
         ) !important;
 
-    border: 1px solid rgba(168, 85, 247, 0.35) !important;
-    border-radius: 22px !important;
+    border: 1px solid rgba(168, 85, 247, 0.38) !important;
+    border-radius: 20px !important;
 
     box-shadow:
         0 12px 35px rgba(0, 0, 0, 0.32),
-        0 0 28px rgba(124, 58, 237, 0.12) !important;
+        0 0 28px rgba(124, 58, 237, 0.14) !important;
 
     overflow-x: auto !important;
+    overflow-y: hidden !important;
+
     scrollbar-width: none !important;
 }
 
@@ -1348,22 +1336,24 @@ header,
 }
 
 
-/* TOOL BUTTON */
+/* TOOL BUTTONS */
 
 .quick-tools button {
     flex: 0 0 auto !important;
 
-    min-width: 92px !important;
-    height: 72px !important;
+    width: auto !important;
+    min-width: 86px !important;
+    height: 68px !important;
 
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
 
-    gap: 7px !important;
+    gap: 6px !important;
 
-    padding: 9px 10px !important;
+    margin: 0 !important;
+    padding: 8px 10px !important;
 
     background:
         linear-gradient(
@@ -1372,15 +1362,18 @@ header,
             rgba(37, 99, 235, 0.12)
         ) !important;
 
-    border: 1px solid rgba(168, 85, 247, 0.28) !important;
-    border-radius: 18px !important;
+    border: 1px solid rgba(168, 85, 247, 0.30) !important;
+    border-radius: 17px !important;
 
     color: #f7f3ff !important;
 
     font-size: 10px !important;
     font-weight: 600 !important;
 
+    line-height: 1.2 !important;
+
     white-space: nowrap !important;
+    overflow: hidden !important;
 
     box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.06),
@@ -1393,11 +1386,15 @@ header,
 }
 
 
-/* TOOL ICON */
+/* TOOL ICONS */
 
 .quick-tools .tool-icon {
-    width: 27px !important;
-    height: 27px !important;
+    width: 25px !important;
+    height: 25px !important;
+
+    margin: 0 !important;
+
+    flex-shrink: 0 !important;
 
     color: #c084fc !important;
 
@@ -1408,27 +1405,11 @@ header,
 }
 
 
-/* ICON EFFECTS */
-
-.quick-tools button:hover {
-    transform: translateY(-3px) !important;
-
-    border-color: rgba(192, 132, 252, 0.70) !important;
-
-    box-shadow:
-        0 10px 25px rgba(124, 58, 237, 0.25),
-        0 0 20px rgba(168, 85, 247, 0.15) !important;
-}
-
-.quick-tools button:active {
-    transform: scale(0.95) !important;
-}
-
-
 /* WHATSAPP */
 
 .quick-tools .whatsapp-icon {
     color: #25d366 !important;
+    fill: #25d366 !important;
 
     filter:
         drop-shadow(
@@ -1461,29 +1442,51 @@ header,
 }
 
 
+/* HOVER */
+
+.quick-tools button:hover {
+    transform: translateY(-3px) !important;
+
+    border-color:
+        rgba(192, 132, 252, 0.72) !important;
+
+    box-shadow:
+        0 10px 25px rgba(124, 58, 237, 0.25),
+        0 0 20px rgba(168, 85, 247, 0.15) !important;
+}
+
+
+/* PRESS */
+
+.quick-tools button:active {
+    transform: scale(0.95) !important;
+}
+
+
 /* MOBILE */
 
 @media (max-width: 600px) {
 
     .quick-tools {
         gap: 8px !important;
-        padding: 10px !important;
-        border-radius: 20px !important;
+        padding: 8px !important;
+        border-radius: 18px !important;
     }
 
     .quick-tools button {
-        min-width: 86px !important;
-        height: 68px !important;
-        border-radius: 17px !important;
+        min-width: 78px !important;
+        height: 64px !important;
+        border-radius: 15px !important;
+        padding: 7px 8px !important;
         font-size: 9px !important;
     }
 
     .quick-tools .tool-icon {
-        width: 25px !important;
-        height: 25px !important;
+        width: 23px !important;
+        height: 23px !important;
     }
 }
-    
+
 </style>
 
 </head><body data-theme="light"><div class="aurora-bg">
