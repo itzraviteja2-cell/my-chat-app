@@ -4164,47 +4164,6 @@ function setQuickTool(
     input.focus();
 
 }
-
-/* COLLAPSE QUICK TOOLS WHEN CHAT OPENS */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        const input =
-            document.getElementById("input");
-
-        const section =
-            document.querySelector(
-                ".quick-tools-section"
-            );
-
-        const arrow =
-            document.getElementById(
-                "quickToolsArrow"
-            );
-
-        if (!input || !section) {
-            return;
-        }
-
-        input.addEventListener(
-            "focus",
-            function() {
-
-                section.classList.add(
-                    "collapsed"
-                );
-
-                if (arrow) {
-                    arrow.textContent = "›";
-                }
-
-            }
-        );
-
-    }
-);
     
     /* VOICE */
 
