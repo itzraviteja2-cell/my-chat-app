@@ -1064,6 +1064,238 @@
 
 
 /* ===== END AURORA MOBILE UI FIX ===== */
+
+    /* =========================================
+   AURORA SMART AI — PREMIUM HOME DESIGN
+   STEP 1
+   ========================================= */
+
+:root {
+    --aurora-purple: #7c3aed;
+    --aurora-violet: #a855f7;
+    --aurora-blue: #2563eb;
+    --aurora-cyan: #06b6d4;
+}
+
+/* MAIN APP BACKGROUND */
+
+body {
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(124, 58, 237, 0.18),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 10% 45%,
+            rgba(37, 99, 235, 0.12),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 90% 70%,
+            rgba(168, 85, 247, 0.10),
+            transparent 35%
+        ),
+        #080616;
+}
+
+/* APP HEADER */
+
+header,
+.top-bar,
+.app-header {
+    background: rgba(8, 6, 22, 0.82);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.18);
+}
+
+/* QUICK TOOLS AREA */
+
+.quick-tools {
+    background: rgba(12, 8, 32, 0.72);
+    border: 1px solid rgba(139, 92, 246, 0.22);
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.quick-tools::-webkit-scrollbar {
+    display: none;
+}
+
+/* QUICK TOOL BUTTONS */
+
+.quick-tools button {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(124, 58, 237, 0.16),
+            rgba(37, 99, 235, 0.08)
+        );
+
+    border: 1px solid rgba(139, 92, 246, 0.28);
+    border-radius: 16px;
+
+    color: #f4f0ff;
+
+    min-height: 62px;
+    padding: 9px 13px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+/* TOOL HOVER / PRESS */
+
+.quick-tools button:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(168, 85, 247, 0.65);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(124, 58, 237, 0.28),
+            rgba(37, 99, 235, 0.16)
+        );
+
+    box-shadow:
+        0 8px 24px rgba(124, 58, 237, 0.20);
+}
+
+.quick-tools button:active {
+    transform: scale(0.96);
+}
+
+/* TOOL ICONS */
+
+.quick-tools .tool-icon {
+    filter:
+        drop-shadow(0 0 7px rgba(168, 85, 247, 0.45));
+}
+
+/* PDF TOOL */
+
+.quick-tools .pdf-icon {
+    filter:
+        drop-shadow(0 0 8px rgba(239, 83, 85, 0.35));
+}
+
+/* INPUT AREA */
+
+.input-area {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17, 11, 40, 0.90),
+            rgba(8, 7, 25, 0.92)
+        );
+
+    border: 1px solid rgba(139, 92, 246, 0.30);
+    border-radius: 22px;
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.30),
+        0 0 22px rgba(124, 58, 237, 0.08);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+/* ADD BUTTON */
+
+.add-btn {
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7
+        ) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+
+    box-shadow:
+        0 0 18px rgba(124, 58, 237, 0.40),
+        0 7px 20px rgba(0, 0, 0, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.add-btn:hover {
+    transform: scale(1.05);
+
+    box-shadow:
+        0 0 28px rgba(168, 85, 247, 0.55),
+        0 8px 24px rgba(0, 0, 0, 0.30);
+}
+
+/* SEND BUTTON */
+
+.send-btn {
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #2563eb
+        ) !important;
+
+    box-shadow:
+        0 0 18px rgba(124, 58, 237, 0.35);
+}
+
+/* UPLOAD MENU */
+
+.upload-menu {
+    background:
+        rgba(12, 8, 32, 0.96);
+
+    border: 1px solid rgba(139, 92, 246, 0.35);
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.45),
+        0 0 25px rgba(124, 58, 237, 0.12);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    border-radius: 18px;
+}
+
+/* MOBILE POLISH */
+
+@media (max-width: 600px) {
+
+    .quick-tools {
+        border-radius: 18px;
+        padding: 8px;
+        gap: 7px;
+    }
+
+    .quick-tools button {
+        min-width: 72px;
+        min-height: 60px;
+        border-radius: 15px;
+        padding: 8px 10px;
+        font-size: 10px;
+    }
+
+    .input-area {
+        border-radius: 20px;
+    }
+}
     
 </style>
 
