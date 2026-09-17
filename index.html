@@ -4105,30 +4105,50 @@ function toggleQuickTools() {
             ".quick-tools-section"
         );
 
+    const panel =
+        document.getElementById(
+            "quickToolsPanel"
+        );
+
     const arrow =
         document.getElementById(
             "quickToolsArrow"
         );
 
-    if (!section) {
+    if (!section || !panel) {
         return;
     }
 
-    section.classList.toggle(
-        "collapsed"
-    );
+    const isOpen =
+        panel.style.display !== "none";
 
-    if (
-        section.classList.contains(
+    if (isOpen) {
+
+        section.classList.add(
             "collapsed"
-        )
-    ) {
+        );
+
+        panel.style.setProperty(
+            "display",
+            "none",
+            "important"
+        );
 
         if (arrow) {
             arrow.textContent = "›";
         }
 
     } else {
+
+        section.classList.remove(
+            "collapsed"
+        );
+
+        panel.style.setProperty(
+            "display",
+            "grid",
+            "important"
+        );
 
         if (arrow) {
             arrow.textContent = "⌄";
