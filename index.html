@@ -274,17 +274,25 @@
         z-index: 1;
     }
 
-    /* WELCOME */
-
     .welcome {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: flex-start;
+
     padding: 10px;
-    }
+    box-sizing: border-box;
+}
+
+.welcome-card {
+    flex-shrink: 0;
+    margin: 0 auto;
+}
 
     .welcome-card {
     width: 100%;
