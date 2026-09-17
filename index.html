@@ -4096,7 +4096,47 @@ const regenerateBtn =
 
     }
 
-    /* /* QUICK TOOLS TOGGLE */
+    /* QUICK TOOLS TOGGLE */
+
+function toggleQuickTools() {
+
+    const section =
+        document.querySelector(
+            ".quick-tools-section"
+        );
+
+    const arrow =
+        document.getElementById(
+            "quickToolsArrow"
+        );
+
+    if (!section) {
+        return;
+    }
+
+    section.classList.toggle(
+        "collapsed"
+    );
+
+    if (
+        section.classList.contains(
+            "collapsed"
+        )
+    ) {
+
+        if (arrow) {
+            arrow.textContent = "›";
+        }
+
+    } else {
+
+        if (arrow) {
+            arrow.textContent = "⌄";
+        }
+
+    }
+
+}
 
 function setQuickTool(
     prompt
