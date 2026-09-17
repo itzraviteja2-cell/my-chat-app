@@ -4521,8 +4521,11 @@ if (
         "collapsed"
     );
 
-    quickToolsPanel.style.display =
-        "none";
+    quickToolsPanel.style.setProperty(
+        "display",
+        "none",
+        "important"
+    );
 
     if (quickToolsArrow) {
         quickToolsArrow.textContent =
