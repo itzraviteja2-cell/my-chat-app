@@ -4096,7 +4096,7 @@ const regenerateBtn =
 
     }
 
-    /* QUICK TOOLS TOGGLE */
+    /* /* QUICK TOOLS TOGGLE */
 
 function toggleQuickTools() {
 
@@ -4105,35 +4105,51 @@ function toggleQuickTools() {
             ".quick-tools-section"
         );
 
+    const panel =
+        document.getElementById(
+            "quickToolsPanel"
+        );
+
     const arrow =
         document.getElementById(
             "quickToolsArrow"
         );
 
-    if (!section) {
+    if (!section || !panel) {
         return;
     }
 
-    section.classList.toggle(
-        "collapsed"
-    );
-
-    if (
+    const isClosed =
         section.classList.contains(
             "collapsed"
-        )
-    ) {
+        );
+
+    if (isClosed) {
+
+        section.classList.remove(
+            "collapsed"
+        );
+
+        panel.style.display = "grid";
+
+        if (arrow) {
+            arrow.textContent = "⌄";
+        }
+
+    } else {
+
+        section.classList.add(
+            "collapsed"
+        );
+
+        panel.style.display = "none";
 
         if (arrow) {
             arrow.textContent = "›";
         }
 
-    } else {
-
-        if (arrow) {
-            arrow.textContent = "⌄";
-        }
     }
+
 }
 
 function setQuickTool(
