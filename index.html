@@ -4098,60 +4098,6 @@ const regenerateBtn =
 
     /* /* QUICK TOOLS TOGGLE */
 
-function toggleQuickTools() {
-
-    const section =
-        document.querySelector(
-            ".quick-tools-section"
-        );
-
-    const panel =
-        document.getElementById(
-            "quickToolsPanel"
-        );
-
-    const arrow =
-        document.getElementById(
-            "quickToolsArrow"
-        );
-
-    if (!section || !panel) {
-        return;
-    }
-
-    const isClosed =
-        section.classList.contains(
-            "collapsed"
-        );
-
-    if (isClosed) {
-
-        section.classList.remove(
-            "collapsed"
-        );
-
-        panel.style.display = "grid";
-
-        if (arrow) {
-            arrow.textContent = "⌄";
-        }
-
-    } else {
-
-        section.classList.add(
-            "collapsed"
-        );
-
-        panel.style.display = "none";
-
-        if (arrow) {
-            arrow.textContent = "›";
-        }
-
-    }
-
-}
-
 function setQuickTool(
     prompt
 ) {
