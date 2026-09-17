@@ -4495,29 +4495,41 @@ async function sendMessage(isRegenerate = false) {
     if (!message && !selectedImage)
         return;
     
-    /* CHAT OPEN - COLLAPSE QUICK TOOLS */
+    /* QUICK TOOLS - COLLAPSE TO BAR */
 
-    const quickToolsSection =
-        document.querySelector(
-            ".quick-tools-section"
-        );
+const quickToolsSection =
+    document.querySelector(
+        ".quick-tools-section"
+    );
 
-    const quickToolsArrow =
-        document.getElementById(
-            "quickToolsArrow"
-        );
+const quickToolsPanel =
+    document.getElementById(
+        "quickToolsPanel"
+    );
 
-    if (quickToolsSection) {
+const quickToolsArrow =
+    document.getElementById(
+        "quickToolsArrow"
+    );
 
-        quickToolsSection.classList.add(
-            "collapsed"
-        );
+if (
+    quickToolsSection &&
+    quickToolsPanel
+) {
 
-        if (quickToolsArrow) {
-            quickToolsArrow.textContent = "›";
-        }
+    quickToolsSection.classList.add(
+        "collapsed"
+    );
 
+    quickToolsPanel.style.display =
+        "none";
+
+    if (quickToolsArrow) {
+        quickToolsArrow.textContent =
+            "›";
     }
+
+}
 
     /* CREATE CHAT */
 
