@@ -4472,7 +4472,30 @@ async function sendMessage(isRegenerate = false) {
 
     if (!message && !selectedImage)
         return;
+    
+    /* CHAT OPEN - COLLAPSE QUICK TOOLS */
 
+    const quickToolsSection =
+        document.querySelector(
+            ".quick-tools-section"
+        );
+
+    const quickToolsArrow =
+        document.getElementById(
+            "quickToolsArrow"
+        );
+
+    if (quickToolsSection) {
+
+        quickToolsSection.classList.add(
+            "collapsed"
+        );
+
+        if (quickToolsArrow) {
+            quickToolsArrow.textContent = "›";
+        }
+
+    }
 
     /* CREATE CHAT */
 
