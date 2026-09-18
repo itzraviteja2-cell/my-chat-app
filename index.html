@@ -4310,6 +4310,8 @@ async function sendMessage(isRegenerate = false) {
 
     const message =
         input.value.trim();
+
+    const lowerMessage = message.toLowerCase();
     
     if (!message && !selectedImage)
         return;
