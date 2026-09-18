@@ -4429,63 +4429,107 @@ if (
     }
 
 
-    /* MEMORY */
+    /* =========================================
+   AURORA SMART AI — SMART MEMORY V2
+   ========================================= */
 
-    const memoryTriggers = [
+function saveSmartMemory(message) {
 
-        "నా పేరు",
-        "my name is",
-        "నా భాష",
-        "నాకు ఇష్టం",
-        "నాకు నచ్చుతుంది",
-        "i like",
-        "i love",
-        "remember this",
-        "గుర్తు పెట్టుకో",
-        "ఇది గుర్తు పెట్టుకో"
+    const text = message.trim();
 
-    ];
+    if (!text) return;
 
+    let memories = {};
 
-    const lowerMessage =
-        message.toLowerCase();
+    try {
+        memories = JSON.parse(
+            localStorage.getItem("auroraMemory") || "{}"
+        );
+    } catch {
+        memories = {};
+    }
 
+    const lower = text.toLowerCase();
+
+    /* NAME */
 
     if (
-        memoryTriggers.some(
-            trigger =>
-                lowerMessage.includes(trigger)
-        )
+        lower.includes("నా పేరు") ||
+        lower.includes("my name is")
     ) {
 
-        let memories;
+        let name = "";
 
-        try {
-
-            memories =
-                JSON.parse(
-                    localStorage.getItem(
-                        "auroraMemory"
-                    ) || "[]"
-                );
-
-        } catch {
-
-            memories = [];
-
+        if (lower.includes("my name is")) {
+            name = text
+                .substring(
+                    lower.indexOf("my name is") + 10
+                )
+                .trim();
+        } else {
+            name = text
+                .substring(
+                    lower.indexOf("నా పేరు") + 7
+                )
+                .trim();
         }
 
-        memories.push(message);
-
-        memories =
-            memories.slice(-20);
-
-        localStorage.setItem(
-            "auroraMemory",
-            JSON.stringify(memories)
-        );
-
+        if (name) {
+            memories.name = name;
+        }
     }
+
+    /* LANGUAGE */
+
+    if (
+        lower.includes("నా భాష") ||
+        lower.includes("my language")
+    ) {
+        memories.language = text;
+    }
+
+    /* LIKES */
+
+    if (
+        lower.includes("నాకు ఇష్టం") ||
+        lower.includes("నాకు నచ్చుతుంది") ||
+        lower.includes("i like") ||
+        lower.includes("i love")
+    ) {
+        if (!memories.likes) {
+            memories.likes = [];
+        }
+
+        memories.likes.push(text);
+
+        memories.likes =
+            [...new Set(memories.likes)].slice(-10);
+    }
+
+    /* EXPLICIT REMEMBER */
+
+    if (
+        lower.includes("remember this") ||
+        lower.includes("గుర్తు పెట్టుకో") ||
+        lower.includes("ఇది గుర్తు పెట్టుకో")
+    ) {
+        if (!memories.important) {
+            memories.important = [];
+        }
+
+        memories.important.push(text);
+
+        memories.important =
+            [...new Set(memories.important)].slice(-10);
+    }
+
+    /* SAVE */
+
+    localStorage.setItem(
+        "auroraMemory",
+        JSON.stringify(memories)
+    );
+}
 
 
     /* QUICK TOOL SHORT MODE */
