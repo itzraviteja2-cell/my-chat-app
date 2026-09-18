@@ -3958,63 +3958,29 @@ const regenerateBtn =
     /* QUICK TOOLS TOGGLE */
 
 function toggleQuickTools() {
+    const section = document.querySelector(".quick-tools-section");
+    const panel = document.getElementById("quickToolsPanel");
+    const arrow = document.getElementById("quickToolsArrow");
 
-    const section =
-        document.querySelector(
-            ".quick-tools-section"
-        );
+    if (!section || !panel) return;
 
-    const panel =
-        document.getElementById(
-            "quickToolsPanel"
-        );
+    const isCollapsed = section.classList.contains("collapsed");
 
-    const arrow =
-        document.getElementById(
-            "quickToolsArrow"
-        );
-
-    if (!section || !panel) {
-        return;
-    }
-
-    const isOpen =
-        panel.style.display !== "none";
-
-    if (isOpen) {
-
-        section.classList.add(
-            "collapsed"
-        );
-
-        panel.style.setProperty(
-            "display",
-            "none",
-            "important"
-        );
-
-        if (arrow) {
-            arrow.textContent = "›";
-        }
-
-    } else {
-
-        section.classList.remove(
-            "collapsed"
-        );
-
-        panel.style.setProperty(
-            "display",
-            "grid",
-            "important"
-        );
+    if (isCollapsed) {
+        section.classList.remove("collapsed");
+        panel.style.setProperty("display", "grid", "important");
 
         if (arrow) {
             arrow.textContent = "⌄";
         }
+    } else {
+        section.classList.add("collapsed");
+        panel.style.setProperty("display", "none", "important");
 
+        if (arrow) {
+            arrow.textContent = "›";
+        }
     }
-
 }
 
 function setQuickTool(
