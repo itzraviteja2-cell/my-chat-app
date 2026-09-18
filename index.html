@@ -4310,7 +4310,9 @@ async function sendMessage(isRegenerate = false) {
 
     const message =
         input.value.trim();
+    
 saveSmartMemory(message);
+    
     if (!message && !selectedImage)
         return;
     
