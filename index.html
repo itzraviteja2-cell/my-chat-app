@@ -4434,12 +4434,12 @@ if (
 
 
     /* =========================================
-   AURORA SMART AI — SMART MEMORY V2.1
+   AURORA SMART AI — SMART MEMORY V2.2
    ========================================= */
 
 function saveSmartMemory(message) {
 
-    const text = message.trim();
+    const text = (message || "").trim();
 
     if (!text) return;
 
@@ -4451,40 +4451,19 @@ function saveSmartMemory(message) {
             localStorage.getItem("auroraMemory") || "{}"
         );
 
+        if (
+            stored &&
+            typeof stored === "object" &&
+            !Array.isArray(stored)
+        ) {
+            memories = stored;
+        }
 
     } catch {
 
         memories = {};
 
     }
-
-    /* MEMORY V2 RESET + MIGRATION */
-
-const memoryVersion =
-    localStorage.getItem("auroraMemoryVersion");
-
-if (memoryVersion !== "2.1") {
-
-    memories = {};
-
-    localStorage.setItem(
-        "auroraMemoryVersion",
-        "2.1"
-    );
-
-} else if (
-    stored &&
-    typeof stored === "object" &&
-    !Array.isArray(stored)
-) {
-
-    memories = stored;
-
-} else {
-
-    memories = {};
-
-}
 
     const lower =
         text.toLowerCase();
@@ -4494,10 +4473,8 @@ if (memoryVersion !== "2.1") {
        NAME
        ========================= */
 
-    const teluguNamePrefix = "నా పేరు";
-
     if (
-        lower.includes(teluguNamePrefix) ||
+        lower.includes("నా పేరు") ||
         lower.includes("my name is")
     ) {
 
@@ -4505,8 +4482,7 @@ if (memoryVersion !== "2.1") {
 
         if (lower.includes("my name is")) {
 
-            const prefix =
-                "my name is";
+            const prefix = "my name is";
 
             const index =
                 lower.indexOf(prefix);
@@ -4518,22 +4494,19 @@ if (memoryVersion !== "2.1") {
 
         } else {
 
+            const prefix = "నా పేరు";
+
             const index =
-                lower.indexOf(teluguNamePrefix);
+                lower.indexOf(prefix);
 
             name =
                 text
-                    .slice(
-                        index +
-                        teluguNamePrefix.length
-                    )
+                    .slice(index + prefix.length)
                     .trim();
         }
 
         if (name) {
-
             memories.name = name;
-
         }
     }
 
@@ -4564,9 +4537,7 @@ if (memoryVersion !== "2.1") {
     ) {
 
         if (!Array.isArray(memories.likes)) {
-
             memories.likes = [];
-
         }
 
         memories.likes.push(text);
@@ -4589,9 +4560,7 @@ if (memoryVersion !== "2.1") {
     ) {
 
         if (!Array.isArray(memories.important)) {
-
             memories.important = [];
-
         }
 
         memories.important.push(text);
