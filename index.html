@@ -4451,32 +4451,40 @@ function saveSmartMemory(message) {
             localStorage.getItem("auroraMemory") || "{}"
         );
 
-        /* OLD MEMORY → NEW MEMORY MIGRATION */
-
-        if (Array.isArray(stored)) {
-
-            memories = {
-                important: stored.slice(-10)
-            };
-
-        } else if (
-            stored &&
-            typeof stored === "object"
-        ) {
-
-            memories = stored;
-
-        } else {
-
-            memories = {};
-
-        }
 
     } catch {
 
         memories = {};
 
     }
+
+    /* MEMORY V2 RESET + MIGRATION */
+
+const memoryVersion =
+    localStorage.getItem("auroraMemoryVersion");
+
+if (memoryVersion !== "2.1") {
+
+    memories = {};
+
+    localStorage.setItem(
+        "auroraMemoryVersion",
+        "2.1"
+    );
+
+} else if (
+    stored &&
+    typeof stored === "object" &&
+    !Array.isArray(stored)
+) {
+
+    memories = stored;
+
+} else {
+
+    memories = {};
+
+}
 
     const lower =
         text.toLowerCase();
