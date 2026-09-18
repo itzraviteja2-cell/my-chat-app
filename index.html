@@ -4434,7 +4434,7 @@ if (
 
 
     /* =========================================
-   AURORA SMART AI — SMART MEMORY V2
+   AURORA SMART AI — SMART MEMORY V2.1
    ========================================= */
 
 function saveSmartMemory(message) {
@@ -4446,53 +4446,107 @@ function saveSmartMemory(message) {
     let memories = {};
 
     try {
-        memories = JSON.parse(
+
+        const stored = JSON.parse(
             localStorage.getItem("auroraMemory") || "{}"
         );
+
+        /* OLD MEMORY → NEW MEMORY MIGRATION */
+
+        if (Array.isArray(stored)) {
+
+            memories = {
+                important: stored.slice(-10)
+            };
+
+        } else if (
+            stored &&
+            typeof stored === "object"
+        ) {
+
+            memories = stored;
+
+        } else {
+
+            memories = {};
+
+        }
+
     } catch {
+
         memories = {};
+
     }
 
-    const lower = text.toLowerCase();
+    const lower =
+        text.toLowerCase();
 
-    /* NAME */
+
+    /* =========================
+       NAME
+       ========================= */
+
+    const teluguNamePrefix = "నా పేరు";
 
     if (
-        lower.includes("నా పేరు") ||
+        lower.includes(teluguNamePrefix) ||
         lower.includes("my name is")
     ) {
 
         let name = "";
 
         if (lower.includes("my name is")) {
-            name = text
-                .substring(
-                    lower.indexOf("my name is") + 10
-                )
-                .trim();
+
+            const prefix =
+                "my name is";
+
+            const index =
+                lower.indexOf(prefix);
+
+            name =
+                text
+                    .slice(index + prefix.length)
+                    .trim();
+
         } else {
-            name = text
-                .substring(
-                    lower.indexOf("నా పేరు") + 7
-                )
-                .trim();
+
+            const index =
+                lower.indexOf(teluguNamePrefix);
+
+            name =
+                text
+                    .slice(
+                        index +
+                        teluguNamePrefix.length
+                    )
+                    .trim();
         }
 
         if (name) {
+
             memories.name = name;
+
         }
     }
 
-    /* LANGUAGE */
+
+    /* =========================
+       LANGUAGE
+       ========================= */
 
     if (
         lower.includes("నా భాష") ||
         lower.includes("my language")
     ) {
+
         memories.language = text;
+
     }
 
-    /* LIKES */
+
+    /* =========================
+       LIKES
+       ========================= */
 
     if (
         lower.includes("నాకు ఇష్టం") ||
@@ -4500,34 +4554,50 @@ function saveSmartMemory(message) {
         lower.includes("i like") ||
         lower.includes("i love")
     ) {
-        if (!memories.likes) {
+
+        if (!Array.isArray(memories.likes)) {
+
             memories.likes = [];
+
         }
 
         memories.likes.push(text);
 
         memories.likes =
-            [...new Set(memories.likes)].slice(-10);
+            [...new Set(memories.likes)]
+            .slice(-10);
+
     }
 
-    /* EXPLICIT REMEMBER */
+
+    /* =========================
+       IMPORTANT MEMORY
+       ========================= */
 
     if (
         lower.includes("remember this") ||
         lower.includes("గుర్తు పెట్టుకో") ||
         lower.includes("ఇది గుర్తు పెట్టుకో")
     ) {
-        if (!memories.important) {
+
+        if (!Array.isArray(memories.important)) {
+
             memories.important = [];
+
         }
 
         memories.important.push(text);
 
         memories.important =
-            [...new Set(memories.important)].slice(-10);
+            [...new Set(memories.important)]
+            .slice(-10);
+
     }
 
-    /* SAVE */
+
+    /* =========================
+       SAVE
+       ========================= */
 
     localStorage.setItem(
         "auroraMemory",
