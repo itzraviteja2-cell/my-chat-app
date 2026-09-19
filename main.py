@@ -171,24 +171,9 @@ def chat(request: ChatRequest):
 
         contents = []
 
-        # MEMORY
-
-        if request.memory:
-
-            contents.append({
-                "role": "user",
-                "parts": [
-                    {
-                        "text": (
-                            "Important user memory: "
-                            + request.memory
-                        )
-                    }
-                ]
-            })
-
-
+        # =========================
         # CHAT HISTORY
+        # =========================
 
         for item in request.history:
 
@@ -208,6 +193,8 @@ def chat(request: ChatRequest):
             ):
                 continue
 
+            if not text.strip():
+                continue
 
             if role == "user":
 
@@ -219,7 +206,6 @@ def chat(request: ChatRequest):
                         }
                     ]
                 })
-
 
             elif role == "bot":
 
@@ -233,12 +219,16 @@ def chat(request: ChatRequest):
                 })
 
 
+        # =========================
         # CURRENT MESSAGE
+        # =========================
 
         current_message = request.message
 
 
+        # =========================
         # REGENERATE
+        # =========================
 
         if request.regenerate:
 
@@ -262,7 +252,49 @@ def chat(request: ChatRequest):
         })
 
 
-        # GEMINI RESPONSE WITH RETRY
+        # =========================
+        # SMART MEMORY INSTRUCTION
+        # =========================
+
+        memory_instruction = ""
+
+        if request.memory:
+
+            memory_instruction = (
+                "You have access to important saved memory "
+                "about the user.\n\n"
+
+                "IMPORTANT MEMORY:\n"
+                + request.memory
+                + "\n\n"
+
+                "MEMORY RULES:\n"
+                "1. Treat the saved memory above as trusted "
+                "user information.\n"
+
+                "2. If the user asks for information that is "
+                "already present in the saved memory, use that "
+                "information directly.\n"
+
+                "3. Do NOT ask the user to provide information "
+                "again when it is already present in memory.\n"
+
+                "4. If the saved memory contains the user's name "
+                "and the user asks 'నా పేరు ఏమిటి?', "
+                "'What is my name?', or an equivalent question, "
+                "answer using the saved name directly.\n"
+
+                "5. Do not say that you need to remember the name "
+                "again if the name is already in memory.\n"
+
+                "6. Never invent information that is not present "
+                "in memory.\n"
+            )
+
+
+        # =========================
+        # GEMINI RESPONSE
+        # =========================
 
         response = None
         last_error = None
@@ -273,8 +305,22 @@ def chat(request: ChatRequest):
             try:
 
                 response = client.models.generate_content(
-    model="gemini-3.6-flash",
-    contents=contents
+
+                    model="gemini-3.6-flash",
+
+                    contents=contents,
+
+                    config=types.GenerateContentConfig(
+                        system_instruction=
+                            memory_instruction
+                            if memory_instruction
+                            else (
+                                "You are Aurora Smart AI. "
+                                "Answer the user's question "
+                                "helpfully and naturally."
+                            )
+                    )
+
                 )
 
                 break
@@ -298,385 +344,6 @@ def chat(request: ChatRequest):
             "reply": response.text
         }
 
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
-
-
-# IMAGE CHAT
-# PHOTO + TEXT
-
-@app.post("/chat-image")
-async def chat_image(
-    message: str = Form(...),
-    image: UploadFile = File(...)
-):
-
-    if not os.getenv(
-        "GEMINI_API_KEY"
-    ):
-
-        raise HTTPException(
-            status_code=500,
-            detail="GEMINI_API_KEY is not configured"
-        )
-
-
-    try:
-
-        # READ IMAGE
-
-        image_bytes = await image.read()
-
-
-        if not image_bytes:
-
-            raise HTTPException(
-                status_code=400,
-                detail="Image file is empty"
-            )
-
-
-        # MIME TYPE
-
-        mime_type = (
-            image.content_type
-            or "image/jpeg"
-        )
-
-
-        # USER INSTRUCTION
-
-        user_message = (
-            message.strip()
-            if message
-            else "Analyze this image"
-        )
-
-
-        prompt = (
-            "Look at the uploaded image carefully "
-            "and respond to the user's request.\n\n"
-            "User request:\n"
-            + user_message
-        )
-
-
-        # SEND IMAGE + TEXT TO GEMINI
-
-        response = client.models.generate_content(
-
-            model="gemini-3.6-flash",
-
-            contents=[
-
-                types.Content(
-
-                    role="user",
-
-                    parts=[
-
-                        types.Part.from_bytes(
-
-                            data=image_bytes,
-
-                            mime_type=mime_type
-
-                        ),
-
-                        types.Part.from_text(
-
-                            text=prompt
-
-                        )
-
-                    ]
-
-                )
-
-            ]
-
-        )
-
-
-        # CHECK RESPONSE
-
-        for candidate in response.candidates:
-
-            if not candidate.content:
-
-                continue
-
-
-            for part in candidate.content.parts:
-
-
-                # TEXT RESPONSE
-
-                if part.text:
-
-                    return {
-                        "reply": part.text
-                    }
-
-
-                # IMAGE RESPONSE
-
-                if part.inline_data:
-
-                    image_data = (
-                        part.inline_data.data
-                    )
-
-
-                    return {
-                        "image":
-                            base64.b64encode(
-                                image_data
-                            ).decode("utf-8")
-                    }
-
-
-        raise HTTPException(
-            status_code=500,
-            detail="No response generated from image"
-        )
-
-
-    except HTTPException:
-
-        raise
-
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
-
-
-# IMAGE GENERATION - POLLINATIONS BYOP
-
-@app.post("/generate-image")
-def generate_image(
-    request: ImageRequest,
-    authorization: str = Header(default="")
-):
-
-    if not authorization.startswith("Bearer "):
-
-        raise HTTPException(
-            status_code=401,
-            detail="Connect your Pollinations account first"
-        )
-
-    pollinations_key = authorization[7:].strip()
-
-    if not pollinations_key:
-
-        raise HTTPException(
-            status_code=401,
-            detail="Pollinations authorization key is missing"
-        )
-
-    if not request.prompt.strip():
-
-        raise HTTPException(
-            status_code=400,
-            detail="Image prompt is required"
-        )
-
-    try:
-
-        prompt = quote(
-            request.prompt.strip(),
-            safe=""
-        )
-
-        url = (
-            "https://gen.pollinations.ai/image/"
-            + prompt
-            + "?model=flux"
-        )
-
-        api_request = Request(
-            url,
-            headers={
-                "Authorization":
-                "Bearer " +
-                pollinations_key
-            }
-        )
-
-        with urlopen(
-            api_request,
-            timeout=60
-        ) as response:
-
-            image_bytes = response.read()
-
-            mime_type = response.headers.get(
-                "Content-Type",
-                "image/jpeg"
-            )
-
-        if not image_bytes:
-
-            raise HTTPException(
-                status_code=500,
-                detail="Generated image data is empty"
-            )
-
-        image_data = base64.b64encode(
-            image_bytes
-        ).decode("utf-8")
-
-        return {
-            "image": image_data,
-            "mime_type": mime_type
-        }
-
-    except HTTPException:
-
-        raise
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
-
-# PDF CHAT
-
-@app.post("/chat-pdf")
-async def chat_pdf(
-    message: str = Form(...),
-    pdf: UploadFile = File(...)
-):
-
-    if not os.getenv(
-        "GEMINI_API_KEY"
-    ):
-
-        raise HTTPException(
-            status_code=500,
-            detail="GEMINI_API_KEY is not configured"
-        )
-
-    try:
-
-        # READ PDF
-
-        pdf_bytes = await pdf.read()
-
-        if not pdf_bytes:
-
-            raise HTTPException(
-                status_code=400,
-                detail="PDF file is empty"
-            )
-
-        # CHECK PDF TYPE
-
-        mime_type = (
-            pdf.content_type
-            or "application/pdf"
-        )
-
-        if mime_type != "application/pdf":
-
-            raise HTTPException(
-                status_code=400,
-                detail="Please upload a PDF file"
-            )
-
-        # USER QUESTION
-
-        user_message = (
-            message.strip()
-            if message.strip()
-            else "Summarize this PDF"
-        )
-
-        prompt = (
-    "Read the uploaded PDF carefully.\n\n"
-
-    "Answer the user's question using ONLY information from the PDF.\n"
-    "Do not invent or add information.\n\n"
-
-    "STRICT LANGUAGE RULE:\n"
-    "Use exactly ONE output language.\n"
-    "If the user's question is in Telugu, the ENTIRE answer must be in Telugu only.\n"
-    "If the user's question is in English, the ENTIRE answer must be in English only.\n"
-    "Never provide translations.\n"
-    "Never repeat the same information in another language.\n"
-    "Do not write an English version after a Telugu answer.\n"
-    "Do not write a Telugu version after an English answer.\n"
-    "English names, numbers, headings, or technical terms from the PDF may be kept only when necessary, "
-    "but do not translate or repeat the answer.\n\n"
-
-    "User question:\n"
-    + user_message
-        )
-
-        # SEND PDF + QUESTION TO GEMINI
-
-        response = client.models.generate_content(
-
-            model="gemini-3.6-flash",
-
-            contents=[
-
-                types.Content(
-
-                    role="user",
-
-                    parts=[
-
-                        types.Part.from_bytes(
-
-                            data=pdf_bytes,
-
-                            mime_type="application/pdf"
-
-                        ),
-
-                        types.Part.from_text(
-
-                            text=prompt
-
-                        )
-
-                    ]
-
-                )
-
-            ]
-
-        )
-
-        # RESPONSE
-
-        if response.text:
-
-            return {
-                "reply": response.text
-            }
-
-        raise HTTPException(
-            status_code=500,
-            detail="No response generated from PDF"
-        )
-
-    except HTTPException:
-
-        raise
 
     except Exception as e:
 
