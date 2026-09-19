@@ -4849,6 +4849,373 @@ else {
         "auroraMemory",
         JSON.stringify(memories)
     );
+
+    /* =========================================
+   AURORA SMART AI — SMART MEMORY V3
+   ========================================= */
+
+function saveSmartMemory(message) {
+
+    const text =
+        (message || "").trim();
+
+    if (!text) return;
+
+
+    /* =========================
+       LOAD MEMORY
+       ========================= */
+
+    let memories = {};
+
+    try {
+
+        const stored =
+            JSON.parse(
+                localStorage.getItem(
+                    "auroraMemory"
+                ) || "{}"
+            );
+
+        if (
+            stored &&
+            typeof stored === "object" &&
+            !Array.isArray(stored)
+        ) {
+
+            memories = stored;
+
+        }
+
+    } catch {
+
+        memories = {};
+
+    }
+
+
+    const lower =
+        text.toLowerCase();
+
+
+    /* =========================
+       NAME
+       ========================= */
+
+    if (
+        lower.includes("నా పేరు") ||
+        lower.includes("my name is")
+    ) {
+
+        let name = "";
+
+
+        if (
+            lower.includes("my name is")
+        ) {
+
+            const prefix =
+                "my name is";
+
+            const index =
+                lower.indexOf(
+                    prefix
+                );
+
+            name =
+                text
+                    .slice(
+                        index +
+                        prefix.length
+                    )
+                    .trim();
+
+        } else {
+
+            const prefix =
+                "నా పేరు";
+
+            const index =
+                text.indexOf(
+                    prefix
+                );
+
+            name =
+                text
+                    .slice(
+                        index +
+                        prefix.length
+                    )
+                    .trim();
+
+        }
+
+
+        if (name) {
+
+            memories.name =
+                name;
+
+        }
+
+    }
+
+
+    /* =========================
+       LANGUAGE
+       ========================= */
+
+    if (
+        lower.includes("నా భాష") ||
+        lower.includes("my language")
+    ) {
+
+        memories.language =
+            text;
+
+    }
+
+
+    /* =========================
+       LIKES
+       ========================= */
+
+    if (
+        lower.includes("నాకు ఇష్టం") ||
+        lower.includes("నాకు నచ్చుతుంది") ||
+        lower.includes("నాకు నచ్చింది") ||
+        lower.includes("i like") ||
+        lower.includes("i love") ||
+        lower.includes("i enjoy")
+    ) {
+
+        if (
+            !Array.isArray(
+                memories.likes
+            )
+        ) {
+
+            memories.likes = [];
+
+        }
+
+
+        if (
+            !memories.likes.includes(
+                text
+            )
+        ) {
+
+            memories.likes.push(
+                text
+            );
+
+        }
+
+
+        memories.likes =
+            memories.likes.slice(
+                -20
+            );
+
+    }
+
+
+    /* =========================
+       PREFERENCES
+       ========================= */
+
+    if (
+        lower.includes("నాకు కావాలి") ||
+        lower.includes("నాకు వద్దు") ||
+        lower.includes("ఇలా చేయి") ||
+        lower.includes("ఇలా చేయవద్దు") ||
+        lower.includes("నాకు ఇష్టం లేదు") ||
+        lower.includes("i prefer") ||
+        lower.includes("i don't like") ||
+        lower.includes("i want") ||
+        lower.includes("i don't want") ||
+        lower.includes("from now on") ||
+        lower.includes("ఇక నుంచి")
+    ) {
+
+        if (
+            !Array.isArray(
+                memories.preferences
+            )
+        ) {
+
+            memories.preferences = [];
+
+        }
+
+
+        if (
+            !memories.preferences.includes(
+                text
+            )
+        ) {
+
+            memories.preferences.push(
+                text
+            );
+
+        }
+
+
+        memories.preferences =
+            memories.preferences.slice(
+                -20
+            );
+
+    }
+
+
+    /* =========================
+       IMPORTANT MEMORY
+       ========================= */
+
+    if (
+        lower.includes("remember this") ||
+        lower.includes("remember that") ||
+        lower.includes("గుర్తు పెట్టుకో") ||
+        lower.includes("ఇది గుర్తు పెట్టుకో") ||
+        lower.includes("దీన్ని గుర్తు పెట్టుకో")
+    ) {
+
+        if (
+            !Array.isArray(
+                memories.important
+            )
+        ) {
+
+            memories.important = [];
+
+        }
+
+
+        if (
+            !memories.important.includes(
+                text
+            )
+        ) {
+
+            memories.important.push(
+                text
+            );
+
+        }
+
+
+        memories.important =
+            memories.important.slice(
+                -20
+            );
+
+    }
+
+
+    /* =========================
+       GENERAL USEFUL MEMORY
+       ========================= */
+
+    const usefulPatterns = [
+
+        "నా ",
+        "మా ",
+        "నాకు ",
+        "నేను ",
+        "నా దగ్గర",
+        "నా పని",
+        "నా business",
+        "నా యాప్",
+        "my ",
+        "i am ",
+        "i have ",
+        "i use ",
+        "my wife",
+        "my family",
+        "my business",
+        "my app",
+        "my project"
+
+    ];
+
+
+    const isUseful =
+        usefulPatterns.some(
+            pattern =>
+                lower.startsWith(
+                    pattern.toLowerCase()
+                )
+        );
+
+
+    if (
+        isUseful &&
+        text.length >= 5 &&
+        text.length <= 500 &&
+        !lower.includes("నా పేరు") &&
+        !lower.includes("my name is") &&
+        !lower.includes("గుర్తు పెట్టుకో") &&
+        !lower.includes("remember this") &&
+        !lower.includes("remember that")
+    ) {
+
+        if (
+            !Array.isArray(
+                memories.general
+            )
+        ) {
+
+            memories.general = [];
+
+        }
+
+
+        if (
+            !memories.general.includes(
+                text
+            )
+        ) {
+
+            memories.general.push(
+                text
+            );
+
+        }
+
+
+        memories.general =
+            memories.general.slice(
+                -30
+            );
+
+    }
+
+
+    /* =========================
+       MEMORY VERSION
+       ========================= */
+
+    memories.version =
+        "3.0";
+
+
+    /* =========================
+       SAVE MEMORY
+       ========================= */
+
+    localStorage.setItem(
+
+        "auroraMemory",
+
+        JSON.stringify(
+            memories
+        )
+
+    );
+
 }
 
     /* LOAD SAVED THEME */
