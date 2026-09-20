@@ -4895,66 +4895,67 @@ function saveSmartMemory(message) {
 
 
     /* =========================
-       NAME
-       ========================= */
+   NAME
+   ========================= */
 
-    if (
-        lower.includes("నా పేరు") ||
-        lower.includes("my name is")
-    ) {
+const isNameQuestion =
+    lower.includes("నా పేరు ఏమిటి") ||
+    lower.includes("నా పేరు ఏంటి") ||
+    lower.includes("నా పేరు చెప్పండి") ||
+    lower.includes("నా పేరు?") ||
+    lower.includes("what is my name") ||
+    lower.includes("what's my name") ||
+    lower.includes("tell me my name");
 
-        let name = "";
+if (
+    !isNameQuestion &&
+    (
+        lower.startsWith("నా పేరు") ||
+        lower.startsWith("my name is")
+    )
+) {
 
+    let name = "";
 
-        if (
-            lower.includes("my name is")
-        ) {
+    if (lower.startsWith("my name is")) {
 
-            const prefix =
-                "my name is";
+        const prefix =
+            "my name is";
 
-            const index =
-                lower.indexOf(
-                    prefix
-                );
+        const index =
+            lower.indexOf(prefix);
 
-            name =
-                text
-                    .slice(
-                        index +
-                        prefix.length
-                    )
-                    .trim();
+        name =
+            text
+                .slice(
+                    index + prefix.length
+                )
+                .trim();
 
-        } else {
+    } else {
 
-            const prefix =
-                "నా పేరు";
+        const prefix =
+            "నా పేరు";
 
-            const index =
-                text.indexOf(
-                    prefix
-                );
+        const index =
+            text.indexOf(prefix);
 
-            name =
-                text
-                    .slice(
-                        index +
-                        prefix.length
-                    )
-                    .trim();
-
-        }
-
-
-        if (name) {
-
-            memories.name =
-                name;
-
-        }
+        name =
+            text
+                .slice(
+                    index + prefix.length
+                )
+                .trim();
 
     }
+
+    if (name) {
+
+        memories.name =
+            name;
+
+    }
+}
 
 
     /* =========================
