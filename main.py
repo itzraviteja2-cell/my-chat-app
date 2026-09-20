@@ -510,6 +510,9 @@ IMPORTANT MEMORY RULES:
             "name",
             ""
         )
+        
+        print("DEBUG MEMORY DATA:", memory_data)
+print("DEBUG SAVED NAME:", saved_name)
 
         if (
             isinstance(saved_name, str)
