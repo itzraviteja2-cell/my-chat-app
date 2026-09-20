@@ -3569,6 +3569,119 @@ image.style.height = "180px";
 
         }
 
+            /* =========================
+   USER EDIT + COPY
+   ========================= */
+
+const userActions =
+    document.createElement("div");
+
+userActions.className =
+    "actions";
+
+
+const userText =
+    (
+        typeof text === "object" &&
+        text.message
+    )
+        ? text.message
+        : String(text);
+
+
+/* EDIT */
+
+const editBtn =
+    document.createElement("button");
+
+editBtn.className =
+    "action-btn";
+
+editBtn.innerHTML =
+    `
+    <i class="fa-solid fa-pen"></i>
+    Edit
+    `;
+
+editBtn.onclick =
+    () => {
+
+        const input =
+            document.getElementById(
+                "input"
+            );
+
+        if (!input)
+            return;
+
+        input.value =
+            userText;
+
+        input.focus();
+
+        input.setSelectionRange(
+            input.value.length,
+            input.value.length
+        );
+
+    };
+
+
+/* COPY */
+
+const userCopyBtn =
+    document.createElement("button");
+
+userCopyBtn.className =
+    "action-btn";
+
+userCopyBtn.innerHTML =
+    `
+    <i class="fa-solid fa-copy"></i>
+    Copy
+    `;
+
+userCopyBtn.onclick =
+    async () => {
+
+        try {
+
+            await navigator
+                .clipboard
+                .writeText(
+                    userText
+                );
+
+            showToast(
+                "Copied!"
+            );
+
+        }
+
+        catch {
+
+            showToast(
+                "Unable to copy"
+            );
+
+        }
+
+    };
+
+
+userActions.appendChild(
+    editBtn
+);
+
+userActions.appendChild(
+    userCopyBtn
+);
+
+
+bubble.parentElement.appendChild(
+    userActions
+);
+
         else {
 
             row.innerHTML =
