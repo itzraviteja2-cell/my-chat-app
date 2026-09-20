@@ -495,7 +495,42 @@ IMPORTANT MEMORY RULES:
         # =====================================
 
         current_message = request.message
+        
+        # =====================================
+        # DIRECT SAVED NAME CHECK
+        # =====================================
 
+        name_check = (
+            current_message
+            .strip()
+            .lower()
+        )
+
+        saved_name = memory_data.get(
+            "name",
+            ""
+        )
+
+        if (
+            isinstance(saved_name, str)
+            and saved_name.strip()
+            and (
+                "నా పేరు ఏమిటి" in name_check
+                or "నా పేరు ఏంటి" in name_check
+                or "నా పేరు ఏంటి?" in name_check
+                or "నా పేరు?" in name_check
+                or "what is my name" in name_check
+                or "what's my name" in name_check
+                or "tell me my name" in name_check
+            )
+        ):
+
+            return {
+                "reply":
+                    "మీ పేరు "
+                    + saved_name.strip()
+                    + "."
+            }
 
         # =====================================
         # REGENERATE
