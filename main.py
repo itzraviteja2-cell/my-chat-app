@@ -512,7 +512,7 @@ IMPORTANT MEMORY RULES:
         )
         
         print("DEBUG MEMORY DATA:", memory_data)
-print("DEBUG SAVED NAME:", saved_name)
+        print("DEBUG SAVED NAME:", saved_name)
 
         if (
             isinstance(saved_name, str)
