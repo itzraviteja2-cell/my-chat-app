@@ -4317,6 +4317,11 @@ async function sendMessage(isRegenerate = false) {
         return;
 
     saveSmartMemory(message);
+
+    console.log(
+    "AURORA MEMORY:",
+    localStorage.getItem("auroraMemory")
+);
     
     /* QUICK TOOLS - COLLAPSE TO BAR */
 
