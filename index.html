@@ -3388,7 +3388,8 @@ function renderHistory() {
     function loadChat() {
 
     const container =
-        document.getElementById(
+        document
+        .getElementById(
             "messages"
         );
 
@@ -3409,53 +3410,17 @@ function renderHistory() {
         .add("active");
 
 
-    currentChat.messages.forEach(
-        msg => {
+    currentChat.messages
+        .forEach(
+            msg => {
 
-            const role =
-                msg.role || "user";
-
-
-            let messageData;
-
-
-            if (
-                msg.image
-            ) {
-
-                messageData = {
-
-                    image:
-                        msg.image,
-
-                    message:
-                        msg.text ||
-                        msg.message ||
-                        msg.content ||
-                        ""
-
-                };
+                appendMessage(
+                    msg.text,
+                    msg.role
+                );
 
             }
-
-            else {
-
-                messageData =
-                    msg.text ??
-                    msg.message ??
-                    msg.content ??
-                    "";
-
-            }
-
-
-            appendMessage(
-                messageData,
-                role
-            );
-
-        }
-    );
+        );
 
     }
 
