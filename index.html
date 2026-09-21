@@ -3427,377 +3427,631 @@ function renderHistory() {
 
     /* MESSAGE */
 
-    function appendMessage(
-        text,
-        role
+function appendMessage(
+    text,
+    role
+) {
+
+    const container =
+        document
+        .getElementById(
+            "messages"
+        );
+
+
+    const row =
+        document
+        .createElement(
+            "div"
+        );
+
+
+    row.className =
+        "row " +
+        role;
+
+
+    /* =========================
+       USER MESSAGE
+       ========================= */
+
+    if (
+        role === "user"
     ) {
 
-        const container =
-            document
-            .getElementById(
-                "messages"
+        row.innerHTML =
+            `
+            <div class="bubble"></div>
+            `;
+
+
+        const bubble =
+            row.querySelector(
+                ".bubble"
             );
 
 
-        const row =
-            document
-            .createElement(
+        let userText = "";
+
+
+        /* IMAGE + TEXT MESSAGE */
+
+        if (
+            typeof text === "object" &&
+            text.image
+        ) {
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.src =
+                text.image;
+
+
+            image.className =
+                "chat-image";
+
+
+            image.style.width =
+                "140px";
+
+
+            image.style.height =
+                "180px";
+
+
+            image.style.objectFit =
+                "cover";
+
+
+            bubble.appendChild(
+                image
+            );
+
+
+            if (
+                text.message
+            ) {
+
+                userText =
+                    String(
+                        text.message
+                    );
+
+
+                const messageText =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                messageText.innerText =
+                    userText;
+
+
+                bubble.appendChild(
+                    messageText
+                );
+
+            }
+
+        }
+
+        /* NORMAL TEXT MESSAGE */
+
+        else {
+
+            userText =
+                String(text);
+
+
+            bubble.innerText =
+                userText;
+
+        }
+
+
+        /* =========================
+           USER MESSAGE ACTIONS
+           ========================= */
+
+        const userActions =
+            document.createElement(
                 "div"
             );
 
 
-        row.className =
-            "row " +
-            role;
+        userActions.style.display =
+            "flex";
 
 
-        if (
-    role === "user"
-) {
-
-    row.innerHTML =
-        `
-        <div class="bubble"></div>
-        `;
+        userActions.style.gap =
+            "8px";
 
 
-    const bubble =
-        row.querySelector(
-            ".bubble"
-        );
+        userActions.style.marginTop =
+            "6px";
 
 
-    if (
-        typeof text === "object" &&
-        text.image
-    ) {
+        userActions.style.alignItems =
+            "center";
 
-        const image =
+
+        /* =========================
+           EDIT BUTTON
+           ========================= */
+
+        const editBtn =
             document.createElement(
-                "img"
+                "button"
             );
 
-        image.src =
-            text.image;
 
-        image.className =
-            "chat-image";
-
-image.style.width = "140px";
-image.style.height = "180px";
-    image.style.objectFit = "cover";   
-        
-        bubble.appendChild(
-            image
-        );
+        editBtn.type =
+            "button";
 
 
-        if (
-            text.message
-        ) {
+        editBtn.innerHTML =
+            `
+            <i class="fa-solid fa-pen"></i>
+            Edit
+            `;
 
-            const messageText =
-                document.createElement(
-                    "div"
+
+        editBtn.style.display =
+            "inline-flex";
+
+
+        editBtn.style.alignItems =
+            "center";
+
+
+        editBtn.style.gap =
+            "5px";
+
+
+        editBtn.style.visibility =
+            "visible";
+
+
+        editBtn.style.opacity =
+            "1";
+
+
+        editBtn.style.cursor =
+            "pointer";
+
+
+        editBtn.onclick =
+            () => {
+
+                const input =
+                    document.getElementById(
+                        "input"
+                    );
+
+
+                if (!input)
+                    return;
+
+
+                input.value =
+                    userText;
+
+
+                input.focus();
+
+
+                input.setSelectionRange(
+                    input.value.length,
+                    input.value.length
                 );
 
-            messageText.innerText =
-                text.message;
+            };
 
-            bubble.appendChild(
-                messageText
+
+        /* =========================
+           COPY BUTTON
+           ========================= */
+
+        const copyUserBtn =
+            document.createElement(
+                "button"
             );
 
-        }
+
+        copyUserBtn.type =
+            "button";
+
+
+        copyUserBtn.innerHTML =
+            `
+            <i class="fa-solid fa-copy"></i>
+            Copy
+            `;
+
+
+        copyUserBtn.style.display =
+            "inline-flex";
+
+
+        copyUserBtn.style.alignItems =
+            "center";
+
+
+        copyUserBtn.style.gap =
+            "5px";
+
+
+        copyUserBtn.style.visibility =
+            "visible";
+
+
+        copyUserBtn.style.opacity =
+            "1";
+
+
+        copyUserBtn.style.cursor =
+            "pointer";
+
+
+        copyUserBtn.onclick =
+            async () => {
+
+                try {
+
+                    await navigator
+                        .clipboard
+                        .writeText(
+                            userText
+                        );
+
+
+                    showToast(
+                        "Copied!"
+                    );
+
+                }
+
+                catch {
+
+                    showToast(
+                        "Unable to copy"
+                    );
+
+                }
+
+            };
+
+
+        userActions.appendChild(
+            editBtn
+        );
+
+
+        userActions.appendChild(
+            copyUserBtn
+        );
+
+
+        bubble.appendChild(
+            userActions
+        );
 
     }
+
+
+    /* =========================
+       BOT MESSAGE
+       ========================= */
 
     else {
 
-        bubble.innerText =
-            text;
+        row.innerHTML =
+            `
+            <div class="message-avatar">
+                <i
+                    class="
+                    fa-solid
+                    fa-sparkles
+                    "
+                ></i>
+            </div>
 
-    }
-
-        }
-
-        else {
-
-            row.innerHTML =
-                `
-
-                <div class="message-avatar">
-                    <i
-                        class="
-                        fa-solid
-                        fa-sparkles
-                        "
-                    ></i>
-                </div>
-
+            <div
+                class="bot-wrapper"
+            >
 
                 <div
-                    class="bot-wrapper"
+                    class="bubble"
+                ></div>
+
+                <div
+                    class="actions"
                 >
 
-                    <div
-                        class="bubble"
-                    ></div>
-
-
-                    <div
-                        class="actions"
+                    <button
+                        class="
+                        action-btn
+                        listen-btn
+                        "
                     >
-
-                        <button
+                        <i
                             class="
-                            action-btn
-                            listen-btn
+                            fa-solid
+                            fa-volume-high
                             "
-                        >
-                            <i
-                                class="
-                                fa-solid
-                                fa-volume-high
-                                "
-                            ></i>
+                        ></i>
 
-                            Listen
-                        </button>
+                        Listen
+                    </button>
 
 
-                        <button
+                    <button
+                        class="
+                        action-btn
+                        copy-btn
+                        "
+                    >
+                        <i
                             class="
-                            action-btn
-                            copy-btn
+                            fa-solid
+                            fa-copy
                             "
-                        >
-                            <i
-                                class="
-                                fa-solid
-                                fa-copy
-                                "
-                            ></i>
+                        ></i>
 
-                            Copy
-                        </button>
+                        Copy
+                    </button>
 
 
-                        <button
-    class="action-btn regenerate-btn"
->
-    <i
-        class="fa-solid fa-rotate-right"
-    ></i>
+                    <button
+                        class="
+                        action-btn
+                        regenerate-btn
+                    "
+                    >
+                        <i
+                            class="
+                            fa-solid
+                            fa-rotate-right
+                            "
+                        ></i>
 
-    Regenerate
-</button>
+                        Regenerate
+                    </button>
 
 
-<button
-    class="action-btn share-btn"
->
-    <i
-        class="fa-solid fa-share-nodes"
-    ></i>
+                    <button
+                        class="
+                        action-btn
+                        share-btn
+                        "
+                    >
+                        <i
+                            class="
+                            fa-solid
+                            fa-share-nodes
+                            "
+                        ></i>
 
-    Share
-</button>
-
-                    </div>
+                        Share
+                    </button>
 
                 </div>
 
-                `;
+            </div>
+            `;
 
 
-            row
-                .querySelector(
-                    ".bubble"
-                )
-                .innerText =
-                text;
+        row
+            .querySelector(
+                ".bubble"
+            )
+            .innerText =
+            text;
 
 
-            const listenBtn =
-                row
-                .querySelector(
-                    ".listen-btn"
-                );
-
-
-            const copyBtn =
-                row
-                .querySelector(
-                    ".copy-btn"
-                );
-
-
-            const shareBtn =
-                row
-                .querySelector(
-                    ".share-btn"
-                );
-const regenerateBtn =
-    row
-    .querySelector(
-        ".regenerate-btn"
-    );
-
-            listenBtn.onclick =
-    () => {
-
-        window.speechSynthesis.cancel();
-
-
-        const speech =
-            new SpeechSynthesisUtterance(
-                text
+        const listenBtn =
+            row.querySelector(
+                ".listen-btn"
             );
 
 
-        speech.lang =
-            "en-US";
+        const copyBtn =
+            row.querySelector(
+                ".copy-btn"
+            );
 
 
-        speech.rate =
-            1;
+        const shareBtn =
+            row.querySelector(
+                ".share-btn"
+            );
 
 
-        speech.pitch =
-            1;
+        const regenerateBtn =
+            row.querySelector(
+                ".regenerate-btn"
+            );
 
 
-        window.speechSynthesis.resume();
+        /* LISTEN */
 
-
-        setTimeout(
+        listenBtn.onclick =
             () => {
 
-                window.speechSynthesis.speak(
-                    speech
+                window
+                    .speechSynthesis
+                    .cancel();
+
+
+                const speech =
+                    new SpeechSynthesisUtterance(
+                        text
+                    );
+
+
+                speech.lang =
+                    "en-US";
+
+
+                speech.rate =
+                    1;
+
+
+                speech.pitch =
+                    1;
+
+
+                window
+                    .speechSynthesis
+                    .resume();
+
+
+                setTimeout(
+                    () => {
+
+                        window
+                            .speechSynthesis
+                            .speak(
+                                speech
+                            );
+
+                    },
+                    100
                 );
 
-            },
-            100
-        );
-
-    };
+            };
 
 
-            copyBtn.onclick =
-                async () => {
+        /* BOT COPY */
+
+        copyBtn.onclick =
+            async () => {
+
+                try {
+
+                    await navigator
+                        .clipboard
+                        .writeText(
+                            text
+                        );
+
+
+                    showToast(
+                        "Copied!"
+                    );
+
+                }
+
+                catch {
+
+                    showToast(
+                        "Unable to copy"
+                    );
+
+                }
+
+            };
+
+
+        /* SHARE */
+
+        shareBtn.onclick =
+            async () => {
+
+                if (
+                    navigator.share
+                ) {
 
                     try {
 
                         await navigator
-                            .clipboard
-                            .writeText(
-                                text
-                            );
+                            .share({
 
+                                title:
+                                    "Aurora Smart AI",
 
-                        showToast(
-                            "Copied!"
-                        );
+                                text:
+                                    text
+
+                            });
+
+                    }
+
+                    catch(error) {
 
                     }
 
-                    catch {
+                }
 
-                        showToast(
-                            "Unable to copy"
+                else {
+
+                    await navigator
+                        .clipboard
+                        .writeText(
+                            text
                         );
 
-                    }
+
+                    showToast(
+                        "Copied for sharing"
+                    );
+
+                }
+
+            };
+
+
+        /* REGENERATE */
+
+        if (
+            regenerateBtn
+        ) {
+
+            regenerateBtn.onclick =
+                () => {
+
+                    regenerateResponse();
 
                 };
 
-
-            shareBtn.onclick =
-                async () => {
-
-                    if (
-                        navigator.share
-                    ) {
-
-                        try {
-
-                            await navigator
-                                .share({
-
-                                    title:
-                                        "Aurora Smart AI",
-
-                                    text:
-                                        text
-
-                                });
-
-                        }
-
-                        catch(error) {
-
-                        }
-
-                    }
-
-                    else {
-
-                        await navigator
-                            .clipboard
-                            .writeText(
-                                text
-                            );
-
-
-                        showToast(
-                            "Copied for sharing"
-                        );
-
-                    }
-
-                };
-
-            if (
-    regenerateBtn
-) {
-
-    regenerateBtn.onclick =
-        () => {
-
-            regenerateResponse();
-
-        };
-
-            }
         }
-
-
-        container.appendChild(
-            row
-        );
-
-
-        document
-            .getElementById(
-                "welcome"
-            )
-            .style.display =
-            "none";
-
-
-        container.classList
-            .add("active");
-
-
-        container.scrollTop =
-            container.scrollHeight;
 
     }
 
 
-    /* TYPING DOTS */
+    /* =========================
+       ADD MESSAGE
+       ========================= */
+
+    container.appendChild(
+        row
+    );
+
+
+    document
+        .getElementById(
+            "welcome"
+        )
+        .style.display =
+        "none";
+
+
+    container.classList
+        .add("active");
+
+
+    container.scrollTop =
+        container.scrollHeight;
+
+}
+
+
+   /* TYPING DOTS */
 
     function showTyping() {
 
