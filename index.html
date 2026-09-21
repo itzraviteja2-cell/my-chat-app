@@ -3584,10 +3584,18 @@ function appendMessage(
 
 
         /* =========================
-           EDIT BUTTON
-           ========================= */
+   EDIT BUTTON
+   ========================= */
 
-        editBtn.innerHTML =
+const editBtn =
+    document.createElement(
+        "button"
+    );
+
+editBtn.type =
+    "button";
+
+editBtn.innerHTML =
     `
     <i class="fa-solid fa-pen"></i>
     `;
@@ -3606,6 +3614,44 @@ editBtn.style.padding =
 
 editBtn.style.justifyContent =
     "center";
+
+editBtn.style.display =
+    "inline-flex";
+
+editBtn.style.alignItems =
+    "center";
+
+editBtn.style.visibility =
+    "visible";
+
+editBtn.style.opacity =
+    "1";
+
+editBtn.style.cursor =
+    "pointer";
+
+editBtn.onclick =
+    () => {
+
+        const input =
+            document.getElementById(
+                "input"
+            );
+
+        if (!input)
+            return;
+
+        input.value =
+            userText;
+
+        input.focus();
+
+        input.setSelectionRange(
+            input.value.length,
+            input.value.length
+        );
+
+    };
 
 
         /* =========================
