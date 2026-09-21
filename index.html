@@ -3387,40 +3387,75 @@ function renderHistory() {
 
     function loadChat() {
 
-        const container =
-            document
-            .getElementById(
-                "messages"
+    const container =
+        document.getElementById(
+            "messages"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    document
+        .getElementById(
+            "welcome"
+        )
+        .style.display =
+        "none";
+
+
+    container.classList
+        .add("active");
+
+
+    currentChat.messages.forEach(
+        msg => {
+
+            const role =
+                msg.role || "user";
+
+
+            let messageData;
+
+
+            if (
+                msg.image
+            ) {
+
+                messageData = {
+
+                    image:
+                        msg.image,
+
+                    message:
+                        msg.text ||
+                        msg.message ||
+                        msg.content ||
+                        ""
+
+                };
+
+            }
+
+            else {
+
+                messageData =
+                    msg.text ??
+                    msg.message ??
+                    msg.content ??
+                    "";
+
+            }
+
+
+            appendMessage(
+                messageData,
+                role
             );
 
-
-        container.innerHTML =
-            "";
-
-
-        document
-            .getElementById(
-                "welcome"
-            )
-            .style.display =
-            "none";
-
-
-        container.classList
-            .add("active");
-
-
-        currentChat.messages
-            .forEach(
-                msg => {
-
-                    appendMessage(
-                        msg.text,
-                        msg.role
-                    );
-
-                }
-            );
+        }
+    );
 
     }
 
