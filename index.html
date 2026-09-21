@@ -3584,73 +3584,25 @@ function appendMessage(
            EDIT BUTTON
            ========================= */
 
-        const editBtn =
-            document.createElement(
-                "button"
-            );
-
-
-        editBtn.type =
-            "button";
-
-
         editBtn.innerHTML =
-            `
-            <i class="fa-solid fa-pen"></i>
-            Edit
-            `;
+    `
+    <i class="fa-solid fa-pen"></i>
+    `;
 
+editBtn.title =
+    "Edit";
 
-        editBtn.style.display =
-            "inline-flex";
+editBtn.style.width =
+    "32px";
 
+editBtn.style.height =
+    "30px";
 
-        editBtn.style.alignItems =
-            "center";
+editBtn.style.padding =
+    "0";
 
-
-        editBtn.style.gap =
-            "5px";
-
-
-        editBtn.style.visibility =
-            "visible";
-
-
-        editBtn.style.opacity =
-            "1";
-
-
-        editBtn.style.cursor =
-            "pointer";
-
-
-        editBtn.onclick =
-            () => {
-
-                const input =
-                    document.getElementById(
-                        "input"
-                    );
-
-
-                if (!input)
-                    return;
-
-
-                input.value =
-                    userText;
-
-
-                input.focus();
-
-
-                input.setSelectionRange(
-                    input.value.length,
-                    input.value.length
-                );
-
-            };
+editBtn.style.justifyContent =
+    "center";
 
 
         /* =========================
