@@ -1172,15 +1172,27 @@
 
 .settings-panel {
     position: fixed;
+
     top: 0;
     right: -320px;
+
     width: 300px;
     height: 100%;
-    background: var(--sidebar);
-    z-index: 30;
+
+    background: var(--sidebar) !important;
+
+    z-index: 99999 !important;
+
+    opacity: 1 !important;
+
     transition: right 0.3s ease;
+
     border-left: 1px solid var(--border);
-    box-shadow: -15px 0 40px rgba(0,0,0,0.12);
+
+    box-shadow:
+        -15px 0 40px rgba(0,0,0,0.18);
+
+    overflow-y: auto;
 }
 
 .settings-panel.show {
@@ -1188,33 +1200,62 @@
 }
 
 .settings-header {
+    min-height: 64px;
+
     padding: 16px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--border);
+
+    background: var(--sidebar) !important;
+
+    border-bottom:
+        1px solid var(--border);
+
+    box-sizing: border-box;
 }
 
 .settings-header h3 {
     margin: 0;
+
+    font-size: 20px;
+
+    color: var(--text);
+
+    white-space: nowrap;
 }
 
 .settings-content {
     padding: 18px;
+
+    background: var(--sidebar) !important;
+
+    box-sizing: border-box;
 }
 
 .setting-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     padding: 16px;
+
+    margin-bottom: 8px;
+
     border-radius: 16px;
-    background: var(--hover);
+
+    background: var(--hover) !important;
+
+    box-sizing: border-box;
 }
 
 .setting-item strong {
     display: block;
+
     margin-bottom: 4px;
+
+    color: var(--text);
 }
 
 .setting-item p {
