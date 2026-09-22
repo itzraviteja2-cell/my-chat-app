@@ -3089,69 +3089,7 @@ document
             }
 
         }
-    );
-
-    document
-    .getElementById("pdfInput")
-    .addEventListener("change", async function(event) {
-
-        const pdfFile = event.target.files[0];
-
-        if (!pdfFile) return;
-
-        showTyping();
-
-        const formData = new FormData();
-
-        formData.append("pdf", pdfFile);
-        formData.append(
-            "message",
-            "Summarize this PDF"
-        );
-
-        try {
-
-            const response = await fetch(
-                "/chat-pdf",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
-
-            const data = await response.json();
-
-            hideTyping();
-
-            if (!response.ok) {
-
-                appendMessage(
-    "🔄 Retry",
-    "bot"
-);
-
-                return;
-            }
-
-            appendMessage(
-                data.reply,
-                "bot"
-            );
-
-        } catch (error) {
-
-    hideTyping();
-
-    appendMessage(
-        "🔄 Retry",
-        "bot"
-    );
-
-        }
-
-        event.target.value = "";
-
-    });
+    )
     
 function toggleSettings() {
 
