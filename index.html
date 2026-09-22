@@ -1270,6 +1270,39 @@
     color: var(--tool);
 }
 
+    /* SETTINGS — FINAL MOBILE FIX */
+
+.settings-panel {
+    position: fixed !important;
+    top: 0 !important;
+    right: -100vw !important;
+
+    width: 85vw !important;
+    max-width: 420px !important;
+    height: 100vh !important;
+
+    background: #ffffff !important;
+    opacity: 1 !important;
+
+    z-index: 999999 !important;
+
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+
+    transition: right 0.3s ease !important;
+}
+
+.settings-panel.show {
+    right: 0 !important;
+}
+
+.settings-header,
+.settings-content {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+}
+
 /* DARK MODE TOGGLE */
 
 .switch {
