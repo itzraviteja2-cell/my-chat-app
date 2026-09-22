@@ -555,15 +555,39 @@
     display: none;
 }
 
-    .user .bubble {
-        color: white;
-        border-bottom-right-radius: 5px;
-        background: linear-gradient(
-            135deg,
-            var(--accent),
-            var(--accent2)
-        );
-    }
+    /* USER MESSAGE */
+
+.row.user {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.user-message-text {
+    display: block !important;
+
+    color: var(--text) !important;
+
+    background: transparent !important;
+
+    width: auto !important;
+    max-width: 85% !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+
+    visibility: visible !important;
+    opacity: 1 !important;
+}
 
     .bot-wrapper {
     flex: 1;
