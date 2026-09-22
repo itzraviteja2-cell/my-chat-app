@@ -2347,79 +2347,161 @@ header,
 
     <!-- PREMIUM WELCOME -->
 
-    <div
-        class="welcome"
-        id="welcome"
-    >
-
-        <div class="welcome-card">
-
-            <img
-    src="/static/aurora-logo-small.jpg"
-    alt="Aurora Smart AI"
-    class="app-logo"
+<div
+    class="welcome"
+    id="welcome"
 >
-            
+
+    <div class="welcome-card">
+
+        <img
+            src="/static/aurora-logo-small.jpg"
+            alt="Aurora Smart AI"
+            class="app-logo"
+        >
+
+        <div class="welcome-badge">
+
+            <i
+                class="fa-solid fa-sparkles"
+            ></i>
+
+            Aurora Smart AI
+
+        </div>
+
+        <h1>
+            Your Intelligent AI Companion
+        </h1>
+
+        <p>
+            Ask anything, explore ideas,
+            and get smart answers instantly.
+        </p>
 
 
-            <div class="welcome-badge">
+        <!-- AURORA FEATURE TOOLS -->
 
-                <i
-                    class="fa-solid fa-sparkles"
-                ></i>
-
-                Aurora Smart AI
-
-            </div>
+        <div class="welcome-features">
 
 
-            <h1>
-                Your Intelligent AI Companion
-            </h1>
+            <button
+                class="welcome-feature"
+                type="button"
+                onclick="
+                setPrompt(
+                'Help me with documents'
+                )"
+            >
+
+                <span class="feature-icon">
+                    📄
+                </span>
+
+                <span class="feature-text">
+
+                    <strong>
+                        Documents
+                    </strong>
+
+                    <small>
+                        Summarize & explain
+                    </small>
+
+                </span>
+
+            </button>
 
 
-            <p>
-                Ask anything, explore ideas,
-                and get smart answers instantly.
-            </p>
+            <button
+                class="welcome-feature"
+                type="button"
+                onclick="
+                setPrompt(
+                'Help me study'
+                )"
+            >
+
+                <span class="feature-icon">
+                    🎓
+                </span>
+
+                <span class="feature-text">
+
+                    <strong>
+                        Student
+                    </strong>
+
+                    <small>
+                        Learn & solve
+                    </small>
+
+                </span>
+
+            </button>
 
 
-            <div class="quick-prompts">
+            <button
+                class="welcome-feature"
+                type="button"
+                onclick="
+                setPrompt(
+                'Give me verified government information'
+                )"
+            >
 
-                <button
-                    onclick="
-                    setPrompt(
-                    'Give me a creative idea'
-                    )"
-                >
-                    ✨ Give me a creative idea
-                </button>
+                <span class="feature-icon">
+                    🏛️
+                </span>
+
+                <span class="feature-text">
+
+                    <strong>
+                        Government Info
+                    </strong>
+
+                    <small>
+                        Verified information
+                    </small>
+
+                </span>
+
+            </button>
 
 
-                <button
-                    onclick="
-                    setPrompt(
-                    'Help me solve a problem'
-                    )"
-                >
-                    💡 Help me solve a problem
-                </button>
+            <button
+                class="welcome-feature"
+                type="button"
+                onclick="
+                setPrompt(
+                'Research this topic with reliable sources'
+                )"
+            >
 
+                <span class="feature-icon">
+                    🔎
+                </span>
 
-                <button
-                    onclick="
-                    setPrompt(
-                    'Tell me something interesting'
-                    )"
-                >
-                    🚀 Tell me something interesting
-                </button>
+                <span class="feature-text">
 
-            </div>
+                    <strong>
+                        Research
+                    </strong>
+
+                    <small>
+                        Sources & facts
+                    </small>
+
+                </span>
+
+            </button>
+
 
         </div>
 
     </div>
+
+</div>
 
 
     <!-- MESSAGES -->
