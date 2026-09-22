@@ -3842,22 +3842,21 @@ function appendMessage(
 ) {
 
     const container =
-        document
-        .getElementById(
+        document.getElementById(
             "messages"
         );
 
+    if (!container)
+        return;
+
 
     const row =
-        document
-        .createElement(
+        document.createElement(
             "div"
         );
 
-
     row.className =
-        "row " +
-        role;
+        "row " + role;
 
 
     /* =========================
@@ -3868,25 +3867,86 @@ function appendMessage(
         role === "user"
     ) {
 
-        row.innerHTML =
-    `
-    <div class="user-message-text"></div>
-    `;
+        /* FORCE USER ROW VISIBLE */
+
+        row.style.display =
+            "flex";
+
+        row.style.flexDirection =
+            "column";
+
+        row.style.alignItems =
+            "flex-end";
+
+        row.style.width =
+            "100%";
+
+        row.style.boxSizing =
+            "border-box";
 
 
         const bubble =
-    row.querySelector(
-        ".user-message-text"
-    );
+            document.createElement(
+                "div"
+            );
+
+        bubble.className =
+            "user-message-text";
+
+
+        bubble.style.display =
+            "block";
+
+        bubble.style.visibility =
+            "visible";
+
+        bubble.style.opacity =
+            "1";
+
+        bubble.style.color =
+            "var(--text)";
+
+        bubble.style.background =
+            "transparent";
+
+        bubble.style.maxWidth =
+            "85%";
+
+        bubble.style.width =
+            "auto";
+
+        bubble.style.padding =
+            "0";
+
+        bubble.style.margin =
+            "0";
+
+        bubble.style.fontSize =
+            "15px";
+
+        bubble.style.lineHeight =
+            "1.5";
+
+        bubble.style.whiteSpace =
+            "pre-wrap";
+
+        bubble.style.overflowWrap =
+            "anywhere";
+
+        bubble.style.wordBreak =
+            "break-word";
 
 
         let userText = "";
 
 
-        /* IMAGE + TEXT MESSAGE */
+        /* =========================
+           IMAGE + TEXT
+           ========================= */
 
         if (
             typeof text === "object" &&
+            text !== null &&
             text.image
         ) {
 
@@ -3895,26 +3955,26 @@ function appendMessage(
                     "img"
                 );
 
-
             image.src =
                 text.image;
-
 
             image.className =
                 "chat-image";
 
-
             image.style.width =
                 "140px";
-
 
             image.style.height =
                 "180px";
 
-
             image.style.objectFit =
                 "cover";
 
+            image.style.display =
+                "block";
+
+            image.style.borderRadius =
+                "12px";
 
             bubble.appendChild(
                 image
@@ -3930,16 +3990,16 @@ function appendMessage(
                         text.message
                     );
 
-
                 const messageText =
                     document.createElement(
                         "div"
                     );
 
-
                 messageText.innerText =
                     userText;
 
+                messageText.style.marginTop =
+                    "6px";
 
                 bubble.appendChild(
                     messageText
@@ -3949,13 +4009,15 @@ function appendMessage(
 
         }
 
-        /* NORMAL TEXT MESSAGE */
+
+        /* =========================
+           NORMAL TEXT
+           ========================= */
 
         else {
 
             userText =
-                String(text);
-
+                String(text ?? "");
 
             bubble.innerText =
                 userText;
@@ -3963,8 +4025,13 @@ function appendMessage(
         }
 
 
+        row.appendChild(
+            bubble
+        );
+
+
         /* =========================
-           USER MESSAGE ACTIONS
+           USER ACTIONS
            ========================= */
 
         const userActions =
@@ -3973,98 +4040,120 @@ function appendMessage(
             );
 
         userActions.className =
-    "user-message-actions";
+            "user-message-actions";
 
 
         userActions.style.display =
             "flex";
 
-
         userActions.style.gap =
-            "8px";
-
+            "4px";
 
         userActions.style.marginTop =
-            "6px";
+            "3px";
 
+        userActions.style.padding =
+            "0";
 
         userActions.style.alignItems =
             "center";
 
+        userActions.style.background =
+            "transparent";
+
 
         /* =========================
-   EDIT BUTTON
-   ========================= */
+           EDIT
+           ========================= */
 
-const editBtn =
-    document.createElement(
-        "button"
-    );
-
-editBtn.type =
-    "button";
-
-editBtn.innerHTML =
-    `
-    <i class="fa-solid fa-pen"></i>
-    `;
-
-editBtn.title =
-    "Edit";
-
-editBtn.style.width =
-    "32px";
-
-editBtn.style.height =
-    "30px";
-
-editBtn.style.padding =
-    "0";
-
-editBtn.style.justifyContent =
-    "center";
-
-editBtn.style.display =
-    "inline-flex";
-
-editBtn.style.alignItems =
-    "center";
-
-editBtn.style.visibility =
-    "visible";
-
-editBtn.style.opacity =
-    "1";
-
-editBtn.style.cursor =
-    "pointer";
-
-editBtn.onclick =
-    () => {
-
-        const input =
-            document.getElementById(
-                "input"
+        const editBtn =
+            document.createElement(
+                "button"
             );
 
-        if (!input)
-            return;
+        editBtn.type =
+            "button";
 
-        input.value =
-            userText;
+        editBtn.innerHTML =
+            `
+            <i class="fa-solid fa-pen"></i>
+            `;
 
-        input.focus();
+        editBtn.title =
+            "Edit";
 
-        input.setSelectionRange(
-            input.value.length,
-            input.value.length
-        );
 
-    };
+        editBtn.style.width =
+            "22px";
+
+        editBtn.style.height =
+            "22px";
+
+        editBtn.style.minWidth =
+            "22px";
+
+        editBtn.style.padding =
+            "0";
+
+        editBtn.style.margin =
+            "0";
+
+        editBtn.style.border =
+            "none";
+
+        editBtn.style.borderRadius =
+            "0";
+
+        editBtn.style.background =
+            "transparent";
+
+        editBtn.style.boxShadow =
+            "none";
+
+        editBtn.style.display =
+            "inline-flex";
+
+        editBtn.style.alignItems =
+            "center";
+
+        editBtn.style.justifyContent =
+            "center";
+
+        editBtn.style.color =
+            "var(--tool)";
+
+        editBtn.style.cursor =
+            "pointer";
+
+
+        editBtn.onclick =
+            () => {
+
+                const input =
+                    document.getElementById(
+                        "input"
+                    );
+
+                if (!input)
+                    return;
+
+
+                input.value =
+                    userText;
+
+                input.focus();
+
+
+                input.setSelectionRange(
+                    input.value.length,
+                    input.value.length
+                );
+
+            };
 
 
         /* =========================
-           COPY BUTTON
+           COPY
            ========================= */
 
         const copyUserBtn =
@@ -4072,51 +4161,56 @@ editBtn.onclick =
                 "button"
             );
 
-
         copyUserBtn.type =
             "button";
 
-
         copyUserBtn.innerHTML =
-    `
-    <i class="fa-solid fa-copy"></i>
-    `;
+            `
+            <i class="fa-solid fa-copy"></i>
+            `;
 
-copyUserBtn.title =
-    "Copy";
+        copyUserBtn.title =
+            "Copy";
 
-copyUserBtn.style.width =
-    "32px";
 
-copyUserBtn.style.height =
-    "30px";
+        copyUserBtn.style.width =
+            "22px";
 
-copyUserBtn.style.padding =
-    "0";
+        copyUserBtn.style.height =
+            "22px";
 
-copyUserBtn.style.justifyContent =
-    "center";
+        copyUserBtn.style.minWidth =
+            "22px";
 
+        copyUserBtn.style.padding =
+            "0";
+
+        copyUserBtn.style.margin =
+            "0";
+
+        copyUserBtn.style.border =
+            "none";
+
+        copyUserBtn.style.borderRadius =
+            "0";
+
+        copyUserBtn.style.background =
+            "transparent";
+
+        copyUserBtn.style.boxShadow =
+            "none";
 
         copyUserBtn.style.display =
             "inline-flex";
 
-
         copyUserBtn.style.alignItems =
             "center";
 
+        copyUserBtn.style.justifyContent =
+            "center";
 
-        copyUserBtn.style.gap =
-            "5px";
-
-
-        copyUserBtn.style.visibility =
-            "visible";
-
-
-        copyUserBtn.style.opacity =
-            "1";
-
+        copyUserBtn.style.color =
+            "var(--tool)";
 
         copyUserBtn.style.cursor =
             "pointer";
@@ -4132,7 +4226,6 @@ copyUserBtn.style.justifyContent =
                         .writeText(
                             userText
                         );
-
 
                     showToast(
                         "Copied!"
@@ -4154,7 +4247,6 @@ copyUserBtn.style.justifyContent =
         userActions.appendChild(
             editBtn
         );
-
 
         userActions.appendChild(
             copyUserBtn
@@ -4235,7 +4327,7 @@ copyUserBtn.style.justifyContent =
                         class="
                         action-btn
                         regenerate-btn
-                    "
+                        "
                     >
                         <i
                             class="
@@ -4270,13 +4362,19 @@ copyUserBtn.style.justifyContent =
             `;
 
 
-        row
-            .querySelector(
+        const bubble =
+            row.querySelector(
                 ".bubble"
-            )
-            .innerText =
+            );
+
+
+        bubble.innerText =
             text;
 
+
+        /* =========================
+           LISTEN
+           ========================= */
 
         const listenBtn =
             row.querySelector(
@@ -4284,11 +4382,100 @@ copyUserBtn.style.justifyContent =
             );
 
 
+        if (listenBtn) {
+
+            listenBtn.onclick =
+                () => {
+
+                    window
+                        .speechSynthesis
+                        .cancel();
+
+
+                    const speech =
+                        new SpeechSynthesisUtterance(
+                            text
+                        );
+
+
+                    speech.lang =
+                        "en-US";
+
+                    speech.rate =
+                        1;
+
+                    speech.pitch =
+                        1;
+
+
+                    window
+                        .speechSynthesis
+                        .resume();
+
+
+                    setTimeout(
+                        () => {
+
+                            window
+                                .speechSynthesis
+                                .speak(
+                                    speech
+                                );
+
+                        },
+                        100
+                    );
+
+                };
+
+        }
+
+
+        /* =========================
+           BOT COPY
+           ========================= */
+
         const copyBtn =
             row.querySelector(
                 ".copy-btn"
             );
 
+
+        if (copyBtn) {
+
+            copyBtn.onclick =
+                async () => {
+
+                    try {
+
+                        await navigator
+                            .clipboard
+                            .writeText(
+                                text
+                            );
+
+                        showToast(
+                            "Copied!"
+                        );
+
+                    }
+
+                    catch {
+
+                        showToast(
+                            "Unable to copy"
+                        );
+
+                    }
+
+                };
+
+        }
+
+
+        /* =========================
+           SHARE
+           ========================= */
 
         const shareBtn =
             row.querySelector(
@@ -4296,141 +4483,64 @@ copyUserBtn.style.justifyContent =
             );
 
 
+        if (shareBtn) {
+
+            shareBtn.onclick =
+                async () => {
+
+                    if (
+                        navigator.share
+                    ) {
+
+                        try {
+
+                            await navigator
+                                .share({
+
+                                    title:
+                                        "Aurora Smart AI",
+
+                                    text:
+                                        text
+
+                                });
+
+                        }
+
+                        catch(error) {
+
+                        }
+
+                    }
+
+                    else {
+
+                        await navigator
+                            .clipboard
+                            .writeText(
+                                text
+                            );
+
+                        showToast(
+                            "Copied for sharing"
+                        );
+
+                    }
+
+                };
+
+        }
+
+
+        /* =========================
+           REGENERATE
+           ========================= */
+
         const regenerateBtn =
             row.querySelector(
                 ".regenerate-btn"
             );
 
-
-        /* LISTEN */
-
-        listenBtn.onclick =
-            () => {
-
-                window
-                    .speechSynthesis
-                    .cancel();
-
-
-                const speech =
-                    new SpeechSynthesisUtterance(
-                        text
-                    );
-
-
-                speech.lang =
-                    "en-US";
-
-
-                speech.rate =
-                    1;
-
-
-                speech.pitch =
-                    1;
-
-
-                window
-                    .speechSynthesis
-                    .resume();
-
-
-                setTimeout(
-                    () => {
-
-                        window
-                            .speechSynthesis
-                            .speak(
-                                speech
-                            );
-
-                    },
-                    100
-                );
-
-            };
-
-
-        /* BOT COPY */
-
-        copyBtn.onclick =
-            async () => {
-
-                try {
-
-                    await navigator
-                        .clipboard
-                        .writeText(
-                            text
-                        );
-
-
-                    showToast(
-                        "Copied!"
-                    );
-
-                }
-
-                catch {
-
-                    showToast(
-                        "Unable to copy"
-                    );
-
-                }
-
-            };
-
-
-        /* SHARE */
-
-        shareBtn.onclick =
-            async () => {
-
-                if (
-                    navigator.share
-                ) {
-
-                    try {
-
-                        await navigator
-                            .share({
-
-                                title:
-                                    "Aurora Smart AI",
-
-                                text:
-                                    text
-
-                            });
-
-                    }
-
-                    catch(error) {
-
-                    }
-
-                }
-
-                else {
-
-                    await navigator
-                        .clipboard
-                        .writeText(
-                            text
-                        );
-
-
-                    showToast(
-                        "Copied for sharing"
-                    );
-
-                }
-
-            };
-
-
-        /* REGENERATE */
 
         if (
             regenerateBtn
@@ -4449,7 +4559,7 @@ copyUserBtn.style.justifyContent =
 
 
     /* =========================
-       ADD MESSAGE
+       ADD MESSAGE TO SCREEN
        ========================= */
 
     container.appendChild(
@@ -4457,23 +4567,39 @@ copyUserBtn.style.justifyContent =
     );
 
 
-    document
-        .getElementById(
+    /* SHOW CHAT AREA */
+
+    const welcome =
+        document.getElementById(
             "welcome"
-        )
-        .style.display =
-        "none";
+        );
 
 
-    container.classList
-        .add("active");
+    if (welcome) {
+
+        welcome.style.display =
+            "none";
+
+    }
 
 
-    container.scrollTop =
-        container.scrollHeight;
+    container.classList.add(
+        "active"
+    );
+
+
+    /* SCROLL TO NEW MESSAGE */
+
+    requestAnimationFrame(
+        () => {
+
+            container.scrollTop =
+                container.scrollHeight;
+
+        }
+    );
 
 }
-
 
    /* TYPING DOTS */
 
