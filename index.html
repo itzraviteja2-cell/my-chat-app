@@ -1096,15 +1096,28 @@
     text-overflow: ellipsis;
     }
 
-    .add-btn,
-    .mic,
-    .send {
-        width: 42px;
-        height: 42px;
-        border: none;
-        border-radius: 50%;
-        font-size: 16px;
-    }
+    .add-btn {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: var(--tool);
+    font-size: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.mic,
+.send {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
+}
 
     .add-btn,
     .mic {
