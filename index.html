@@ -4677,6 +4677,28 @@ if (
     const imageToSend =
         selectedImage;
 
+    /* SHOW CHAT MESSAGES */
+
+const messagesContainer =
+    document.getElementById(
+        "messages"
+    );
+
+if (messagesContainer) {
+
+    messagesContainer.classList.add(
+        "active"
+    );
+
+}
+
+document
+    .getElementById(
+        "welcome"
+    )
+    .style.display =
+    "none";
+
 
     /* SHOW USER MESSAGE */
 
