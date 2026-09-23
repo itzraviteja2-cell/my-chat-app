@@ -3201,26 +3201,25 @@ function toggleSettings() {
     /* NEW CHAT */
 
     function newChat() {
-
     currentChat = null;
 
-    document
-        .getElementById("messages")
-        .innerHTML = "";
+    const messages = document.getElementById("messages");
+    const welcome = document.getElementById("welcome");
 
-    document
-        .getElementById("messages")
-        .classList
-        .remove("active");
+    messages.innerHTML = "";
+    messages.classList.remove("active");
+    messages.style.display = "none";
 
-    document
-        .getElementById("welcome")
-        .style
-        .display = "flex";
+    welcome.style.display = "flex";
+    welcome.scrollTop = 0;
+
+    const welcomeCard = welcome.querySelector(".welcome-card");
+    if (welcomeCard) {
+        welcomeCard.style.display = "block";
+    }
 
     toggleSidebar();
-
-}
+    }
 function clearChatHistory() {
 
     chats.length = 0;
