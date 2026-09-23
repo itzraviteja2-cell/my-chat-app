@@ -2200,6 +2200,27 @@ header,
     padding: 0 !important;
     }
 
+    /* PREMIUM LIGHT CHAT SCREEN ONLY */
+
+body:has(.messages.active) .main {
+    background: #f7f5ff !important;
+}
+
+body:has(.messages.active) .messages {
+    background: #f7f5ff !important;
+}
+
+body:has(.messages.active) .messages .user-message-text,
+body:has(.messages.active) .messages .bubble {
+    color: #202033 !important;
+}
+
+body:has(.messages.active) .messages .action-btn {
+    color: #71677f !important;
+    background: rgba(255,255,255,0.45) !important;
+    border-color: rgba(124,58,237,0.06) !important;
+}
+
 </style>
 
 </head><body data-theme="light"><div class="aurora-bg">
