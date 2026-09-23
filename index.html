@@ -2393,31 +2393,33 @@ body:has(.messages.active) .messages .action-btn {
 
     <button
         type="button"
-        onclick="openFiles()"
+        onclick="document.getElementById('fileInput').click()"
     >
         📄 Documents
     </button>
 
     <button
-    type="button"
-    onclick="setQuickTool('Study Assistant')"
->
-    🎓 Student
-</button>
+        type="button"
+        onclick="setQuickTool('Study Assistant')"
+    >
+        🎓 Student
+    </button>
 
-<button
-    type="button"
-    onclick="setQuickTool('Government Info')"
->
-    🏛️ Government Info
-</button>
+    <button
+        type="button"
+        onclick="setQuickTool('Government Info')"
+    >
+        🏛️ Government Info
+    </button>
 
-<button
-    type="button"
-    onclick="setQuickTool('Research')"
->
-    🔎 Research
-</button>
+    <button
+        type="button"
+        onclick="setQuickTool('Research')"
+    >
+        🔎 Research
+    </button>
+
+        </div>
 
 <!-- MESSAGES -->
 <div class="messages" id="messages"></div>
