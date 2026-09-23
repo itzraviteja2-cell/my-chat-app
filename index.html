@@ -3450,13 +3450,18 @@ function renderHistory() {
 }
 
     function loadChat() {
-    const container = document.getElementById("messages");
 
-    if (!container || !currentChat) return;
+    const container =
+        document.getElementById("messages");
+
+    if (!container || !currentChat)
+        return;
 
     container.innerHTML = "";
 
-    const welcome = document.getElementById("welcome");
+    const welcome =
+        document.getElementById("welcome");
+
     if (welcome) {
         welcome.style.display = "none";
     }
@@ -3466,12 +3471,38 @@ function renderHistory() {
     container.style.visibility = "visible";
 
     currentChat.messages.forEach(msg => {
-        appendMessage(msg.text, msg.role);
+
+        if (
+            msg.role === "user" &&
+            msg.image
+        ) {
+
+            appendMessage(
+                {
+                    image: msg.image,
+                    message: msg.text || ""
+                },
+                "user"
+            );
+
+        } else {
+
+            appendMessage(
+                msg.text || "",
+                msg.role
+            );
+
+        }
+
     });
 
     requestAnimationFrame(() => {
-        container.scrollTop = container.scrollHeight;
+
+        container.scrollTop =
+            container.scrollHeight;
+
     });
+
     }
 
 
