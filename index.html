@@ -2400,21 +2400,21 @@ body:has(.messages.active) .messages .action-btn {
 
     <button
         type="button"
-        onclick="setPrompt('You are my study assistant. Explain the topic I ask about in simple language, step by step, with examples.'); document.getElementById('input').focus();"
+        onclick="setQuickTool('Study Assistant: Explain my question step by step with simple examples.')"
     >
         🎓 Student
     </button>
 
     <button
         type="button"
-        onclick="setPrompt('Provide clear, factual and verified information about the government topic I ask about. Mention the source when available.'); document.getElementById('input').focus();"
+        onclick="setQuickTool('Government Info: Give factual and verified information with sources when available.')"
     >
         🏛️ Government Info
     </button>
 
     <button
         type="button"
-        onclick="setPrompt('Research the topic I ask about carefully. Give a clear summary, important facts, and reliable sources when available.'); document.getElementById('input').focus();"
+        onclick="setQuickTool('Research: Research my topic and give a clear summary with reliable sources.')"
     >
         🔎 Research
     </button>
