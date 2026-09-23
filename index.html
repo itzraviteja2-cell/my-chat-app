@@ -993,6 +993,27 @@
     box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     z-index: 9999;
 }
+    /* QUICK TOOLS — SAFE COMPACT FIX */
+
+.quick-tools-section {
+    flex-shrink: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.quick-tools-section.collapsed .quick-tools {
+    display: none !important;
+}
+
+.quick-tools {
+    flex-shrink: 0 !important;
+    max-height: 82px !important;
+    box-sizing: border-box !important;
+}
+
+.input-area {
+    flex-shrink: 0 !important;
+}
 
 .upload-menu.show {
     display: flex;
