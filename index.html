@@ -3453,29 +3453,43 @@ function renderHistory() {
     const container =
         document.getElementById("messages");
 
-    if (!container || !currentChat)
-        return;
-
-    container.innerHTML = "";
-
     const welcome =
         document.getElementById("welcome");
 
+    if (!container || !currentChat) {
+        return;
+    }
+
+    /* CLEAR CURRENT CHAT AREA */
+    container.innerHTML = "";
+
+    /* HIDE WELCOME SCREEN */
     if (welcome) {
         welcome.style.display = "none";
     }
 
+    /* SHOW CHAT SCREEN */
     container.classList.add("active");
     container.style.display = "flex";
     container.style.visibility = "visible";
 
-    currentChat.messages.forEach(msg => {
+    /* LOAD SAVED MESSAGES */
+    const savedMessages =
+        Array.isArray(currentChat.messages)
+            ? currentChat.messages
+            : [];
 
+    savedMessages.forEach(msg => {
+
+        if (!msg) {
+            return;
+        }
+
+        /* USER IMAGE MESSAGE */
         if (
             msg.role === "user" &&
             msg.image
         ) {
-
             appendMessage(
                 {
                     image: msg.image,
@@ -3484,24 +3498,41 @@ function renderHistory() {
                 "user"
             );
 
-        } else {
-
-            appendMessage(
-                msg.text || "",
-                msg.role
-            );
-
+            return;
         }
 
+        /* BOT IMAGE MESSAGE */
+        if (
+            msg.role === "bot" &&
+            msg.image
+        ) {
+            appendMessage(
+                {
+                    image: msg.image,
+                    message: msg.text || ""
+                },
+                "bot"
+            );
+
+            return;
+        }
+
+        /* NORMAL TEXT MESSAGE */
+        appendMessage(
+            msg.text || "",
+            msg.role === "bot"
+                ? "bot"
+                : "user"
+        );
     });
 
+    /* SCROLL TO LATEST MESSAGE */
     requestAnimationFrame(() => {
 
         container.scrollTop =
             container.scrollHeight;
 
     });
-
     }
 
 
