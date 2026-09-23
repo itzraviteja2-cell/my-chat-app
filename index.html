@@ -2269,97 +2269,49 @@ header,
 
 
     <!-- PREMIUM WELCOME -->
-
-<div
-    class="welcome"
-    id="welcome"
->
-
+<div class="welcome" id="welcome">
     <div class="welcome-card">
-
-        <img
-            src="/static/aurora-logo-small.jpg"
-            alt="Aurora Smart AI"
-            class="app-logo"
-        >
+        <img src="/static/aurora-logo-small.jpg"
+             alt="Aurora Smart AI"
+             class="app-logo">
 
         <div class="welcome-badge">
-
-            <i
-                class="fa-solid fa-sparkles"
-            ></i>
-
+            <i class="fa-solid fa-sparkles"></i>
             Aurora Smart AI
-
         </div>
 
-        <h1>
-            Your Intelligent AI Companion
-        </h1>
+        <h1>Your Intelligent AI Companion</h1>
 
         <p>
-            Ask anything, explore ideas,
-            and get smart answers instantly.
+            Ask anything, explore ideas, and get smart answers instantly.
         </p>
 
-
         <div class="quick-prompts">
+            <button type="button"
+                    onclick="setPrompt('Help me with documents')">
+                📄 Documents
+            </button>
 
-    <button
-        type="button"
-        onclick="
-        setPrompt(
-        'Help me with documents'
-        )"
-    >
-        📄 Documents
-    </button>
+            <button type="button"
+                    onclick="setPrompt('Help me study')">
+                🎓 Student
+            </button>
 
+            <button type="button"
+                    onclick="setPrompt('Give me verified government information')">
+                🏛️ Government Info
+            </button>
 
-    <button
-        type="button"
-        onclick="
-        setPrompt(
-        'Help me study'
-        )"
-    >
-        🎓 Student
-    </button>
-
-
-    <button
-        type="button"
-        onclick="
-        setPrompt(
-        'Give me verified government information'
-        )"
-    >
-        🏛️ Government Info
-    </button>
-
-
-    <button
-        type="button"
-        onclick="
-        setPrompt(
-        'Research this topic with reliable sources'
-        )"
-    >
-        🔎 Research
-    </button>
-
+            <button type="button"
+                    onclick="setPrompt('Research this topic with reliable sources')">
+                🔎 Research
+            </button>
         </div>
-    
     </div>
+</div>
 
-
-    <!-- MESSAGES -->
-
-    <div
-        class="messages"
-        id="messages"
-    ></div>
-  </div>
+<!-- MESSAGES -->
+<div class="messages" id="messages"></div>
     
 <!-- QUICK TOOLS -->
 
