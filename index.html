@@ -1198,36 +1198,46 @@
         }
 
     }
-/* SETTINGS PANEL */
+/* ================================
+   AURORA SMART AI — SETTINGS PANEL
+   ================================ */
 
 .settings-panel {
     position: fixed;
-
     top: 0;
     right: -320px;
 
-    width: 85vw;
-    height: 100%;
+    width: min(85vw, 360px);
+    height: 100vh;
 
-    background: #ffffff !important;
+    background: #ffffff;
+    color: #111827;
 
-    z-index: 99999 !important;
+    z-index: 99999;
 
-    opacity: 1 !important;
+    opacity: 1;
+    visibility: visible;
 
-    transition: right 0.3s ease;
+    transition:
+        right 0.3s ease,
+        opacity 0.2s ease;
 
-    border-left: 1px solid var(--border);
+    border-left: 1px solid #e5e7eb;
 
     box-shadow:
-        -15px 0 40px rgba(0,0,0,0.18);
+        -15px 0 40px rgba(0, 0, 0, 0.18);
 
     overflow-y: auto;
+    overflow-x: hidden;
+
+    box-sizing: border-box;
 }
 
 .settings-panel.show {
     right: 0;
 }
+
+/* SETTINGS HEADER */
 
 .settings-header {
     min-height: 64px;
@@ -1238,10 +1248,10 @@
     align-items: center;
     justify-content: space-between;
 
-    background: #ffffff !important;
+    background: #ffffff;
+    color: #111827;
 
-    border-bottom:
-        1px solid var(--border);
+    border-bottom: 1px solid #e5e7eb;
 
     box-sizing: border-box;
 }
@@ -1250,32 +1260,45 @@
     margin: 0;
 
     font-size: 20px;
+    font-weight: 700;
 
-    color: var(--text);
+    color: #111827;
 
     white-space: nowrap;
 }
 
+/* SETTINGS CONTENT */
+
 .settings-content {
+    width: 100%;
+
     padding: 18px;
 
-    background: #ffffff !important;
+    background: #ffffff;
+    color: #111827;
 
     box-sizing: border-box;
 }
 
+/* SETTING ITEM */
+
 .setting-item {
+    width: 100%;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
 
     padding: 16px;
-
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 
     border-radius: 16px;
 
-    background: var(--hover) !important;
+    background: #f5f3ff;
+    color: #111827;
+
+    border: 1px solid #ede9fe;
 
     box-sizing: border-box;
 }
@@ -1285,20 +1308,76 @@
 
     margin-bottom: 4px;
 
-    color: var(--text);
+    color: #111827;
 }
 
 .setting-item p {
     margin: 0;
+
     font-size: 12px;
-    color: var(--tool);
+
+    color: #6b7280;
+
+    line-height: 1.4;
 }
 
-.settings-header,
-.settings-content {
-    width: 100% !important;
-    box-sizing: border-box !important;
-    background: #ffffff !important;
+/* DARK MODE */
+
+body.dark .settings-panel {
+    background: #120d1f;
+    color: #f5f3ff;
+
+    border-left-color: #2d2440;
+}
+
+body.dark .settings-header {
+    background: #120d1f;
+    color: #f5f3ff;
+
+    border-bottom-color: #2d2440;
+}
+
+body.dark .settings-header h3 {
+    color: #f5f3ff;
+}
+
+body.dark .settings-content {
+    background: #120d1f;
+    color: #f5f3ff;
+}
+
+body.dark .setting-item {
+    background: #1b1429;
+    color: #f5f3ff;
+
+    border-color: #302344;
+}
+
+body.dark .setting-item strong {
+    color: #f5f3ff;
+}
+
+body.dark .setting-item p {
+    color: #b9aecb;
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+
+    .settings-panel {
+        width: 88vw;
+        max-width: 360px;
+    }
+
+    .settings-content {
+        padding: 14px;
+    }
+
+    .setting-item {
+        padding: 14px;
+        border-radius: 14px;
+    }
 }
 
 /* DARK MODE TOGGLE */
