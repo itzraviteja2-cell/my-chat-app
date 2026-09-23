@@ -2591,140 +2591,113 @@ header,
 </div>
 
     <!-- INPUT -->
+<div class="input-area">
 
-    <div class="input-area">
+    <div class="image-preview-wrap" id="imagePreviewWrap">
+        <img id="imagePreview" alt="Selected image">
 
-
-        <div
-            class="image-preview-wrap"
-            id="imagePreviewWrap"
+        <button
+            class="remove-image"
+            type="button"
+            onclick="removeImage()"
         >
-
-            <img
-                id="imagePreview"
-                alt="Selected image"
-            >
-
-
-            <button
-                class="remove-image"
-                onclick="removeImage()"
-            >
-                <i
-                    class="fa-solid fa-xmark"
-                ></i>
-            </button>
-
-        </div>
-
-        <div class="input-box">
-
-
-            <button
-    class="add-btn"
-    onclick="toggleUploadMenu()"
->
-    <i class="fa-solid fa-plus"></i>
-</button>
-
-
-<div
-    class="upload-menu"
-    id="uploadMenu"
->
-
-    <button
-        onclick="openCamera()"
-    >
-        📷 Camera
-    </button>
-
-    <button
-        onclick="openGallery()"
-    >
-        🖼️ Photo Upload
-    </button>
-
-    <button
-        onclick="openFiles()"
-    >
-        📁 Files
-    </button>
-
-
-</div>
-
-
-            <input
-                type="file"
-                id="imageInput"
-                accept="image/*"
-                hidden
-                onchange="previewImage(event)"
-            >
-
-
-<!-- CAMERA -->
-
-<input
-    type="file"
-    id="cameraInput"
-    accept="image/*"
-    capture="environment"
-    hidden
-    onchange="previewImage(event)"
->
-        
-
-<!-- FILES -->
-
-<input
-    type="file"
-    id="fileInput"
-    hidden
-    onchange="previewImage(event)"
->
-            
-<input
-    type="file"
-    id="pdfInput"
-    accept=".pdf,application/pdf"
-    hidden
->
-
-<textarea
-    id="input"
-    placeholder="Message Aurora..."
-    onkeydown="handleKey(event)"
-    rows="1"
-></textarea>
-
-            <button
-                class="mic"
-                id="micBtn"
-                onclick="startVoice()"
-            >
-                <i
-                    class="fa-solid fa-microphone"
-                ></i>
-            </button>
-
-
-            <button
-    class="send"
-    type="button"
-    onclick="sendMessage()"
->
-    <i
-        class="fa-solid fa-arrow-up"
-    ></i>
-            </button>
-
-
-        </div>
-
+            <i class="fa-solid fa-xmark"></i>
+        </button>
     </div>
 
+    <div class="input-box">
+
+        <!-- PLUS BUTTON -->
+        <button
+            class="add-btn"
+            type="button"
+            onclick="toggleUploadMenu()"
+        >
+            <i class="fa-solid fa-plus"></i>
+        </button>
+
+        <!-- UPLOAD MENU -->
+        <div class="upload-menu" id="uploadMenu">
+
+            <button
+                type="button"
+                onclick="openCamera()"
+            >
+                📷 Camera
+            </button>
+
+            <button
+                type="button"
+                onclick="openGallery()"
+            >
+                🖼️ Photo Upload
+            </button>
+
+            <button
+                type="button"
+                onclick="openFiles()"
+            >
+                📁 Files
+            </button>
+
+        </div>
+
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            hidden
+            onchange="previewImage(event)"
+        >
+
+        <input
+            type="file"
+            id="cameraInput"
+            accept="image/*"
+            capture="environment"
+            hidden
+            onchange="previewImage(event)"
+        >
+
+        <input
+            type="file"
+            id="fileInput"
+            hidden
+            onchange="previewImage(event)"
+        >
+
+        <input
+            type="file"
+            id="pdfInput"
+            accept=".pdf,application/pdf"
+            hidden
+        >
+
+        <textarea
+            id="input"
+            placeholder="Message Aurora..."
+            onkeydown="handleKey(event)"
+            rows="1"
+        ></textarea>
+
+        <button
+            class="mic"
+            id="micBtn"
+            type="button"
+            onclick="startVoice()"
+        >
+            <i class="fa-solid fa-microphone"></i>
+        </button>
+
+        <button
+            class="send"
+            type="button"
+            onclick="sendMessage()"
+        >
+            <i class="fa-solid fa-arrow-up"></i>
+        </button>
+
+    </div>
 </div>
 
 <!-- SETTINGS PANEL -->
