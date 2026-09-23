@@ -3463,6 +3463,8 @@ function renderHistory() {
     /* CLEAR CURRENT CHAT AREA */
     container.innerHTML = "";
 
+    console.log("OLD CHAT:", currentChat, currentChat.messages);
+
     /* HIDE WELCOME SCREEN */
     if (welcome) {
         welcome.style.display = "none";
