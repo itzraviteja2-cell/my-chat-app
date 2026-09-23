@@ -2390,28 +2390,36 @@ body:has(.messages.active) .messages .action-btn {
         </p>
 
         <div class="quick-prompts">
-            <button type="button"
-                    onclick="setPrompt('Help me with documents')">
-                📄 Documents
-            </button>
 
-            <button type="button"
-                    onclick="setPrompt('Help me study')">
-                🎓 Student
-            </button>
+    <button
+        type="button"
+        onclick="openFiles()"
+    >
+        📄 Documents
+    </button>
 
-            <button type="button"
-                    onclick="setPrompt('Give me verified government information')">
-                🏛️ Government Info
-            </button>
+    <button
+        type="button"
+        onclick="setPrompt('You are my study assistant. Explain the topic I ask about in simple language, step by step, with examples.'); document.getElementById('input').focus();"
+    >
+        🎓 Student
+    </button>
 
-            <button type="button"
-                    onclick="setPrompt('Research this topic with reliable sources')">
-                🔎 Research
-            </button>
+    <button
+        type="button"
+        onclick="setPrompt('Provide clear, factual and verified information about the government topic I ask about. Mention the source when available.'); document.getElementById('input').focus();"
+    >
+        🏛️ Government Info
+    </button>
+
+    <button
+        type="button"
+        onclick="setPrompt('Research the topic I ask about carefully. Give a clear summary, important facts, and reliable sources when available.'); document.getElementById('input').focus();"
+    >
+        🔎 Research
+    </button>
+
         </div>
-    </div>
-</div>
 
 <!-- MESSAGES -->
 <div class="messages" id="messages"></div>
