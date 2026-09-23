@@ -3361,45 +3361,28 @@ function renderHistory() {
 }
 
     function loadChat() {
+    const container = document.getElementById("messages");
 
-    const container =
-        document
-        .getElementById(
-            "messages"
-        );
+    if (!container || !currentChat) return;
 
+    container.innerHTML = "";
 
-    container.innerHTML =
-        "";
+    const welcome = document.getElementById("welcome");
+    if (welcome) {
+        welcome.style.display = "none";
+    }
 
-
-    document
-    .querySelector(
-        "#welcome .welcome-card"
-    )
-    .style.display =
-        "none";
-
-
-    container.classList
-        .add("active");
-
-        container.style.display = "flex";
+    container.classList.add("active");
+    container.style.display = "flex";
     container.style.visibility = "visible";
 
+    currentChat.messages.forEach(msg => {
+        appendMessage(msg.text, msg.role);
+    });
 
-    currentChat.messages
-        .forEach(
-            msg => {
-
-                appendMessage(
-                    msg.text,
-                    msg.role
-                );
-
-            }
-        );
-
+    requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight;
+    });
     }
 
 
