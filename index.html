@@ -4781,16 +4781,21 @@ if (messagesContainer) {
         "active"
     );
 
+    messagesContainer.style.display =
+        "flex";
+
+    messagesContainer.style.visibility =
+        "visible";
 }
 
-    console.log(
+console.log(
     "MESSAGES ACTIVE:",
     messagesContainer.className
 );
 
 document
-    .getElementById(
-        "welcome"
+    .querySelector(
+        "#welcome .welcome-card"
     )
     .style.display =
     "none";
