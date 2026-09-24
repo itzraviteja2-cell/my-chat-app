@@ -5704,7 +5704,21 @@ async function webSearch() {
     /* PDF CHAT MEMORY */
 
 let selectedPDF = null;
+    
+function autoResizeInput() {
+    const input = document.getElementById("input");
 
+    if (!input) return;
+
+    input.style.height = "42px";
+
+    const newHeight = Math.min(input.scrollHeight, 120);
+
+    input.style.height = newHeight + "px";
+
+    input.style.overflowY =
+        input.scrollHeight > 120 ? "auto" : "hidden";
+}
     
     /* SEND MESSAGE */
 
