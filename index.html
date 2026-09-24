@@ -4850,33 +4850,51 @@ if (
     /* SHOW CHAT MESSAGES */
 
 const messagesContainer =
-    document.getElementById(
-        "messages"
-    );
-
-if (messagesContainer) {
-
-    messagesContainer.classList.add(
-        "active"
-    );
-
-    messagesContainer.style.display =
-        "flex";
-
-    messagesContainer.style.visibility =
-        "visible";
-}
-
-console.log(
-    "MESSAGES ACTIVE:",
-    messagesContainer.className
-);
+    document.getElementById("messages");
 
 const welcome =
     document.getElementById("welcome");
 
+if (messagesContainer) {
+
+    messagesContainer.classList.add("active");
+
+    messagesContainer.style.display = "flex";
+
+    messagesContainer.style.visibility = "visible";
+
+    messagesContainer.style.opacity = "1";
+}
+
 if (welcome) {
     welcome.style.display = "none";
+}
+
+/* SHOW USER MESSAGE */
+
+if (!isRegenerate) {
+
+    if (imageToSend) {
+
+        appendMessage(
+            {
+                image:
+                    URL.createObjectURL(
+                        imageToSend
+                    ),
+                message:
+                    message
+            },
+            "user"
+        );
+
+    } else {
+
+        appendMessage(
+            message,
+            "user"
+        );
+    }
 }
 
 
