@@ -2967,37 +2967,58 @@ body {
     }
 }
 
-    /* QUICK TOOLS — KEEP PANEL BELOW THE BAR */
+    /* QUICK TOOLS — FIX ROW OVERLAP */
 
 .quick-tools-section {
     position: relative !important;
     z-index: 20 !important;
+}
+
+.quick-tools-section .quick-tools {
+    display: grid !important;
+
+    grid-template-columns: repeat(3, 1fr) !important;
+
+    grid-auto-rows: 64px !important;
+
+    gap: 8px !important;
+
+    height: auto !important;
+    min-height: 136px !important;
+
+    overflow: visible !important;
+
+    transform: none !important;
+}
+
+.quick-tools-section .quick-tools button {
+    height: 64px !important;
+    min-height: 64px !important;
+
+    box-sizing: border-box !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 4px !important;
+
+    line-height: 1.15 !important;
+
     overflow: visible !important;
 }
 
-.quick-tools-section:not(.collapsed) {
-    margin-bottom: 8px !important;
-}
+.quick-tools-section .quick-tools button span {
+    display: block !important;
 
-.quick-tools-section:not(.collapsed) .quick-tools {
-    position: relative !important;
-    top: auto !important;
-    bottom: auto !important;
-    transform: none !important;
+    height: auto !important;
+    min-height: 0 !important;
 
-    margin-top: 6px !important;
+    line-height: 1.15 !important;
 
-    width: 100% !important;
-    max-height: 180px !important;
-    overflow-y: auto !important;
-
-    box-sizing: border-box !important;
-}
-
-.input-area {
-    position: relative !important;
-    z-index: 50 !important;
-    margin-top: 6px !important;
+    overflow: visible !important;
 }
 
 </style>
