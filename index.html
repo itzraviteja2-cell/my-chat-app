@@ -2967,6 +2967,39 @@ body {
     }
 }
 
+    /* QUICK TOOLS — KEEP PANEL BELOW THE BAR */
+
+.quick-tools-section {
+    position: relative !important;
+    z-index: 20 !important;
+    overflow: visible !important;
+}
+
+.quick-tools-section:not(.collapsed) {
+    margin-bottom: 8px !important;
+}
+
+.quick-tools-section:not(.collapsed) .quick-tools {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+
+    margin-top: 6px !important;
+
+    width: 100% !important;
+    max-height: 180px !important;
+    overflow-y: auto !important;
+
+    box-sizing: border-box !important;
+}
+
+.input-area {
+    position: relative !important;
+    z-index: 50 !important;
+    margin-top: 6px !important;
+}
+
 </style>
 
 </head><body data-theme="light"><div class="aurora-bg">
