@@ -373,10 +373,10 @@ def chat(request: ChatRequest):
 
 
         # =====================================
-# SYSTEM INSTRUCTION
-# =====================================
+        # SYSTEM INSTRUCTION
+        # =====================================
 
-system_instruction = """
+        system_instruction = """
 
 You are Aurora Smart AI.
 
