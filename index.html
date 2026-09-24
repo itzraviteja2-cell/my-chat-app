@@ -5708,8 +5708,9 @@ let selectedPDF = null;
     
 function autoResizeInput() {
     const input = document.getElementById("input");
+    const box = document.querySelector(".input-box");
 
-    if (!input) return;
+    if (!input || !box) return;
 
     input.style.height = "42px";
 
@@ -5719,6 +5720,9 @@ function autoResizeInput() {
 
     input.style.overflowY =
         input.scrollHeight > 120 ? "auto" : "hidden";
+
+    box.style.height =
+        Math.max(54, newHeight + 12) + "px";
 }
     
     /* SEND MESSAGE */
