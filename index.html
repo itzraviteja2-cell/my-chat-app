@@ -3933,6 +3933,31 @@ function openPDF() {
         .click();
 }
 
+    function handleDocumentUpload(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    console.log("AURORA DOCUMENT:", file.name);
+
+    // PDF file
+    if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
+        const pdfInput = document.getElementById("pdfInput");
+
+        if (pdfInput) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            pdfInput.files = dataTransfer.files;
+        }
+
+        alert("PDF selected: " + file.name);
+        return;
+    }
+
+    // Other supported documents
+    alert("Document selected: " + file.name);
+    }
+
 
 /* PDF SELECT */
 
