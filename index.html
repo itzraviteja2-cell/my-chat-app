@@ -3139,6 +3139,67 @@ body {
     overflow: visible !important;
 }
 
+    /* =========================================
+   AURORA — FINAL UPLOAD MENU OVERRIDE
+   ========================================= */
+
+.upload-menu {
+    background: linear-gradient(
+        145deg,
+        #24134f 0%,
+        #100a2d 100%
+    ) !important;
+
+    border: 1px solid rgba(184, 112, 255, 0.75) !important;
+    border-radius: 18px !important;
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.55),
+        0 0 30px rgba(124, 58, 237, 0.35) !important;
+
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+
+    padding: 8px !important;
+    z-index: 999999 !important;
+}
+
+.upload-menu.show {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+}
+
+.upload-menu button {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #ffffff !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px !important;
+
+    min-height: 44px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
+.upload-menu button:hover {
+    background: linear-gradient(
+        90deg,
+        rgba(124, 58, 237, 0.40),
+        rgba(168, 85, 247, 0.25)
+    ) !important;
+
+    border-color: rgba(192, 132, 252, 0.60) !important;
+}
+
+@media (max-width: 600px) {
+    .upload-menu {
+        width: 180px !important;
+        bottom: 145px !important;
+        left: 4px !important;
+    }
+    }
+
 </style>
 
 </head><body data-theme="light"><div class="aurora-bg">
