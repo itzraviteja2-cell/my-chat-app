@@ -4897,36 +4897,6 @@ if (!isRegenerate) {
     }
 }
 
-
-    /* SHOW USER MESSAGE */
-
-    if (!isRegenerate) {
-
-        if (imageToSend) {
-
-            appendMessage(
-                {
-                    image:
-                        URL.createObjectURL(
-                            imageToSend
-                        ),
-                    message:
-                        message
-                },
-                "user"
-            );
-
-        } else {
-
-            appendMessage(
-                message,
-                "user"
-            );
-
-        }
-    }
-
-
     /* SAVE USER MESSAGE */
 
     if (!isRegenerate) {
