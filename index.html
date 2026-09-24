@@ -4872,12 +4872,12 @@ console.log(
     messagesContainer.className
 );
 
-document
-    .querySelector(
-        "#welcome .welcome-card"
-    )
-    .style.display =
-    "none";
+const welcome =
+    document.getElementById("welcome");
+
+if (welcome) {
+    welcome.style.display = "none";
+}
 
 
     /* SHOW USER MESSAGE */
