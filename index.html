@@ -1013,77 +1013,60 @@
    ========================================= */
 
 .upload-menu {
-    display: none;
-
+    display: none !important;
     position: absolute;
     bottom: 145px;
     left: 6px;
-
-    width: 185px;
+    width: 190px;
     padding: 8px;
-
     box-sizing: border-box;
 
-    border-radius: 18px;
+    background: linear-gradient(
+        145deg,
+        rgba(28, 18, 65, 0.98),
+        rgba(10, 7, 28, 0.99)
+    ) !important;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(31, 20, 70, 0.98),
-            rgba(16, 10, 42, 0.98)
-        );
-
-    border: 1px solid rgba(168, 85, 247, 0.55);
+    border: 1px solid rgba(168, 85, 247, 0.65) !important;
+    border-radius: 18px !important;
 
     box-shadow:
-        0 14px 35px rgba(0, 0, 0, 0.40),
-        0 0 24px rgba(124, 58, 237, 0.22);
+        0 18px 45px rgba(0, 0, 0, 0.50),
+        0 0 28px rgba(124, 58, 237, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 
-    z-index: 9999;
-
+    z-index: 99999 !important;
     overflow: hidden;
 }
 
-
-/* OPEN */
-
 .upload-menu.show {
-    display: flex;
-
+    display: flex !important;
     flex-direction: column;
+    gap: 5px;
 
-    gap: 4px;
-
-    animation: uploadMenuIn 0.18s ease-out;
+    animation: auroraUploadIn 0.20s ease-out;
 }
-
-
-/* MENU BUTTON */
 
 .upload-menu button {
     width: 100%;
-
     min-height: 44px;
 
     display: flex;
     align-items: center;
 
     padding: 9px 12px;
-
     box-sizing: border-box;
 
-    border: 1px solid transparent;
-    border-radius: 12px;
+    border: 1px solid transparent !important;
+    border-radius: 12px !important;
 
-    background: transparent;
-
-    color: #f8f5ff;
+    background: rgba(255, 255, 255, 0.055) !important;
+    color: #f8f5ff !important;
 
     text-align: left;
-
     cursor: pointer;
 
     font-family: inherit;
@@ -1093,64 +1076,52 @@
     transition:
         background 0.18s ease,
         border-color 0.18s ease,
-        transform 0.18s ease;
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
 }
 
-
-/* HOVER */
-
 .upload-menu button:hover {
-    background:
-        linear-gradient(
-            90deg,
-            rgba(124, 58, 237, 0.25),
-            rgba(168, 85, 247, 0.16)
-        );
+    background: linear-gradient(
+        90deg,
+        rgba(124, 58, 237, 0.32),
+        rgba(168, 85, 247, 0.20)
+    ) !important;
 
-    border-color: rgba(168, 85, 247, 0.35);
+    border-color: rgba(168, 85, 247, 0.45) !important;
+
+    box-shadow:
+        0 0 14px rgba(124, 58, 237, 0.18);
 
     transform: translateX(2px);
 }
-
-
-/* PRESS */
 
 .upload-menu button:active {
     transform: scale(0.97);
 }
 
-
-/* SMALL SCREEN */
+/* MOBILE */
 
 @media (max-width: 600px) {
 
     .upload-menu {
-        width: 175px;
-
+        width: 180px;
         bottom: 145px;
         left: 4px;
-
         padding: 7px;
-
-        border-radius: 17px;
+        border-radius: 17px !important;
     }
 
     .upload-menu button {
-        min-height: 42px;
-
+        min-height: 43px;
         padding: 8px 11px;
-
-        font-size: 12.5px;
-
-        border-radius: 11px;
+        font-size: 13px;
+        border-radius: 11px !important;
     }
 }
 
+/* PREMIUM OPEN ANIMATION */
 
-/* OPEN ANIMATION */
-
-@keyframes uploadMenuIn {
-
+@keyframes auroraUploadIn {
     from {
         opacity: 0;
         transform: translateY(8px) scale(0.96);
@@ -1160,7 +1131,6 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
-
 }
 
 /* QUICK TOOL ICONS */
