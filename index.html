@@ -5721,9 +5721,11 @@ function autoResizeInput() {
     input.style.overflowY =
         input.scrollHeight > 120 ? "auto" : "hidden";
 
-    box.style.height =
-        Math.max(54, newHeight + 12) + "px";
-}
+    box.style.setProperty(
+    "height",
+    Math.max(46, newHeight + 12) + "px",
+    "important"
+);
     
     /* SEND MESSAGE */
 
