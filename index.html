@@ -3944,6 +3944,13 @@ document
             const pdfFile =
                 event.target.files[0];
 
+            console.log(
+    "AURORA PDF FILE:",
+    pdfFile.name,
+    pdfFile.type,
+    pdfFile.size
+);
+
             if (!pdfFile) {
                 return;
             }
