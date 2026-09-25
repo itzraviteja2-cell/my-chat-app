@@ -3966,10 +3966,34 @@ formData.append(
 
 try {
 
-                const response =
-    await fetch(
-        "/chat-pdf",
-        {
+    const healthResponse =
+        await fetch(
+            "/health",
+            {
+                method: "GET",
+                cache: "no-store"
+            }
+        );
+
+    const healthText =
+        await healthResponse.text();
+
+    appendMessage(
+        "🔧 PDF connection test:\n" +
+        healthResponse.status +
+        "\n" +
+        healthText,
+        "bot"
+    );
+
+    const response =
+        await fetch(
+            "/chat-pdf",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
             method: "POST",
             body: formData
         }
