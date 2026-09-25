@@ -3944,38 +3944,19 @@ document
             const pdfFile =
                 event.target.files[0];
 
-            console.log(
-    if (!pdfFile) {
-    return;
-}
-
-alert(
-    "PDF SELECTED\n\n" +
-    "Name: " + pdfFile.name +
-    "\nType: " + pdfFile.type +
-    "\nSize: " + pdfFile.size + " bytes"
-);
-
             if (!pdfFile) {
                 return;
             }
 
-            const pdfFile =
-    event.target.files[0];
+            alert(
+                "PDF SELECTED\n\n" +
+                "Name: " + pdfFile.name +
+                "\nType: " + pdfFile.type +
+                "\nSize: " + pdfFile.size + " bytes"
+            );
 
-if (!pdfFile) {
-    return;
-}
-
-alert(
-    "PDF SELECTED\n\n" +
-    "Name: " + pdfFile.name +
-    "\nType: " + pdfFile.type +
-    "\nSize: " + pdfFile.size + " bytes"
-);
-
-const pdfFileToSend =
-    pdfFile;
+            const pdfFileToSend =
+                pdfFile;
 
             formData.append(
     "message",
