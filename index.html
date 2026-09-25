@@ -3960,18 +3960,22 @@ alert(
                 return;
             }
 
-            const pdfFileToSend =
-    pdfFile;
+            const pdfFile =
+    event.target.files[0];
 
-showTyping();
+if (!pdfFile) {
+    return;
+}
 
-const formData =
-    new FormData();
-
-formData.append(
-    "pdf",
-    pdfFileToSend
+alert(
+    "PDF SELECTED\n\n" +
+    "Name: " + pdfFile.name +
+    "\nType: " + pdfFile.type +
+    "\nSize: " + pdfFile.size + " bytes"
 );
+
+const pdfFileToSend =
+    pdfFile;
 
             formData.append(
     "message",
