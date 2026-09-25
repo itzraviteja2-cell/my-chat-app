@@ -4009,13 +4009,19 @@ document
 
             catch (error) {
 
-                hideTyping();
+    hideTyping();
 
-                appendMessage(
-                    "📄 PDF error: " +
-                    error.message,
-                    "bot"
-                );
+    console.error(
+        "AURORA PDF ERROR:",
+        error
+    );
+
+    appendMessage(
+        "📄 PDF error: " +
+        (error?.message || "Unknown error") +
+        "\n\nPDF request Railway serverకి చేరలేదు.",
+        "bot"
+    );
 
             }
 
