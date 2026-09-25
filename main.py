@@ -17,7 +17,6 @@ from fastapi import (
 
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from google import genai
@@ -31,14 +30,6 @@ from google.genai import types
 app = FastAPI(
     title="Aurora Smart AI",
     version="2.0.0"
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
 )
 
 
