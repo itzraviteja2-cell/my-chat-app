@@ -3956,14 +3956,22 @@ document
             );
 
             const pdfFileToSend =
-                pdfFile;
+    pdfFile;
 
-            formData.append(
-    "message",
-    "ఈ PDFలో ఏముంది? ముఖ్యమైన విషయాలను సులభంగా తెలుగులో మాత్రమే summarize చేయండి. Englishలో మళ్లీ translation ఇవ్వకండి. ఒకే సమాధానం ఒక్కసారి మాత్రమే ఇవ్వండి."
+const formData =
+    new FormData();
+
+formData.append(
+    "pdf",
+    pdfFileToSend
 );
 
-            try {
+formData.append(
+    "message",
+    "Summarize this PDF and answer in the same language and style as the user's request. Do not force Telugu or English. Give only one clear answer."
+);
+
+try {
 
                 const response =
     await fetch(
