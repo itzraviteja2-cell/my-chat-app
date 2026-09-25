@@ -4015,11 +4015,13 @@ try {
     );
 
     appendMessage(
-        "📄 PDF error: " +
-        (error?.message || "Unknown error") +
-        "\n\nPDF request Railway serverకి చేరలేదు.",
-        "bot"
-    );
+    "📄 PDF error: " +
+    (error?.message || "Unknown error") +
+    "\n\nType: " +
+    (error?.name || "Unknown") +
+    "\n\nPDF request failed before receiving a response from Railway.",
+    "bot"
+);
 
             }
 
