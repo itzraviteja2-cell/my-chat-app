@@ -5370,6 +5370,127 @@ function setQuickTool(
 
 }
 
+    /* VOICE */
+
+let auroraRecognition = null;
+let auroraVoiceListening = false;
+
+function startVoice() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+
+        showToast(
+            "Voice input is not supported"
+        );
+
+        return;
+    }
+
+    const micBtn =
+        document.getElementById("micBtn");
+
+    if (!auroraRecognition) {
+
+        auroraRecognition =
+            new SpeechRecognition();
+
+        auroraRecognition.lang = "te-IN";
+        auroraRecognition.continuous = true;
+        auroraRecognition.interimResults = true;
+        auroraRecognition.maxAlternatives = 1;
+
+        auroraRecognition.onstart = () => {
+
+            auroraVoiceListening = true;
+
+            if (micBtn) {
+                micBtn.classList.add("listening");
+            }
+        };
+
+        auroraRecognition.onresult = (event) => {
+
+            let text = "";
+
+            for (
+                let i = event.resultIndex;
+                i < event.results.length;
+                i++
+            ) {
+
+                text +=
+                    event.results[i][0].transcript;
+            }
+
+            const input =
+                document.getElementById("input");
+
+            if (input) {
+
+                input.value = text;
+
+                input.style.height = "auto";
+
+                input.style.height =
+                    Math.min(
+                        input.scrollHeight,
+                        120
+                    ) + "px";
+            }
+        };
+
+        auroraRecognition.onerror = (event) => {
+
+            console.log(
+                "Voice error:",
+                event.error
+            );
+
+            auroraVoiceListening = false;
+
+            if (micBtn) {
+                micBtn.classList.remove(
+                    "listening"
+                );
+            }
+        };
+
+        auroraRecognition.onend = () => {
+
+            auroraVoiceListening = false;
+
+            if (micBtn) {
+                micBtn.classList.remove(
+                    "listening"
+                );
+            }
+        };
+    }
+
+    if (auroraVoiceListening) {
+
+        auroraRecognition.stop();
+
+    } else {
+
+        try {
+
+            auroraRecognition.start();
+
+        } catch (error) {
+
+            console.log(
+                "Voice start error:",
+                error
+            );
+        }
+    }
+}
+
 function regenerateResponse() {
 
     if (
