@@ -3945,10 +3945,15 @@ document
                 event.target.files[0];
 
             console.log(
-    "AURORA PDF FILE:",
-    pdfFile.name,
-    pdfFile.type,
-    pdfFile.size
+    if (!pdfFile) {
+    return;
+}
+
+alert(
+    "PDF SELECTED\n\n" +
+    "Name: " + pdfFile.name +
+    "\nType: " + pdfFile.type +
+    "\nSize: " + pdfFile.size + " bytes"
 );
 
             if (!pdfFile) {
