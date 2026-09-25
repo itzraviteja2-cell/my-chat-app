@@ -3864,6 +3864,62 @@ body {
 
     }
 
+    async function uploadPDF(event) {
+
+    const pdfFile = event.target.files[0];
+
+    if (!pdfFile) return;
+
+    const formData = new FormData();
+
+    formData.append("pdf", pdfFile);
+
+    formData.append(
+        "message",
+        "Summarize this PDF and answer in the same language and style as the user's request. Do not force Telugu or English. Give only one clear answer."
+    );
+
+    try {
+
+        const response = await fetch(
+            "/chat-pdf",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            appendMessage(
+                "📄 PDF error: " +
+                (data.detail || "PDF upload failed"),
+                "bot"
+            );
+            return;
+        }
+
+        appendMessage(
+            "📄 PDF Summary\n\n" +
+            (data.reply || "PDF summary అందుబాటులో లేదు."),
+            "bot"
+        );
+
+    } catch (error) {
+
+        console.error("AURORA PDF ERROR:", error);
+
+        appendMessage(
+            "📄 PDF error: " +
+            (error?.message || "Unknown error"),
+            "bot"
+        );
+    }
+
+    event.target.value = "";
+    }
+
 function openCamera() {
 
     document
