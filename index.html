@@ -3710,11 +3710,12 @@ body {
 >
 
         <input
-            type="file"
-            id="pdfInput"
-            accept=".pdf,application/pdf"
-            hidden
-        >
+    type="file"
+    id="pdfInput"
+    accept=".pdf,application/pdf"
+    hidden
+    onchange="previewImage(event)"
+>
 
         <textarea
     id="input"
