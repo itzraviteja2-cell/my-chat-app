@@ -5370,53 +5370,322 @@ function setQuickTool(
 
 }
     
-    /* VOICE */
+    /* =========================
+   AURORA SMART AI — VOICE
+   ========================= */
 
-    function startVoice() {
+let auroraRecognition = null;
+let auroraVoiceListening = false;
+let auroraFinalTranscript = "";
 
-        const SpeechRecognition =
-            window.SpeechRecognition ||
-            window.webkitSpeechRecognition;
+function startVoice() {
 
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
-        if (
-            !SpeechRecognition
-        ) {
+    if (!SpeechRecognition) {
 
-            showToast(
-                "Voice input is not supported"
-            );
+        showToast(
+            "Voice input is not supported on this browser"
+        );
 
-            return;
+        return;
+    }
 
+    const input =
+        document.getElementById("input");
+
+    const micBtn =
+        document.getElementById("micBtn");
+
+    if (auroraVoiceListening) {
+
+        auroraVoiceListening = false;
+
+        if (auroraRecognition) {
+            try {
+                auroraRecognition.stop();
+            } catch (e) {}
         }
 
+        micBtn.classList.remove("listening");
 
-        const recognition =
-            new SpeechRecognition();
+        return;
+    }
+
+    auroraVoiceListening = true;
+    auroraFinalTranscript = "";
+
+    auroraRecognition =
+        new SpeechRecognition();
+
+    /*
+     * Telugu + English mixed speech
+     * Chrome generally handles the selected
+     * language better than trying to switch
+     * languages automatically.
+     */
+    auroraRecognition.lang = "te-IN";
+
+    auroraRecognition.continuous = true;
+
+    auroraRecognition.interimResults = true;
+
+    auroraRecognition.maxAlternatives = 1;
 
 
-        recognition.lang =
-            "en-US";
+    auroraRecognition.onstart = () => {
+
+        micBtn.classList.add("listening");
+
+        showToast(
+            "🎤 Listening..."
+        );
+    };
 
 
-        const micBtn =
-            document
-            .getElementById(
-                "micBtn"
+    auroraRecognition.onresult = (event) => {
+
+        let interimTranscript = "";
+
+        for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ) {
+
+            const transcript =
+                event.results[i][0].transcript;
+
+            if (
+                event.results[i].isFinal
+            ) {
+
+                auroraFinalTranscript +=
+                    transcript + " ";
+
+            } else {
+
+                interimTranscript +=
+                    transcript;
+
+            }
+        }
+
+        const combinedText =
+            (
+                auroraFinalTranscript +
+                interimTranscript
+            ).trim();
+
+        if (combinedText) {
+
+            input.value =
+                combinedText;
+
+            input.dispatchEvent(
+                new Event("input", {
+                    bubbles: true
+                })
             );
+        }
+    };
 
 
-        recognition.onstart =
-            () => {
+    auroraRecognition.onerror = (event) => {
 
-                micBtn
-                    .classList
-                    .add(
-                        "listening"
+        console.log(
+            "Voice recognition error:",
+            event.error
+        );
+
+        /*
+         * Do not stop automatically for
+         * temporary browser recognition errors.
+         */
+        if (
+            event.error === "no-speech" ||
+            event.error === "audio-capture" ||
+            event.error === "network"
+        ) {
+            return;
+        }
+    };
+
+
+    auroraRecognition.onend = () => {
+
+        /*
+         * Chrome may automatically end a
+         * recognition session after some time.
+         * Restart while the user is still listening.
+         */
+        if (auroraVoiceListening) {
+
+            setTimeout(() => {
+
+                if (
+                    !auroraVoiceListening
+                ) {
+                    return;
+                }
+
+                try {
+
+                    auroraRecognition =
+                        new SpeechRecognition();
+
+                    auroraRecognition.lang =
+                        "te-IN";
+
+                    auroraRecognition.continuous =
+                        true;
+
+                    auroraRecognition.interimResults =
+                        true;
+
+                    auroraRecognition.maxAlternatives =
+                        1;
+
+                    /*
+                     * Reconnect handlers
+                     */
+                    auroraRecognition.onstart =
+                        () => {
+
+                            micBtn.classList.add(
+                                "listening"
+                            );
+                        };
+
+
+                    auroraRecognition.onresult =
+                        (event) => {
+
+                            let interimTranscript =
+                                "";
+
+                            for (
+                                let i =
+                                    event.resultIndex;
+                                i <
+                                    event.results.length;
+                                i++
+                            ) {
+
+                                const transcript =
+                                    event.results[i][0]
+                                        .transcript;
+
+                                if (
+                                    event.results[i]
+                                        .isFinal
+                                ) {
+
+                                    auroraFinalTranscript +=
+                                        transcript + " ";
+
+                                } else {
+
+                                    interimTranscript +=
+                                        transcript;
+                                }
+                            }
+
+                            const combinedText =
+                                (
+                                    auroraFinalTranscript +
+                                    interimTranscript
+                                ).trim();
+
+                            if (combinedText) {
+
+                                input.value =
+                                    combinedText;
+
+                                input.dispatchEvent(
+                                    new Event(
+                                        "input",
+                                        {
+                                            bubbles: true
+                                        }
+                                    )
+                                );
+                            }
+                        };
+
+
+                    auroraRecognition.onerror =
+                        (errorEvent) => {
+
+                            console.log(
+                                "Voice restart error:",
+                                errorEvent.error
+                            );
+                        };
+
+
+                    auroraRecognition.onend =
+                        () => {
+
+                            if (
+                                auroraVoiceListening
+                            ) {
+
+                                setTimeout(() => {
+
+                                    if (
+                                        auroraVoiceListening
+                                    ) {
+
+                                        startVoice();
+                                    }
+
+                                }, 300);
+                            }
+                        };
+
+
+                    auroraRecognition.start();
+
+                } catch (error) {
+
+                    console.log(
+                        "Voice restart failed:",
+                        error
                     );
+                }
 
-            };
+            }, 300);
+
+        } else {
+
+            micBtn.classList.remove(
+                "listening"
+            );
+        }
+    };
+
+
+    try {
+
+        auroraRecognition.start();
+
+    } catch (error) {
+
+        console.log(
+            "Voice start error:",
+            error
+        );
+
+        auroraVoiceListening = false;
+
+        micBtn.classList.remove(
+            "listening"
+        );
+    }
+}
 
 
         recognition.onend =
