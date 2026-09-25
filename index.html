@@ -3976,13 +3976,13 @@ formData.append(
             try {
 
                 const response =
-                    await fetch(
-                        "/chat-pdf",
-                        {
-                            method: "POST",
-                            body: formData
-                        }
-                    );
+    await fetch(
+        "https://my-chat-app-production-c4fa.up.railway.app/chat-pdf",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
 
                 const data =
                     await response.json();
