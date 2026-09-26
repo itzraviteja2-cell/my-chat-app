@@ -1430,7 +1430,7 @@ async def astrologer_kundali(data: dict):
             }
         }
 
-                kundali_request = Request(
+        kundali_request = Request(
 
             kundali_url,
 
