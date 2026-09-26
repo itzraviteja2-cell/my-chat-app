@@ -3205,6 +3205,227 @@ body {
     }
     }
 
+    /* =========================================
+   AURORA ASTROLOGER
+   ========================================= */
+
+.aurora-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(8, 4, 20, 0.72);
+    backdrop-filter: blur(12px);
+}
+
+.aurora-modal-card {
+    width: min(420px, 100%);
+    padding: 26px;
+
+    border-radius: 28px;
+
+    background: linear-gradient(
+        145deg,
+        #ffffff,
+        #f4efff
+    );
+
+    box-shadow:
+        0 25px 80px
+        rgba(80, 40, 150, 0.35);
+
+    position: relative;
+
+    animation:
+        astroCardIn
+        0.25s
+        ease;
+}
+
+@keyframes astroCardIn {
+    from {
+        opacity: 0;
+        transform:
+            translateY(18px)
+            scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+.aurora-modal-close {
+    position: absolute;
+
+    right: 15px;
+    top: 15px;
+
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    border-radius: 50%;
+
+    background:
+        rgba(124, 58, 237, 0.10);
+
+    color: #6d28d9;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.astro-title {
+    font-size: 24px;
+    font-weight: 800;
+
+    color: #5b21b6;
+
+    margin-bottom: 3px;
+}
+
+.astro-subtitle {
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #8b5cf6;
+
+    margin-bottom: 15px;
+}
+
+.astro-description {
+    font-size: 14px;
+    line-height: 1.6;
+
+    color: #4b4560;
+
+    margin-bottom: 20px;
+}
+
+.aurora-modal-card label {
+    display: block;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    margin:
+        14px 0 7px;
+
+    color: #40374f;
+}
+
+.aurora-modal-card input {
+    width: 100%;
+    box-sizing: border-box;
+
+    height: 46px;
+
+    padding: 0 13px;
+
+    border:
+        1px solid
+        rgba(124, 58, 237, 0.20);
+
+    border-radius: 13px;
+
+    outline: none;
+
+    background:
+        rgba(255, 255, 255, 0.9);
+
+    font-size: 14px;
+}
+
+.aurora-modal-card input:focus {
+    border-color: #8b5cf6;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(139, 92, 246, 0.10);
+}
+
+.astro-generate-btn {
+    width: 100%;
+
+    height: 48px;
+
+    margin-top: 22px;
+
+    border: none;
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7
+        );
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px
+        rgba(124, 58, 237, 0.28);
+}
+
+
+/* DARK MODE */
+
+[data-theme="dark"]
+.aurora-modal-card {
+    background:
+        linear-gradient(
+            145deg,
+            #1a1028,
+            #100a1b
+        );
+}
+
+[data-theme="dark"]
+.astro-title {
+    color: #c4b5fd;
+}
+
+[data-theme="dark"]
+.astro-subtitle {
+    color: #d8b4fe;
+}
+
+[data-theme="dark"]
+.astro-description {
+    color: #d4cce0;
+}
+
+[data-theme="dark"]
+.aurora-modal-card label {
+    color: #e8e0f2;
+}
+
+[data-theme="dark"]
+.aurora-modal-card input {
+    background: #160d22;
+    color: white;
+
+    border-color:
+        rgba(192, 132, 252, 0.25);
+}
+
 </style>
 
 </head><body data-theme="light"><div class="aurora-bg">
