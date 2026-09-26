@@ -7476,6 +7476,72 @@ if (pollinationsKey) {
 
 </script>
 
+        <!-- AURORA ASTROLOGER -->
+
+<div id="astrologerModal" class="aurora-modal">
+
+    <div class="aurora-modal-card">
+
+        <button
+            type="button"
+            class="aurora-modal-close"
+            onclick="closeAstrologer()"
+        >
+            ✕
+        </button>
+
+        <div class="astro-title">
+            🔮 Aurora Astrologer
+        </div>
+
+        <div class="astro-subtitle">
+            Vedic Astrology
+        </div>
+
+        <p class="astro-description">
+            మీ జన్మ వివరాలు ఇవ్వండి. మీ Kundaliని Aurora AI వివరించగలదు.
+        </p>
+
+        <label>
+            📅 Date of Birth
+        </label>
+
+        <input
+            type="date"
+            id="astroBirthDate"
+        >
+
+        <label>
+            🕐 Time of Birth
+        </label>
+
+        <input
+            type="time"
+            id="astroBirthTime"
+        >
+
+        <label>
+            📍 Birth Place
+        </label>
+
+        <input
+            type="text"
+            id="astroBirthPlace"
+            placeholder="ఉదా: Warangal, Telangana"
+        >
+
+        <button
+            type="button"
+            class="astro-generate-btn"
+            onclick="generateKundali()"
+        >
+            ✨ Generate Kundali
+        </button>
+
+    </div>
+
+</div>
+
 </body>
 
 </html>
