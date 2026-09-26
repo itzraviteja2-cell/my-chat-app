@@ -7732,23 +7732,26 @@ function generateKundali() {
     const place =
         document.getElementById("astroBirthPlace").value.trim();
 
+    const button =
+        document.querySelector(".astro-generate-btn");
+
 
     if (!date || !time || !place) {
 
-        if (typeof showToast === "function") {
-            showToast(
-                "Date, Time మరియు Birth Place ఇవ్వండి"
-            );
-        }
+        alert(
+            "Date, Time మరియు Birth Place ఇవ్వండి"
+        );
 
         return;
     }
 
 
-    if (typeof showToast === "function") {
-        showToast(
-            "🔮 Real Kundali calculate చేస్తోంది..."
-        );
+    if (button) {
+
+        button.disabled = true;
+
+        button.innerText =
+            "🔮 Kundali Calculate చేస్తోంది...";
     }
 
 
@@ -7774,7 +7777,8 @@ function generateKundali() {
 
     .then(async response => {
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
         if (!response.ok) {
 
@@ -7790,68 +7794,51 @@ function generateKundali() {
     .then(data => {
 
         console.log(
-            "REAL NAVAMSHA KUNDALI:",
+            "NAVAMSHA RESULT:",
             data
         );
 
 
-        if (typeof showToast === "function") {
-
-            showToast(
-                "✅ Real Kundali సిద్ధమైంది"
-            );
-        }
-
-
-        /*
-         * ప్రస్తుతం real Kundali data
-         * browser consoleలో test అవుతుంది.
-         *
-         * తరువాత దీనిని premium
-         * Kundali result cardగా చూపిస్తాం.
-         */
-
-        console.log(
-            "Birth Place:",
+        alert(
+            "✅ Real Kundali data వచ్చింది!\n\n" +
+            "Source: " +
+            data.source +
+            "\n\n" +
+            "Birth Place: " +
             data.birthPlace
         );
 
-        console.log(
-            "Latitude:",
-            data.latitude
-        );
 
-        console.log(
-            "Longitude:",
-            data.longitude
-        );
+        if (button) {
 
-        console.log(
-            "Source:",
-            data.source
-        );
+            button.disabled = false;
 
-        console.log(
-            "Kundali:",
-            data.kundali
-        );
+            button.innerText =
+                "✨ Generate Kundali";
+        }
 
     })
 
     .catch(error => {
 
         console.error(
-            "Kundali Error:",
+            "KUNDALI ERROR:",
             error
         );
 
 
-        if (typeof showToast === "function") {
+        alert(
+            "❌ Kundali generate కాలేదు.\n\n" +
+            error.message
+        );
 
-            showToast(
-                "❌ Kundali തയ്യാറാക്കാൻ കഴിഞ്ഞില്ല: " +
-                error.message
-            );
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.innerText =
+                "✨ Generate Kundali";
         }
 
     });
