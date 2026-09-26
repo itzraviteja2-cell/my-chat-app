@@ -1254,3 +1254,230 @@ IMPORTANT:
             status_code=500,
             detail=str(e)
         )
+
+# =========================================
+# REAL ASTROLOGER - NAVAMSHA KUNDALI
+# =========================================
+
+@app.post("/astrologer/kundali")
+async def astrologer_kundali(data: dict):
+
+    try:
+
+        api_key = os.getenv("NAVAMSHA_API_KEY")
+
+        if not api_key:
+            raise HTTPException(
+                status_code=500,
+                detail="NAVAMSHA_API_KEY is not configured"
+            )
+
+        birth_date = str(
+            data.get("birthDate", "")
+        ).strip()
+
+        birth_time = str(
+            data.get("birthTime", "")
+        ).strip()
+
+        birth_place = str(
+            data.get("birthPlace", "")
+        ).strip()
+
+        if not birth_date or not birth_time or not birth_place:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Birth date, time and place are required"
+            )
+
+
+        # -----------------------------------------
+        # DATE
+        # -----------------------------------------
+
+        date_parts = birth_date.split("-")
+
+        if len(date_parts) != 3:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid birth date"
+            )
+
+        year = int(date_parts[0])
+        month = int(date_parts[1])
+        date = int(date_parts[2])
+
+
+        # -----------------------------------------
+        # TIME
+        # -----------------------------------------
+
+        time_parts = birth_time.split(":")
+
+        if len(time_parts) < 2:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid birth time"
+            )
+
+        hours = int(time_parts[0])
+        minutes = int(time_parts[1])
+
+
+        # -----------------------------------------
+        # GEOCODE BIRTH PLACE
+        # -----------------------------------------
+
+        geocode_url = (
+            "https://nominatim.openstreetmap.org/search"
+            "?format=json"
+            "&limit=1"
+            "&countrycodes=in"
+            "&q="
+            + quote(birth_place)
+        )
+
+        geocode_request = Request(
+            geocode_url,
+            headers={
+                "User-Agent":
+                    "Aurora-Smart-AI/1.0"
+            }
+        )
+
+        with urlopen(
+            geocode_request,
+            timeout=15
+        ) as geo_response:
+
+            geo_data = json.loads(
+                geo_response.read()
+                .decode("utf-8")
+            )
+
+
+        if not geo_data:
+
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "Birth place not found. "
+                    "Please enter a valid city and state."
+                )
+            )
+
+
+        latitude = float(
+            geo_data[0]["lat"]
+        )
+
+        longitude = float(
+            geo_data[0]["lon"]
+        )
+
+
+        # -----------------------------------------
+        # NAVAMSHA KUNDALI
+        # -----------------------------------------
+
+        kundali_url = (
+            "https://api.navamsha.in"
+            "/api/v1/kundali/basic"
+        )
+
+        kundali_payload = {
+
+            "year": year,
+            "month": month,
+            "date": date,
+
+            "hours": hours,
+            "minutes": minutes,
+
+            "latitude": latitude,
+            "longitude": longitude,
+
+            # India Standard Time
+            "timezone": 5.5,
+
+            "settings": {
+                "ayanamsha": "lahiri",
+                "observation_point": "topocentric"
+            }
+        }
+
+
+        kundali_request = Request(
+
+            kundali_url,
+
+            data=json.dumps(
+                kundali_payload
+            ).encode("utf-8"),
+
+            headers={
+                "X-API-Key": api_key,
+                "Content-Type":
+                    "application/json"
+            },
+
+            method="POST"
+        )
+
+
+        with urlopen(
+            kundali_request,
+            timeout=30
+        ) as kundali_response:
+
+            kundali_data = json.loads(
+                kundali_response
+                .read()
+                .decode("utf-8")
+            )
+
+
+        if not kundali_data.get("output"):
+
+            raise HTTPException(
+                status_code=500,
+                detail="Kundali calculation failed"
+            )
+
+
+        return {
+
+            "success": True,
+
+            "birthPlace": birth_place,
+
+            "latitude": latitude,
+
+            "longitude": longitude,
+
+            "timezone": 5.5,
+
+            "source": "Navamsha",
+
+            "ayanamsha": "Lahiri",
+
+            "kundali":
+                kundali_data["output"]
+        }
+
+
+    except HTTPException:
+
+        raise
+
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
