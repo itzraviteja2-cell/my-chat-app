@@ -5372,122 +5372,235 @@ function setQuickTool(
 
     /* VOICE */
 
-let auroraRecognition = null;
+let auroraVoiceRecorder = null;
+let auroraVoiceChunks = [];
 let auroraVoiceListening = false;
 
-function startVoice() {
+async function startVoice() {
 
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+    const micBtn =
+        document.getElementById("micBtn");
 
-    if (!SpeechRecognition) {
+    const input =
+        document.getElementById("input");
+
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
 
         showToast(
-            "Voice input is not supported"
+            "Microphone is not supported"
         );
 
         return;
     }
 
-    const micBtn =
-        document.getElementById("micBtn");
-
-    if (!auroraRecognition) {
-
-        auroraRecognition =
-            new SpeechRecognition();
-
-        auroraRecognition.lang = "en-IN";
-        auroraRecognition.continuous = true;
-        auroraRecognition.interimResults = true;
-        auroraRecognition.maxAlternatives = 1;
-
-        auroraRecognition.onstart = () => {
-
-            auroraVoiceListening = true;
-
-            if (micBtn) {
-                micBtn.classList.add("listening");
-            }
-        };
-
-        auroraRecognition.onresult = (event) => {
-
-            let text = "";
-
-            for (
-                let i = event.resultIndex;
-                i < event.results.length;
-                i++
-            ) {
-
-                text +=
-                    event.results[i][0].transcript;
-            }
-
-            const input =
-                document.getElementById("input");
-
-            if (input) {
-
-                input.value = text;
-
-                input.style.height = "auto";
-
-                input.style.height =
-                    Math.min(
-                        input.scrollHeight,
-                        120
-                    ) + "px";
-            }
-        };
-
-        auroraRecognition.onerror = (event) => {
-
-            console.log(
-                "Voice error:",
-                event.error
-            );
-
-            auroraVoiceListening = false;
-
-            if (micBtn) {
-                micBtn.classList.remove(
-                    "listening"
-                );
-            }
-        };
-
-        auroraRecognition.onend = () => {
-
-            auroraVoiceListening = false;
-
-            if (micBtn) {
-                micBtn.classList.remove(
-                    "listening"
-                );
-            }
-        };
-    }
+    /* STOP RECORDING */
 
     if (auroraVoiceListening) {
 
-        auroraRecognition.stop();
+        if (auroraVoiceRecorder) {
+            auroraVoiceRecorder.stop();
+        }
 
-    } else {
+        return;
+    }
 
-        try {
+    try {
 
-            auroraRecognition.start();
+        const stream =
+            await navigator.mediaDevices.getUserMedia({
+                audio: true
+            });
 
-        } catch (error) {
+        auroraVoiceChunks = [];
 
-            console.log(
-                "Voice start error:",
-                error
+        auroraVoiceRecorder =
+            new MediaRecorder(stream);
+
+        auroraVoiceRecorder.ondataavailable =
+            (event) => {
+
+                if (event.data &&
+                    event.data.size > 0) {
+
+                    auroraVoiceChunks.push(
+                        event.data
+                    );
+                }
+            };
+
+        auroraVoiceRecorder.onstart =
+            () => {
+
+                auroraVoiceListening = true;
+
+                if (micBtn) {
+                    micBtn.classList.add(
+                        "listening"
+                    );
+                }
+
+                showToast(
+                    "Listening..."
+                );
+            };
+
+        auroraVoiceRecorder.onstop =
+            async () => {
+
+                auroraVoiceListening = false;
+
+                if (micBtn) {
+                    micBtn.classList.remove(
+                        "listening"
+                    );
+                }
+
+                stream
+                    .getTracks()
+                    .forEach(
+                        track => track.stop()
+                    );
+
+                if (
+                    auroraVoiceChunks.length === 0
+                ) {
+
+                    showToast(
+                        "No voice detected"
+                    );
+
+                    return;
+                }
+
+                const audioBlob =
+                    new Blob(
+                        auroraVoiceChunks,
+                        {
+                            type:
+                                auroraVoiceRecorder
+                                .mimeType ||
+                                "audio/webm"
+                        }
+                    );
+
+                const formData =
+                    new FormData();
+
+                formData.append(
+                    "audio",
+                    audioBlob,
+                    "voice.webm"
+                );
+
+                try {
+
+                    showToast(
+                        "Transcribing..."
+                    );
+
+                    const response =
+                        await fetch(
+                            "/voice-transcribe",
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+                    const data =
+                        await response.json();
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.detail ||
+                            "Voice transcription failed"
+                        );
+                    }
+
+                    const transcript =
+                        data.text || "";
+
+                    if (input &&
+                        transcript.trim()) {
+
+                        input.value =
+                            transcript.trim();
+
+                        input.style.height =
+                            "auto";
+
+                        input.style.height =
+                            Math.min(
+                                input.scrollHeight,
+                                120
+                            ) + "px";
+
+                        input.style.overflowY =
+                            input.scrollHeight > 120
+                                ? "auto"
+                                : "hidden";
+
+                        input.focus();
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Voice transcription error:",
+                        error
+                    );
+
+                    showToast(
+                        "Voice transcription failed"
+                    );
+                }
+            };
+
+        auroraVoiceRecorder.onerror =
+            (event) => {
+
+                console.error(
+                    "Voice recorder error:",
+                    event
+                );
+
+                auroraVoiceListening = false;
+
+                if (micBtn) {
+                    micBtn.classList.remove(
+                        "listening"
+                    );
+                }
+
+                stream
+                    .getTracks()
+                    .forEach(
+                        track => track.stop()
+                    );
+            };
+
+        auroraVoiceRecorder.start();
+
+    } catch (error) {
+
+        console.error(
+            "Microphone error:",
+            error
+        );
+
+        auroraVoiceListening = false;
+
+        if (micBtn) {
+            micBtn.classList.remove(
+                "listening"
             );
         }
+
+        showToast(
+            "Microphone permission is required"
+        );
     }
 }
 
