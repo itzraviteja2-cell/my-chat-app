@@ -1256,7 +1256,7 @@ IMPORTANT:
         )
 
 # =========================================
-# REAL ASTROLOGER - NAVAMSHA DIAGNOSTIC
+# REAL ASTROLOGER - NAVAMSHA KUNDALI
 # =========================================
 
 @app.post("/astrologer/kundali")
@@ -1293,9 +1293,7 @@ async def astrologer_kundali(data: dict):
                 detail="Birth date, time and place are required"
             )
 
-        # -----------------------------------------
         # DATE
-        # -----------------------------------------
 
         date_parts = birth_date.split("-")
 
@@ -1310,9 +1308,7 @@ async def astrologer_kundali(data: dict):
         month = int(date_parts[1])
         date = int(date_parts[2])
 
-        # -----------------------------------------
         # TIME
-        # -----------------------------------------
 
         time_parts = birth_time.split(":")
 
@@ -1326,10 +1322,7 @@ async def astrologer_kundali(data: dict):
         hours = int(time_parts[0])
         minutes = int(time_parts[1])
 
-        # -----------------------------------------
-        # STEP 1
         # GEOCODING
-        # -----------------------------------------
 
         geocode_url = (
             "https://nominatim.openstreetmap.org/search"
@@ -1343,8 +1336,8 @@ async def astrologer_kundali(data: dict):
         geocode_request = Request(
             geocode_url,
             headers={
-                "User-Agent":
-                    "Aurora-Smart-AI/1.0"
+                "User-Agent": "Aurora-Smart-AI/1.0",
+                "Accept": "application/json"
             }
         )
 
@@ -1366,8 +1359,7 @@ async def astrologer_kundali(data: dict):
             raise HTTPException(
                 status_code=502,
                 detail=(
-                    "GEOCODING ERROR: "
-                    "Nominatim returned HTTP "
+                    "GEOCODING ERROR: Nominatim HTTP "
                     + str(e.code)
                 )
             )
@@ -1400,10 +1392,7 @@ async def astrologer_kundali(data: dict):
             geo_data[0]["lon"]
         )
 
-        # -----------------------------------------
-        # STEP 2
-        # NAVAMSHA API
-        # -----------------------------------------
+        # NAVAMSHA
 
         kundali_url = (
             "https://api.navamsha.in"
@@ -1431,23 +1420,15 @@ async def astrologer_kundali(data: dict):
         }
 
         kundali_request = Request(
-
             kundali_url,
-
             data=json.dumps(
                 kundali_payload
             ).encode("utf-8"),
-
             headers={
                 "X-API-Key": api_key,
                 "Content-Type": "application/json",
-                "Accept": "application/json",
-                "User-Agent": "Aurora-Smart-AI/1.0"
+                "Accept": "application/json"
             },
-
-            method="POST"
-                )
-
             method="POST"
         )
 
@@ -1481,8 +1462,7 @@ async def astrologer_kundali(data: dict):
             raise HTTPException(
                 status_code=502,
                 detail=(
-                    "NAVAMSHA API ERROR: "
-                    "HTTP "
+                    "NAVAMSHA API ERROR: HTTP "
                     + str(e.code)
                     + " | "
                     + (
@@ -1503,10 +1483,6 @@ async def astrologer_kundali(data: dict):
                 )
             )
 
-        # -----------------------------------------
-        # CHECK RESULT
-        # -----------------------------------------
-
         if not kundali_data.get("output"):
 
             raise HTTPException(
@@ -1517,31 +1493,21 @@ async def astrologer_kundali(data: dict):
                 )
             )
 
-        # -----------------------------------------
-        # SUCCESS
-        # -----------------------------------------
-
         return {
 
             "success": True,
 
-            "birthPlace":
-                birth_place,
+            "birthPlace": birth_place,
 
-            "latitude":
-                latitude,
+            "latitude": latitude,
 
-            "longitude":
-                longitude,
+            "longitude": longitude,
 
-            "timezone":
-                5.5,
+            "timezone": 5.5,
 
-            "source":
-                "Navamsha",
+            "source": "Navamsha",
 
-            "ayanamsha":
-                "Lahiri",
+            "ayanamsha": "Lahiri",
 
             "kundali":
                 kundali_data["output"]
@@ -1557,4 +1523,3 @@ async def astrologer_kundali(data: dict):
             status_code=500,
             detail=str(e)
         )
-        
