@@ -5379,17 +5379,117 @@ let auroraSilenceTimer = null;
 let auroraAudioContext = null;
 let auroraAnalyser = null;
 let auroraSilenceCheck = null;
+let auroraBeepContext = null;
+
+
+/* VOICE SOUND */
+
+function auroraVoiceSound(type) {
+
+    try {
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (!AudioContext) return;
+
+        if (!auroraBeepContext) {
+
+            auroraBeepContext =
+                new AudioContext();
+
+        }
+
+        if (
+            auroraBeepContext.state ===
+            "suspended"
+        ) {
+
+            auroraBeepContext.resume();
+
+        }
+
+        const oscillator =
+            auroraBeepContext
+                .createOscillator();
+
+        const gain =
+            auroraBeepContext
+                .createGain();
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            auroraBeepContext.destination
+        );
+
+        if (type === "start") {
+
+            oscillator.frequency.value =
+                700;
+
+        } else {
+
+            oscillator.frequency.value =
+                450;
+
+        }
+
+        oscillator.type =
+            "sine";
+
+        const now =
+            auroraBeepContext.currentTime;
+
+        gain.gain.setValueAtTime(
+            0.0001,
+            now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.12,
+            now + 0.01
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + 0.13
+        );
+
+        oscillator.start(now);
+
+        oscillator.stop(
+            now + 0.14
+        );
+
+    } catch (error) {
+
+        console.log(
+            "Voice sound error:",
+            error
+        );
+
+    }
+}
+
 
 async function startVoice() {
 
     const micBtn =
-        document.getElementById("micBtn");
+        document.getElementById(
+            "micBtn"
+        );
 
     const input =
-        document.getElementById("input");
+        document.getElementById(
+            "input"
+        );
 
-    if (!navigator.mediaDevices ||
-        !navigator.mediaDevices.getUserMedia) {
+    if (
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia
+    ) {
 
         showToast(
             "Microphone is not supported"
@@ -5398,28 +5498,49 @@ async function startVoice() {
         return;
     }
 
+
     /* STOP RECORDING */
 
     if (auroraVoiceListening) {
 
+        auroraVoiceSound(
+            "stop"
+        );
+
         if (auroraVoiceRecorder) {
+
             auroraVoiceRecorder.stop();
+
         }
 
         return;
     }
 
+
     try {
 
+        /* START SOUND */
+
+        auroraVoiceSound(
+            "start"
+        );
+
+
         const stream =
-            await navigator.mediaDevices.getUserMedia({
-                audio: true
-            });
+            await navigator.mediaDevices
+                .getUserMedia({
+                    audio: true
+                });
+
 
         auroraVoiceChunks = [];
 
+
         auroraVoiceRecorder =
-            new MediaRecorder(stream);
+            new MediaRecorder(
+                stream
+            );
+
 
         /* AUDIO SILENCE DETECTION */
 
@@ -5429,29 +5550,37 @@ async function startVoice() {
                 window.webkitAudioContext
             )();
 
+
         const source =
             auroraAudioContext
                 .createMediaStreamSource(
                     stream
                 );
 
+
         auroraAnalyser =
             auroraAudioContext
                 .createAnalyser();
 
-        auroraAnalyser.fftSize = 2048;
+
+        auroraAnalyser.fftSize =
+            2048;
+
 
         source.connect(
             auroraAnalyser
         );
+
 
         const audioData =
             new Uint8Array(
                 auroraAnalyser.fftSize
             );
 
+
         let lastSoundTime =
             Date.now();
+
 
         const checkSilence =
             () => {
@@ -5460,15 +5589,20 @@ async function startVoice() {
                     !auroraVoiceListening ||
                     !auroraAnalyser
                 ) {
+
                     return;
+
                 }
+
 
                 auroraAnalyser
                     .getByteTimeDomainData(
                         audioData
                     );
 
+
                 let sum = 0;
+
 
                 for (
                     let i = 0;
@@ -5478,12 +5612,16 @@ async function startVoice() {
 
                     const value =
                         (
-                            audioData[i] - 128
+                            audioData[i] -
+                            128
                         ) / 128;
+
 
                     sum +=
                         value * value;
+
                 }
+
 
                 const volume =
                     Math.sqrt(
@@ -5491,14 +5629,18 @@ async function startVoice() {
                         audioData.length
                     );
 
+
                 /* VOICE DETECTED */
 
-                if (volume > 0.015) {
+                if (
+                    volume > 0.015
+                ) {
 
                     lastSoundTime =
                         Date.now();
 
                 }
+
 
                 /* 1.2 SECONDS SILENCE */
 
@@ -5507,6 +5649,11 @@ async function startVoice() {
                     lastSoundTime >=
                     1200
                 ) {
+
+                    auroraVoiceSound(
+                        "stop"
+                    );
+
 
                     if (
                         auroraVoiceRecorder &&
@@ -5521,13 +5668,17 @@ async function startVoice() {
                     return;
                 }
 
+
                 auroraSilenceCheck =
                     requestAnimationFrame(
                         checkSilence
                     );
+
             };
 
-        auroraVoiceRecorder.ondataavailable =
+
+        auroraVoiceRecorder
+            .ondataavailable =
             (event) => {
 
                 if (
@@ -5535,45 +5686,61 @@ async function startVoice() {
                     event.data.size > 0
                 ) {
 
-                    auroraVoiceChunks.push(
-                        event.data
-                    );
+                    auroraVoiceChunks
+                        .push(
+                            event.data
+                        );
+
                 }
+
             };
 
-        auroraVoiceRecorder.onstart =
+
+        auroraVoiceRecorder
+            .onstart =
             () => {
 
                 auroraVoiceListening =
                     true;
+
 
                 if (micBtn) {
 
                     micBtn.classList.add(
                         "listening"
                     );
+
                 }
+
 
                 showToast(
                     "Listening..."
                 );
 
+
                 lastSoundTime =
                     Date.now();
+
 
                 auroraSilenceCheck =
                     requestAnimationFrame(
                         checkSilence
                     );
+
             };
 
-        auroraVoiceRecorder.onstop =
+
+        auroraVoiceRecorder
+            .onstop =
             async () => {
 
                 auroraVoiceListening =
                     false;
 
-                if (auroraSilenceCheck) {
+
+                if (
+                    auroraSilenceCheck
+                ) {
 
                     cancelAnimationFrame(
                         auroraSilenceCheck
@@ -5581,9 +5748,13 @@ async function startVoice() {
 
                     auroraSilenceCheck =
                         null;
+
                 }
 
-                if (auroraSilenceTimer) {
+
+                if (
+                    auroraSilenceTimer
+                ) {
 
                     clearTimeout(
                         auroraSilenceTimer
@@ -5591,14 +5762,18 @@ async function startVoice() {
 
                     auroraSilenceTimer =
                         null;
+
                 }
+
 
                 if (micBtn) {
 
                     micBtn.classList.remove(
                         "listening"
                     );
+
                 }
+
 
                 stream
                     .getTracks()
@@ -5607,12 +5782,16 @@ async function startVoice() {
                             track.stop()
                     );
 
-                if (auroraAudioContext) {
+
+                if (
+                    auroraAudioContext
+                ) {
 
                     try {
 
                         await
-                            auroraAudioContext.close();
+                            auroraAudioContext
+                                .close();
 
                     } catch (e) {
 
@@ -5620,12 +5799,15 @@ async function startVoice() {
 
                     }
 
+
                     auroraAudioContext =
                         null;
 
                     auroraAnalyser =
                         null;
+
                 }
+
 
                 if (
                     auroraVoiceChunks.length ===
@@ -5637,7 +5819,9 @@ async function startVoice() {
                     );
 
                     return;
+
                 }
+
 
                 const audioBlob =
                     new Blob(
@@ -5650,8 +5834,10 @@ async function startVoice() {
                         }
                     );
 
+
                 const formData =
                     new FormData();
+
 
                 formData.append(
                     "audio",
@@ -5659,11 +5845,13 @@ async function startVoice() {
                     "voice.webm"
                 );
 
+
                 try {
 
                     showToast(
                         "Transcribing..."
                     );
+
 
                     const response =
                         await fetch(
@@ -5674,8 +5862,10 @@ async function startVoice() {
                             }
                         );
 
+
                     const data =
                         await response.json();
+
 
                     if (!response.ok) {
 
@@ -5683,10 +5873,13 @@ async function startVoice() {
                             data.detail ||
                             "Voice transcription failed"
                         );
+
                     }
+
 
                     const transcript =
                         data.text || "";
+
 
                     if (
                         input &&
@@ -5696,10 +5889,10 @@ async function startVoice() {
                         input.value =
                             transcript.trim();
 
-                        /* PREVENT OVERFLOW */
 
                         input.style.height =
                             "auto";
+
 
                         input.style.height =
                             Math.min(
@@ -5707,16 +5900,20 @@ async function startVoice() {
                                 120
                             ) + "px";
 
+
                         input.style.overflowY =
                             input.scrollHeight >
                             120
                                 ? "auto"
                                 : "hidden";
 
+
                         input.style.maxHeight =
                             "120px";
 
+
                         input.focus();
+
                     }
 
                 } catch (error) {
@@ -5726,13 +5923,18 @@ async function startVoice() {
                         error
                     );
 
+
                     showToast(
                         "Voice transcription failed"
                     );
+
                 }
+
             };
 
-        auroraVoiceRecorder.onerror =
+
+        auroraVoiceRecorder
+            .onerror =
             (event) => {
 
                 console.error(
@@ -5740,10 +5942,14 @@ async function startVoice() {
                     event
                 );
 
+
                 auroraVoiceListening =
                     false;
 
-                if (auroraSilenceCheck) {
+
+                if (
+                    auroraSilenceCheck
+                ) {
 
                     cancelAnimationFrame(
                         auroraSilenceCheck
@@ -5751,14 +5957,18 @@ async function startVoice() {
 
                     auroraSilenceCheck =
                         null;
+
                 }
+
 
                 if (micBtn) {
 
                     micBtn.classList.remove(
                         "listening"
                     );
+
                 }
+
 
                 stream
                     .getTracks()
@@ -5766,9 +5976,12 @@ async function startVoice() {
                         track =>
                             track.stop()
                     );
+
             };
 
+
         auroraVoiceRecorder.start();
+
 
     } catch (error) {
 
@@ -5777,21 +5990,28 @@ async function startVoice() {
             error
         );
 
+
         auroraVoiceListening =
             false;
+
 
         if (micBtn) {
 
             micBtn.classList.remove(
                 "listening"
             );
+
         }
+
 
         showToast(
             "Microphone permission is required"
         );
+
     }
+
 }
+
 
 
 function regenerateResponse() {
