@@ -7695,6 +7695,79 @@ if (pollinationsKey) {
 
     renderHistory();
 
+    /* =========================================
+   AURORA ASTROLOGER CONTROLS
+   ========================================= */
+
+function openAstrologer() {
+
+    const modal =
+        document.getElementById("astrologerModal");
+
+    if (modal) {
+        modal.style.display = "flex";
+    }
+}
+
+
+function closeAstrologer() {
+
+    const modal =
+        document.getElementById("astrologerModal");
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+
+function generateKundali() {
+
+    const date =
+        document.getElementById("astroBirthDate").value;
+
+    const time =
+        document.getElementById("astroBirthTime").value;
+
+    const place =
+        document.getElementById("astroBirthPlace").value.trim();
+
+
+    if (!date || !time || !place) {
+
+        if (typeof showToast === "function") {
+            showToast(
+                "Date, Time మరియు Birth Place ఇవ్వండి"
+            );
+        }
+
+        return;
+    }
+
+
+    if (typeof showToast === "function") {
+        showToast(
+            "Kundali సిద్ధం చేస్తోంది..."
+        );
+    }
+}
+
+
+function openPanchang() {
+
+    setQuickTool(
+        "ఈ రోజు Panchang వివరాలు చెప్పు. Tithi, Nakshatra, Yoga, Karana, sunrise మరియు sunset కూడా ఇవ్వు."
+    );
+}
+
+
+function openDharma() {
+
+    setQuickTool(
+        "నా ప్రశ్నకు Vedas, Upanishads, Itihasas, Puranas, Smritis మరియు సంబంధిత Dharma గ్రంథాలు లేదా సంప్రదాయాల ఆధారంగా సమాధానం ఇవ్వు. ఏ గ్రంథం లేదా సంప్రదాయం ఆధారమో స్పష్టంగా చెప్పు. సంప్రదాయాల మధ్య భేదాలు ఉంటే వాటిని కూడా చెప్పు."
+    );
+}
+
 </script>
 
         <!-- AURORA ASTROLOGER -->
