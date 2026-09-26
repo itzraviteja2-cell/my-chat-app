@@ -7747,9 +7747,114 @@ function generateKundali() {
 
     if (typeof showToast === "function") {
         showToast(
-            "Kundali సిద్ధం చేస్తోంది..."
+            "🔮 Real Kundali calculate చేస్తోంది..."
         );
     }
+
+
+    fetch("/astrologer/kundali", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            birthDate: date,
+
+            birthTime: time,
+
+            birthPlace: place
+
+        })
+
+    })
+
+    .then(async response => {
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                "Kundali calculation failed"
+            );
+        }
+
+        return data;
+    })
+
+    .then(data => {
+
+        console.log(
+            "REAL NAVAMSHA KUNDALI:",
+            data
+        );
+
+
+        if (typeof showToast === "function") {
+
+            showToast(
+                "✅ Real Kundali సిద్ధమైంది"
+            );
+        }
+
+
+        /*
+         * ప్రస్తుతం real Kundali data
+         * browser consoleలో test అవుతుంది.
+         *
+         * తరువాత దీనిని premium
+         * Kundali result cardగా చూపిస్తాం.
+         */
+
+        console.log(
+            "Birth Place:",
+            data.birthPlace
+        );
+
+        console.log(
+            "Latitude:",
+            data.latitude
+        );
+
+        console.log(
+            "Longitude:",
+            data.longitude
+        );
+
+        console.log(
+            "Source:",
+            data.source
+        );
+
+        console.log(
+            "Kundali:",
+            data.kundali
+        );
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Kundali Error:",
+            error
+        );
+
+
+        if (typeof showToast === "function") {
+
+            showToast(
+                "❌ Kundali തയ്യാറാക്കാൻ കഴിഞ്ഞില്ല: " +
+                error.message
+            );
+        }
+
+    });
 }
 
 
