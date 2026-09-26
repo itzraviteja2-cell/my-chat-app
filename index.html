@@ -5370,7 +5370,9 @@ function setQuickTool(
 
 }
 
-    /* VOICE */
+    /* =========================================
+   AURORA SMART AI — VOICE
+   ========================================= */
 
 let auroraVoiceRecorder = null;
 let auroraVoiceChunks = [];
@@ -5403,12 +5405,14 @@ function auroraVoiceSound(type) {
             return;
         }
 
+
         if (!auroraBeepContext) {
 
             auroraBeepContext =
                 new AudioContext();
 
         }
+
 
         if (
             auroraBeepContext.state ===
@@ -5419,6 +5423,7 @@ function auroraVoiceSound(type) {
 
         }
 
+
         const oscillator =
             auroraBeepContext
                 .createOscillator();
@@ -5427,6 +5432,7 @@ function auroraVoiceSound(type) {
             auroraBeepContext
                 .createGain();
 
+
         oscillator.connect(gain);
 
         gain.connect(
@@ -5434,51 +5440,99 @@ function auroraVoiceSound(type) {
         );
 
 
-        if (type === "start") {
-
-            oscillator.frequency.value =
-                760;
-
-        } else {
-
-            oscillator.frequency.value =
-                520;
-
-        }
-
-
-        oscillator.type =
-            "sine";
-
-
         const now =
             auroraBeepContext.currentTime;
 
 
-        gain.gain.setValueAtTime(
-            0.0001,
-            now
-        );
+        /* =================================
+           START SOUND
+        ================================= */
+
+        if (type === "start") {
+
+            oscillator.type =
+                "sine";
+
+            oscillator.frequency.value =
+                760;
 
 
-        gain.gain.exponentialRampToValueAtTime(
-            0.20,
-            now + 0.03
-        );
+            gain.gain.setValueAtTime(
+                0.0001,
+                now
+            );
 
 
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + 0.35
-        );
+            gain.gain.exponentialRampToValueAtTime(
+                0.20,
+                now + 0.03
+            );
 
 
-        oscillator.start(now);
+            gain.gain.exponentialRampToValueAtTime(
+                0.0001,
+                now + 0.35
+            );
 
 
-        oscillator.stop(
-            now + 0.36
-        );
+            oscillator.start(now);
+
+            oscillator.stop(
+                now + 0.36
+            );
+
+        }
+
+
+        /* =================================
+           STOP SOUND
+           STRONGER + DIFFERENT
+        ================================= */
+
+        else {
+
+            oscillator.type =
+                "triangle";
+
+
+            oscillator.frequency.setValueAtTime(
+                620,
+                now
+            );
+
+
+            oscillator.frequency.exponentialRampToValueAtTime(
+                420,
+                now + 0.18
+            );
+
+
+            gain.gain.setValueAtTime(
+                0.0001,
+                now
+            );
+
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.38,
+                now + 0.025
+            );
+
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.0001,
+                now + 0.28
+            );
+
+
+            oscillator.start(now);
+
+            oscillator.stop(
+                now + 0.29
+            );
+
+        }
+
 
     } catch (error) {
 
@@ -5488,6 +5542,7 @@ function auroraVoiceSound(type) {
         );
 
     }
+
 }
 
 
@@ -5501,6 +5556,7 @@ async function startVoice() {
         document.getElementById(
             "micBtn"
         );
+
 
     const input =
         document.getElementById(
@@ -5546,7 +5602,9 @@ async function startVoice() {
 
     try {
 
-        /* START BEEP */
+        /* =================================
+           START BEEP
+        ================================= */
 
         auroraVoiceSound(
             "start"
@@ -5663,7 +5721,9 @@ async function startVoice() {
                     );
 
 
-                /* IGNORE FIRST 1.5 SECONDS */
+                /* =================================
+                   IGNORE FIRST 1.5 SECONDS
+                ================================= */
 
                 if (
                     Date.now() -
@@ -5688,7 +5748,8 @@ async function startVoice() {
 
 
                 /* =================================
-                   AUTO STOP AFTER 1.2 SEC SILENCE
+                   AUTO STOP AFTER
+                   1.2 SEC SILENCE
                 ================================= */
 
                 if (
@@ -5846,6 +5907,10 @@ async function startVoice() {
                 }
 
 
+                /* =================================
+                   STOP MICROPHONE
+                ================================= */
+
                 stream
                     .getTracks()
                     .forEach(
@@ -5853,6 +5918,10 @@ async function startVoice() {
                             track.stop()
                     );
 
+
+                /* =================================
+                   CLOSE AUDIO CONTEXT
+                ================================= */
 
                 if (
                     auroraAudioContext
@@ -5897,6 +5966,10 @@ async function startVoice() {
                 }
 
 
+                /* =================================
+                   NO AUDIO
+                ================================= */
+
                 if (
                     auroraVoiceChunks.length ===
                     0
@@ -5939,7 +6012,7 @@ async function startVoice() {
 
 
                 /* =================================
-                   SEND TO BACKEND
+                   SEND TO GEMINI
                 ================================= */
 
                 try {
@@ -5980,6 +6053,10 @@ async function startVoice() {
                         data.text || "";
 
 
+                    /* =================================
+                       PUT TRANSCRIPT IN INPUT
+                    ================================= */
+
                     if (
                         input &&
                         transcript.trim()
@@ -6013,7 +6090,17 @@ async function startVoice() {
 
                         input.focus();
 
+
+                        /* =================================
+                           AUTOMATICALLY SEND TO AI
+                        ================================= */
+
+                        await sendMessage(
+                            false
+                        );
+
                     }
+
 
                 } catch (error) {
 
