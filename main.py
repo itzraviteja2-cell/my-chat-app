@@ -1178,3 +1178,79 @@ async def chat_pdf(
             detail=str(e)
 
         )
+
+# =========================================
+# VOICE TRANSCRIPTION
+# =========================================
+
+@app.post("/voice-transcribe")
+async def voice_transcribe(
+    audio: UploadFile = File(...)
+):
+
+    try:
+
+        audio_data = await audio.read()
+
+        if not audio_data:
+            raise HTTPException(
+                status_code=400,
+                detail="No audio received"
+            )
+
+        mime_type = (
+            audio.content_type
+            or "audio/webm"
+        )
+
+        response = client.models.generate_content(
+
+            model="gemini-3.6-flash",
+
+            contents=[
+
+                """
+Generate an accurate transcript of the speech.
+
+The speaker may use Telugu, English,
+or Telugu-English mixed speech.
+
+IMPORTANT:
+- Telugu speech must be written in Telugu script.
+- English speech must be written in English script.
+- Do NOT transliterate Telugu into English letters.
+- Do NOT transliterate English into Telugu script.
+- Preserve Telugu-English code-switching naturally.
+- Keep the original meaning and order.
+- Return ONLY the transcript.
+""",
+
+                types.Part.from_bytes(
+                    data=audio_data,
+                    mime_type=mime_type
+                )
+
+            ]
+        )
+
+        transcript = response.text.strip()
+
+        if not transcript:
+            raise HTTPException(
+                status_code=500,
+                detail="No transcript generated"
+            )
+
+        return {
+            "text": transcript
+        }
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
