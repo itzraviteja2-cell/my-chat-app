@@ -1430,7 +1430,7 @@ async def astrologer_kundali(data: dict):
             }
         }
 
-        kundali_request = Request(
+                kundali_request = Request(
 
             kundali_url,
 
@@ -1440,9 +1440,13 @@ async def astrologer_kundali(data: dict):
 
             headers={
                 "X-API-Key": api_key,
-                "Content-Type":
-                    "application/json"
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "User-Agent": "Aurora-Smart-AI/1.0"
             },
+
+            method="POST"
+                )
 
             method="POST"
         )
