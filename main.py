@@ -1256,11 +1256,13 @@ IMPORTANT:
         )
 
 # =========================================
-# REAL ASTROLOGER - NAVAMSHA KUNDALI
+# REAL ASTROLOGER - NAVAMSHA DIAGNOSTIC
 # =========================================
 
 @app.post("/astrologer/kundali")
 async def astrologer_kundali(data: dict):
+
+    from urllib.error import HTTPError
 
     try:
 
@@ -1291,7 +1293,6 @@ async def astrologer_kundali(data: dict):
                 detail="Birth date, time and place are required"
             )
 
-
         # -----------------------------------------
         # DATE
         # -----------------------------------------
@@ -1309,7 +1310,6 @@ async def astrologer_kundali(data: dict):
         month = int(date_parts[1])
         date = int(date_parts[2])
 
-
         # -----------------------------------------
         # TIME
         # -----------------------------------------
@@ -1326,9 +1326,9 @@ async def astrologer_kundali(data: dict):
         hours = int(time_parts[0])
         minutes = int(time_parts[1])
 
-
         # -----------------------------------------
-        # GEOCODE BIRTH PLACE
+        # STEP 1
+        # GEOCODING
         # -----------------------------------------
 
         geocode_url = (
@@ -1348,16 +1348,39 @@ async def astrologer_kundali(data: dict):
             }
         )
 
-        with urlopen(
-            geocode_request,
-            timeout=15
-        ) as geo_response:
+        try:
 
-            geo_data = json.loads(
-                geo_response.read()
-                .decode("utf-8")
+            with urlopen(
+                geocode_request,
+                timeout=15
+            ) as geo_response:
+
+                geo_data = json.loads(
+                    geo_response
+                    .read()
+                    .decode("utf-8")
+                )
+
+        except HTTPError as e:
+
+            raise HTTPException(
+                status_code=502,
+                detail=(
+                    "GEOCODING ERROR: "
+                    "Nominatim returned HTTP "
+                    + str(e.code)
+                )
             )
 
+        except Exception as e:
+
+            raise HTTPException(
+                status_code=502,
+                detail=(
+                    "GEOCODING ERROR: "
+                    + str(e)
+                )
+            )
 
         if not geo_data:
 
@@ -1369,7 +1392,6 @@ async def astrologer_kundali(data: dict):
                 )
             )
 
-
         latitude = float(
             geo_data[0]["lat"]
         )
@@ -1378,9 +1400,9 @@ async def astrologer_kundali(data: dict):
             geo_data[0]["lon"]
         )
 
-
         # -----------------------------------------
-        # NAVAMSHA KUNDALI
+        # STEP 2
+        # NAVAMSHA API
         # -----------------------------------------
 
         kundali_url = (
@@ -1400,7 +1422,6 @@ async def astrologer_kundali(data: dict):
             "latitude": latitude,
             "longitude": longitude,
 
-            # India Standard Time
             "timezone": 5.5,
 
             "settings": {
@@ -1408,7 +1429,6 @@ async def astrologer_kundali(data: dict):
                 "observation_point": "topocentric"
             }
         }
-
 
         kundali_request = Request(
 
@@ -1427,52 +1447,105 @@ async def astrologer_kundali(data: dict):
             method="POST"
         )
 
+        try:
 
-        with urlopen(
-            kundali_request,
-            timeout=30
-        ) as kundali_response:
+            with urlopen(
+                kundali_request,
+                timeout=30
+            ) as kundali_response:
 
-            kundali_data = json.loads(
-                kundali_response
-                .read()
-                .decode("utf-8")
+                kundali_data = json.loads(
+                    kundali_response
+                    .read()
+                    .decode("utf-8")
+                )
+
+        except HTTPError as e:
+
+            error_body = ""
+
+            try:
+
+                error_body = (
+                    e.read()
+                    .decode("utf-8")
+                )
+
+            except Exception:
+                pass
+
+            raise HTTPException(
+                status_code=502,
+                detail=(
+                    "NAVAMSHA API ERROR: "
+                    "HTTP "
+                    + str(e.code)
+                    + " | "
+                    + (
+                        error_body[:500]
+                        if error_body
+                        else "No response body"
+                    )
+                )
             )
 
+        except Exception as e:
+
+            raise HTTPException(
+                status_code=502,
+                detail=(
+                    "NAVAMSHA CONNECTION ERROR: "
+                    + str(e)
+                )
+            )
+
+        # -----------------------------------------
+        # CHECK RESULT
+        # -----------------------------------------
 
         if not kundali_data.get("output"):
 
             raise HTTPException(
-                status_code=500,
-                detail="Kundali calculation failed"
+                status_code=502,
+                detail=(
+                    "NAVAMSHA ERROR: "
+                    "No Kundali output returned"
+                )
             )
 
+        # -----------------------------------------
+        # SUCCESS
+        # -----------------------------------------
 
         return {
 
             "success": True,
 
-            "birthPlace": birth_place,
+            "birthPlace":
+                birth_place,
 
-            "latitude": latitude,
+            "latitude":
+                latitude,
 
-            "longitude": longitude,
+            "longitude":
+                longitude,
 
-            "timezone": 5.5,
+            "timezone":
+                5.5,
 
-            "source": "Navamsha",
+            "source":
+                "Navamsha",
 
-            "ayanamsha": "Lahiri",
+            "ayanamsha":
+                "Lahiri",
 
             "kundali":
                 kundali_data["output"]
         }
 
-
     except HTTPException:
 
         raise
-
 
     except Exception as e:
 
@@ -1480,4 +1553,4 @@ async def astrologer_kundali(data: dict):
             status_code=500,
             detail=str(e)
         )
-
+        
