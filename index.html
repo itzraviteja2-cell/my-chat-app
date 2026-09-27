@@ -8385,36 +8385,113 @@ renderHistory();
 
 
                 /* ==========================
-                   SHOW RESULTS
-                   ========================== */
+   SHOW RESULTS
+   ========================== */
 
-                appendMessage(
-                    resultText,
-                    "bot"
-                );
-
-
-                /* ==========================
-                   SAVE RESULTS
-                   ========================== */
-
-                currentChat.messages.push({
-
-                    role: "bot",
-
-                    text: resultText
-                });
+appendMessage(
+    resultsHTML,
+    "bot"
+);
 
 
-                localStorage.setItem(
-                    "auroraChats",
-                    JSON.stringify(chats)
-                );
+/* ==========================
+   SAVE SEARCH RESULTS
+   ========================== */
+
+currentChat.messages.push({
+
+    role: "bot",
+
+    text: resultText
+
+});
 
 
-                renderHistory();
+localStorage.setItem(
+    "auroraChats",
+    JSON.stringify(chats)
+);
 
+
+renderHistory();
+
+
+/* ==========================
+   AI RESEARCH SUMMARY
+   ========================== */
+
+try {
+
+    const summaryResponse =
+        await fetch(
+            "/research-summary",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+
+                        query:
+                            searchQuery,
+
+                        results:
+                            data.results
+                                .slice(0, 6)
+
+                    })
             }
+        );
+
+
+    const summaryData =
+        await summaryResponse.json();
+
+
+    if (
+        summaryResponse.ok &&
+        summaryData.summary
+    ) {
+
+        appendMessage(
+            summaryData.summary,
+            "bot"
+        );
+
+
+        currentChat.messages.push({
+
+            role: "bot",
+
+            text:
+                summaryData.summary
+
+        });
+
+
+        localStorage.setItem(
+            "auroraChats",
+            JSON.stringify(chats)
+        );
+
+
+        renderHistory();
+
+    }
+
+
+} catch (summaryError) {
+
+    console.error(
+        "Research summary error:",
+        summaryError
+    );
+
+}
 
 
             catch (error) {
