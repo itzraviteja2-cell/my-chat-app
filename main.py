@@ -1513,6 +1513,179 @@ async def chat_txt(
         )
 
 # =========================================
+# DOCX DOCUMENT CHAT
+# =========================================
+
+@app.post("/chat-docx")
+async def chat_docx(
+
+    message: str = Form(...),
+
+    docx: UploadFile = File(...)
+
+):
+
+    if not os.getenv("GEMINI_API_KEY"):
+
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured"
+        )
+
+    try:
+
+        import zipfile
+        import io
+        import xml.etree.ElementTree as ET
+
+        docx_bytes = await docx.read()
+
+        if not docx_bytes:
+
+            raise HTTPException(
+                status_code=400,
+                detail="DOCX file is empty"
+            )
+
+        try:
+
+            with zipfile.ZipFile(
+                io.BytesIO(docx_bytes)
+            ) as archive:
+
+                document_xml = archive.read(
+                    "word/document.xml"
+                )
+
+            root = ET.fromstring(
+                document_xml
+            )
+
+            namespace = {
+                "w":
+                "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+            }
+
+            paragraphs = []
+
+            for paragraph in root.findall(
+                ".//w:p",
+                namespace
+            ):
+
+                words = []
+
+                for text_node in paragraph.findall(
+                    ".//w:t",
+                    namespace
+                ):
+
+                    if text_node.text:
+                        words.append(
+                            text_node.text
+                        )
+
+                if words:
+
+                    paragraphs.append(
+                        "".join(words)
+                    )
+
+            document_text = "\n".join(
+                paragraphs
+            ).strip()
+
+        except Exception:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Unable to read DOCX document"
+            )
+
+        if not document_text:
+
+            raise HTTPException(
+                status_code=400,
+                detail="DOCX document contains no readable text"
+            )
+
+        user_message = (
+            message.strip()
+            if message.strip()
+            else "Summarize this DOCX document"
+        )
+
+        prompt = (
+
+            "Read the uploaded DOCX document carefully.\n\n"
+
+            "Answer the user's question using ONLY "
+            "information from the DOCX document.\n"
+
+            "Do not invent or add information.\n\n"
+
+            "STRICT LANGUAGE RULE:\n"
+
+            "Use exactly ONE output language.\n"
+
+            "If the user's question is in Telugu, "
+            "the ENTIRE answer must be in Telugu only.\n"
+
+            "If the user's question is in English, "
+            "the ENTIRE answer must be in English only.\n"
+
+            "Never provide translations.\n"
+
+            "Never repeat the same information "
+            "in another language.\n\n"
+
+            "User question:\n"
+            + user_message
+            + "\n\n"
+
+            "DOCX document:\n"
+            + document_text
+        )
+
+        response = client.models.generate_content(
+
+            model="gemini-3.6-flash",
+
+            contents=[
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
+        )
+
+        if response.text:
+
+            return {
+                "reply": response.text
+            }
+
+        raise HTTPException(
+            status_code=500,
+            detail="No response generated from DOCX"
+        )
+
+    except HTTPException:
+
+        raise
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+# =========================================
 # VOICE TRANSCRIPTION
 # =========================================
 
