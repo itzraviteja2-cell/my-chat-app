@@ -6163,8 +6163,20 @@ function appendMessage(text, role) {
 
         if (bubble) {
 
-            bubble.innerText =
-                String(text ?? "");
+    if (
+        typeof text === "string" &&
+        text.trim().startsWith("<div")
+    ) {
+
+        bubble.innerHTML =
+            text;
+
+    } else {
+
+        bubble.innerText =
+            String(text ?? "");
+
+    }
 
         }
 
