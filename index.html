@@ -7744,81 +7744,259 @@ async function webSearch() {
 
 
                 /* ==========================
-                   BUILD RESULTS
-                   ========================== */
+   BUILD PREMIUM RESULTS
+   ========================== */
 
-                let resultText =
-                    "🔎 Search results for: " +
-                    searchQuery +
-                    "\n\n";
-
-
-                data.results
-                    .slice(0, 6)
-                    .forEach(
-                        (item, index) => {
-
-                            resultText +=
-                                "━━━━━━━━━━━━━━\n";
+let resultText =
+    "🔎 Search results for: " +
+    searchQuery +
+    "\n\n";
 
 
-                            resultText +=
-                                "🔹 " +
-                                (index + 1) +
-                                ". " +
-                                (
-                                    item.title ||
-                                    "Untitled"
-                                ) +
-                                "\n";
+data.results
+    .slice(0, 6)
+    .forEach(
+        (item, index) => {
 
+            resultText +=
+                "━━━━━━━━━━━━━━\n";
 
-                            if (
-                                item.site_name
-                            ) {
+            resultText +=
+                "🔹 " +
+                (index + 1) +
+                ". " +
+                (
+                    item.title ||
+                    "Untitled"
+                ) +
+                "\n";
 
-                                resultText +=
-                                    "🌐 " +
-                                    item.site_name +
-                                    "\n";
-                            }
-
-
-                            if (item.date) {
-
-                                resultText +=
-                                    "🕒 " +
-                                    item.date +
-                                    "\n";
-                            }
-
-
-                            if (item.snippet) {
-
-                                resultText +=
-                                    item.snippet +
-                                    "\n";
-                            }
-
-
-                            if (item.url) {
-
-                                resultText +=
-                                    "🔗 " +
-                                    item.url +
-                                    "\n";
-                            }
-
-
-                            resultText +=
-                                "\n";
-                        }
-                    );
-
+            if (item.site_name) {
 
                 resultText +=
-                    "━━━━━━━━━━━━━━\n" +
-                    "ℹ️ Showing the most relevant results.";
+                    "🌐 " +
+                    item.site_name +
+                    "\n";
+            }
+
+            if (item.date) {
+
+                resultText +=
+                    "🕒 " +
+                    item.date +
+                    "\n";
+            }
+
+            if (item.snippet) {
+
+                resultText +=
+                    item.snippet +
+                    "\n";
+            }
+
+            if (item.url) {
+
+                resultText +=
+                    "🔗 " +
+                    item.url +
+                    "\n";
+            }
+
+            resultText +=
+                "\n";
+        }
+    );
+
+
+resultText +=
+    "━━━━━━━━━━━━━━\n" +
+    "ℹ️ Showing the most relevant results.";
+
+
+/* ==========================
+   PREMIUM RESULT CARDS
+   ========================== */
+
+let resultsHTML = `
+
+    <div class="research-results">
+
+        <div class="research-results-title">
+
+            <div>
+                <i class="fa-solid fa-globe"></i>
+            </div>
+
+            <span>
+                Search results for:
+                <strong>
+                    ${searchQuery}
+                </strong>
+            </span>
+
+        </div>
+`;
+
+
+data.results
+    .slice(0, 6)
+    .forEach(
+        (item, index) => {
+
+            const title =
+                item.title ||
+                "Untitled";
+
+            const site =
+                item.site_name ||
+                "Web source";
+
+            const snippet =
+                item.snippet ||
+                "No description available.";
+
+            const url =
+                item.url ||
+                "#";
+
+
+            resultsHTML += `
+
+                <div
+                    class="research-result-card"
+                >
+
+                    <div
+                        class="research-result-number"
+                    >
+                        ${index + 1}
+                    </div>
+
+
+                    <div
+                        class="research-result-content"
+                    >
+
+                        <div
+                            class="research-result-title"
+                        >
+                            ${title}
+                        </div>
+
+
+                        <div
+                            class="research-result-site"
+                        >
+                            <i
+                                class="fa-solid fa-globe"
+                            ></i>
+
+                            ${site}
+                        </div>
+
+
+                        <div
+                            class="research-result-snippet"
+                        >
+                            ${snippet}
+                        </div>
+
+
+                        ${
+                            item.date
+                            ? `
+                                <div
+                                    class="research-result-date"
+                                >
+                                    <i
+                                        class="fa-regular fa-clock"
+                                    ></i>
+
+                                    ${item.date}
+                                </div>
+                            `
+                            : ""
+                        }
+
+
+                        ${
+                            url !== "#"
+                            ? `
+                                <button
+                                    type="button"
+                                    class="research-source-btn"
+                                    onclick="
+                                        window.open(
+                                            '${url.replace(
+                                                /'/g,
+                                                "\\'"
+                                            )}',
+                                            '_blank'
+                                        )
+                                    "
+                                >
+                                    Open Source
+                                    <i
+                                        class="fa-solid fa-arrow-up-right-from-square"
+                                    ></i>
+                                </button>
+                            `
+                            : ""
+                        }
+
+                    </div>
+
+                </div>
+            `;
+        }
+    );
+
+
+resultsHTML += `
+
+        <div
+            class="research-results-footer"
+        >
+            <i
+                class="fa-solid fa-circle-info"
+            ></i>
+
+            Showing the most relevant results.
+        </div>
+
+    </div>
+`;
+
+
+/* ==========================
+   SHOW RESULTS
+   ========================== */
+
+appendMessage(
+    resultsHTML,
+    "bot"
+);
+
+
+/* ==========================
+   SAVE RESULTS TO HISTORY
+   ========================== */
+
+currentChat.messages.push({
+
+    role: "bot",
+
+    text: resultText
+});
+
+
+localStorage.setItem(
+    "auroraChats",
+    JSON.stringify(chats)
+);
+
+
+renderHistory();
 
 
                 /* ==========================
