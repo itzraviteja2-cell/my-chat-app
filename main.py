@@ -1404,6 +1404,115 @@ async def chat_pdf(
         )
 
 # =========================================
+# TXT DOCUMENT CHAT
+# =========================================
+
+@app.post("/chat-txt")
+async def chat_txt(
+
+    message: str = Form(...),
+
+    txt: UploadFile = File(...)
+
+):
+
+    if not os.getenv("GEMINI_API_KEY"):
+
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured"
+        )
+
+    try:
+
+        txt_bytes = await txt.read()
+
+        if not txt_bytes:
+
+            raise HTTPException(
+                status_code=400,
+                detail="TXT file is empty"
+            )
+
+        text_content = txt_bytes.decode(
+            "utf-8",
+            errors="replace"
+        )
+
+        user_message = (
+            message.strip()
+            if message.strip()
+            else "Summarize this TXT document"
+        )
+
+        prompt = (
+
+            "Read the uploaded TXT document carefully.\n\n"
+
+            "Answer the user's question using ONLY "
+            "information from the TXT document.\n"
+
+            "Do not invent or add information.\n\n"
+
+            "STRICT LANGUAGE RULE:\n"
+
+            "Use exactly ONE output language.\n"
+
+            "If the user's question is in Telugu, "
+            "the ENTIRE answer must be in Telugu only.\n"
+
+            "If the user's question is in English, "
+            "the ENTIRE answer must be in English only.\n"
+
+            "Never provide translations.\n\n"
+
+            "User question:\n"
+            + user_message
+            + "\n\n"
+
+            "TXT document:\n"
+            + text_content
+        )
+
+        response = client.models.generate_content(
+
+            model="gemini-3.6-flash",
+
+            contents=[
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
+        )
+
+        if response.text:
+
+            return {
+                "reply": response.text
+            }
+
+        raise HTTPException(
+            status_code=500,
+            detail="No response generated from TXT"
+        )
+
+    except HTTPException:
+
+        raise
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+# =========================================
 # VOICE TRANSCRIPTION
 # =========================================
 
