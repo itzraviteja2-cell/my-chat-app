@@ -6483,9 +6483,10 @@ function handleKey(event) {
 
     if (!file) return;
 
-    const fileName = file.name.toLowerCase();
+    const fileName =
+        file.name.toLowerCase();
 
-    // PDF → existing PDF system
+    // PDF
     if (fileName.endsWith(".pdf")) {
 
         const pdfInput =
@@ -6510,15 +6511,13 @@ function handleKey(event) {
         return;
     }
 
-    // TXT → AI reading
+    // TXT
     if (fileName.endsWith(".txt")) {
 
-        const formData = new FormData();
+        const formData =
+            new FormData();
 
-        formData.append(
-            "txt",
-            file
-        );
+        formData.append("txt", file);
 
         formData.append(
             "message",
@@ -6527,13 +6526,15 @@ function handleKey(event) {
 
         try {
 
-            const response = await fetch(
-                window.location.origin + "/chat-txt",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
+            const response =
+                await fetch(
+                    window.location.origin +
+                    "/chat-txt",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
 
             const data =
                 await response.json();
@@ -6563,11 +6564,6 @@ function handleKey(event) {
 
         } catch (error) {
 
-            console.error(
-                "AURORA TXT ERROR:",
-                error
-            );
-
             appendMessage(
                 "📄 TXT error: " +
                 (
@@ -6586,11 +6582,153 @@ function handleKey(event) {
         return;
     }
 
-    // Other document types
+    // DOCX
+    if (fileName.endsWith(".docx")) {
+
+        const formData =
+            new FormData();
+
+        formData.append("docx", file);
+
+        formData.append(
+            "message",
+            "Summarize this DOCX document and give one clear answer."
+        );
+
+        try {
+
+            const response =
+                await fetch(
+                    window.location.origin +
+                    "/chat-docx",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+
+                appendMessage(
+                    "📄 DOCX error: " +
+                    (
+                        data.detail ||
+                        "DOCX upload failed"
+                    ),
+                    "bot"
+                );
+
+                return;
+            }
+
+            appendMessage(
+                "📄 DOCX Summary\n\n" +
+                (
+                    data.reply ||
+                    "DOCX summary అందుబాటులో లేదు."
+                ),
+                "bot"
+            );
+
+        } catch (error) {
+
+            appendMessage(
+                "📄 DOCX error: " +
+                (
+                    error?.message ||
+                    "Unable to connect to DOCX server"
+                ),
+                "bot"
+            );
+
+        } finally {
+
+            event.target.value = "";
+
+        }
+
+        return;
+    }
+
+    // XLSX
+    if (fileName.endsWith(".xlsx")) {
+
+        const formData =
+            new FormData();
+
+        formData.append("excel", file);
+
+        formData.append(
+            "message",
+            "Summarize this Excel document and give one clear answer."
+        );
+
+        try {
+
+            const response =
+                await fetch(
+                    window.location.origin +
+                    "/chat-excel",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+
+                appendMessage(
+                    "📊 Excel error: " +
+                    (
+                        data.detail ||
+                        "Excel upload failed"
+                    ),
+                    "bot"
+                );
+
+                return;
+            }
+
+            appendMessage(
+                "📊 Excel Summary\n\n" +
+                (
+                    data.reply ||
+                    "Excel summary అందుబాటులో లేదు."
+                ),
+                "bot"
+            );
+
+        } catch (error) {
+
+            appendMessage(
+                "📊 Excel error: " +
+                (
+                    error?.message ||
+                    "Unable to connect to Excel server"
+                ),
+                "bot"
+            );
+
+        } finally {
+
+            event.target.value = "";
+
+        }
+
+        return;
+    }
+
+    // Other files
     appendMessage(
         "📄 " +
         file.name +
-        " selected. AI reading for this document type is not connected yet.",
+        " selected. AI reading for this file type is not connected yet.",
         "bot"
     );
 
