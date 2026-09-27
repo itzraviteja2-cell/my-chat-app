@@ -6463,7 +6463,7 @@ function handleKey(event) {
     }
 }
 
-    function handleDocumentUpload(event) {
+    window.handleDocumentUpload = function(event) {
 
     const file = event.target.files[0];
 
@@ -6471,7 +6471,6 @@ function handleKey(event) {
 
     const fileName = file.name.toLowerCase();
 
-    // PDF → Aurora PDF AI processing
     if (fileName.endsWith(".pdf")) {
 
         const pdfInput =
@@ -6488,26 +6487,22 @@ function handleKey(event) {
                 dataTransfer.files;
 
             uploadPDF({
-                target: pdfInput,
-                value: ""
+                target: pdfInput
             });
         }
 
         event.target.value = "";
-
         return;
     }
 
-    // Other document formats
     appendMessage(
-        "📄 " +
-        file.name +
+        "📄 " + file.name +
         " selected. Currently PDF documents are supported for AI reading.",
         "bot"
     );
 
     event.target.value = "";
-    }
+};
 
     /* QUICK TOOLS TOGGLE */
 
