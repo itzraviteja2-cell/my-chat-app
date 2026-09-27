@@ -7041,13 +7041,68 @@ async function webSearch() {
         return;
     }
 
+    const searchQuery = query.trim();
+
+    /* CREATE CHAT FOR RESEARCH */
+
+    if (!currentChat) {
+
+        currentChat = {
+            title: searchQuery.substring(0, 30),
+            messages: []
+        };
+
+        chats.unshift(currentChat);
+
+        localStorage.setItem(
+            "auroraChats",
+            JSON.stringify(chats)
+        );
+    }
+
+    const messagesContainer =
+        document.getElementById("messages");
+
+    const welcome =
+        document.getElementById("welcome");
+
+    if (messagesContainer) {
+        messagesContainer.classList.add("active");
+        messagesContainer.style.display = "flex";
+        messagesContainer.style.visibility = "visible";
+        messagesContainer.style.opacity = "1";
+    }
+
+    if (welcome) {
+        welcome.style.display = "none";
+    }
+
+    /* SAVE USER RESEARCH QUERY */
+
+    appendMessage(
+        "🔎 Research: " + searchQuery,
+        "user"
+    );
+
+    currentChat.messages.push({
+        role: "user",
+        text: "🔎 Research: " + searchQuery
+    });
+
+    localStorage.setItem(
+        "auroraChats",
+        JSON.stringify(chats)
+    );
+
+    renderHistory();
+
     showTyping();
 
     try {
 
         const response = await fetch(
             "/web-search?query=" +
-            encodeURIComponent(query.trim())
+            encodeURIComponent(searchQuery)
         );
 
         const data = await response.json();
@@ -7056,14 +7111,29 @@ async function webSearch() {
 
         if (!response.ok) {
 
-            appendMessage(
+            const errorText =
                 "🔍 Search error: " +
                 (
                     data.detail ||
                     "Search failed"
-                ),
+                );
+
+            appendMessage(
+                errorText,
                 "bot"
             );
+
+            currentChat.messages.push({
+                role: "bot",
+                text: errorText
+            });
+
+            localStorage.setItem(
+                "auroraChats",
+                JSON.stringify(chats)
+            );
+
+            renderHistory();
 
             return;
         }
@@ -7073,22 +7143,35 @@ async function webSearch() {
             data.results.length === 0
         ) {
 
+            const noResults =
+                "🔍 No search results found.";
+
             appendMessage(
-                "🔍 No search results found.",
+                noResults,
                 "bot"
             );
 
+            currentChat.messages.push({
+                role: "bot",
+                text: noResults
+            });
+
+            localStorage.setItem(
+                "auroraChats",
+                JSON.stringify(chats)
+            );
+
+            renderHistory();
+
             return;
         }
-
 
         /* PROFESSIONAL SEARCH RESULT */
 
         let resultText =
             "🔎 Search results for: " +
-            query.trim() +
+            searchQuery +
             "\n\n";
-
 
         data.results
             .slice(0, 6)
@@ -7108,16 +7191,13 @@ async function webSearch() {
                         ) +
                         "\n";
 
-
                     if (item.site_name) {
 
                         resultText +=
                             "🌐 " +
                             item.site_name +
                             "\n";
-
                     }
-
 
                     if (item.date) {
 
@@ -7125,18 +7205,14 @@ async function webSearch() {
                             "🕒 " +
                             item.date +
                             "\n";
-
                     }
-
 
                     if (item.snippet) {
 
                         resultText +=
                             item.snippet +
                             "\n";
-
                     }
-
 
                     if (item.url) {
 
@@ -7144,43 +7220,66 @@ async function webSearch() {
                             "🔗 " +
                             item.url +
                             "\n";
-
                     }
-
 
                     resultText +=
                         "\n";
-
                 }
             );
-
 
         resultText +=
             "━━━━━━━━━━━━━━\n" +
             "ℹ️ Showing the most relevant results.";
 
+        /* SHOW RESULTS */
 
         appendMessage(
             resultText,
             "bot"
         );
 
-    }
+        /* SAVE RESULTS TO HISTORY */
 
+        currentChat.messages.push({
+            role: "bot",
+            text: resultText
+        });
+
+        localStorage.setItem(
+            "auroraChats",
+            JSON.stringify(chats)
+        );
+
+        renderHistory();
+
+    }
 
     catch (error) {
 
         hideTyping();
 
-        appendMessage(
+        const errorText =
             "🔍 Search error: " +
-            error.message,
+            error.message;
+
+        appendMessage(
+            errorText,
             "bot"
         );
 
-    }
+        currentChat.messages.push({
+            role: "bot",
+            text: errorText
+        });
 
-}
+        localStorage.setItem(
+            "auroraChats",
+            JSON.stringify(chats)
+        );
+
+        renderHistory();
+    }
+}               
 
     /* PDF CHAT MEMORY */
 
