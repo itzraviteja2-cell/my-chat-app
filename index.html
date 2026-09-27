@@ -6461,6 +6461,52 @@ function handleKey(event) {
     if (event.key === "Enter") {
         return;
     }
+}
+
+    function handleDocumentUpload(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const fileName = file.name.toLowerCase();
+
+    // PDF → Aurora PDF AI processing
+    if (fileName.endsWith(".pdf")) {
+
+        const pdfInput =
+            document.getElementById("pdfInput");
+
+        if (pdfInput) {
+
+            const dataTransfer =
+                new DataTransfer();
+
+            dataTransfer.items.add(file);
+
+            pdfInput.files =
+                dataTransfer.files;
+
+            uploadPDF({
+                target: pdfInput,
+                value: ""
+            });
+        }
+
+        event.target.value = "";
+
+        return;
+    }
+
+    // Other document formats
+    appendMessage(
+        "📄 " +
+        file.name +
+        " selected. Currently PDF documents are supported for AI reading.",
+        "bot"
+    );
+
+    event.target.value = "";
     }
 
     /* QUICK TOOLS TOGGLE */
