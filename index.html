@@ -6477,7 +6477,7 @@ function handleKey(event) {
     }
 }
 
-    window.handleDocumentUpload = function(event) {
+    window.handleDocumentUpload = async function(event) {
 
     const file = event.target.files[0];
 
@@ -6485,6 +6485,7 @@ function handleKey(event) {
 
     const fileName = file.name.toLowerCase();
 
+    // PDF → existing PDF system
     if (fileName.endsWith(".pdf")) {
 
         const pdfInput =
@@ -6509,9 +6510,87 @@ function handleKey(event) {
         return;
     }
 
+    // TXT → AI reading
+    if (fileName.endsWith(".txt")) {
+
+        const formData = new FormData();
+
+        formData.append(
+            "txt",
+            file
+        );
+
+        formData.append(
+            "message",
+            "Summarize this TXT document and give one clear answer."
+        );
+
+        try {
+
+            const response = await fetch(
+                window.location.origin + "/chat-txt",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+
+                appendMessage(
+                    "📄 TXT error: " +
+                    (
+                        data.detail ||
+                        "TXT upload failed"
+                    ),
+                    "bot"
+                );
+
+                return;
+            }
+
+            appendMessage(
+                "📄 TXT Summary\n\n" +
+                (
+                    data.reply ||
+                    "TXT summary అందుబాటులో లేదు."
+                ),
+                "bot"
+            );
+
+        } catch (error) {
+
+            console.error(
+                "AURORA TXT ERROR:",
+                error
+            );
+
+            appendMessage(
+                "📄 TXT error: " +
+                (
+                    error?.message ||
+                    "Unable to connect to TXT server"
+                ),
+                "bot"
+            );
+
+        } finally {
+
+            event.target.value = "";
+
+        }
+
+        return;
+    }
+
+    // Other document types
     appendMessage(
-        "📄 " + file.name +
-        " selected. Currently PDF documents are supported for AI reading.",
+        "📄 " +
+        file.name +
+        " selected. AI reading for this document type is not connected yet.",
         "bot"
     );
 
