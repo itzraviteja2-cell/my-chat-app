@@ -1218,6 +1218,20 @@ def generate_image(
 
         )
 
+# =========================================
+# PDF POST CONNECTION TEST
+# =========================================
+
+@app.post("/pdf-test")
+async def pdf_test(
+    pdf: UploadFile = File(...)
+):
+
+    return {
+        "status": "ok",
+        "filename": pdf.filename
+    }
+
 
 # =========================================
 # PDF CHAT
