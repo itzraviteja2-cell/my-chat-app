@@ -191,6 +191,231 @@ def web_search(query: str):
             detail=str(e)
         )
 
+# =========================================
+# AI RESEARCH SUMMARY
+# =========================================
+
+@app.post("/research-summary")
+def research_summary(data: dict):
+
+    if not os.getenv(
+        "GEMINI_API_KEY"
+    ):
+
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured"
+        )
+
+    try:
+
+        query = str(
+            data.get(
+                "query",
+                ""
+            )
+        ).strip()
+
+
+        results = data.get(
+            "results",
+            []
+        )
+
+
+        if not query:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Research query is required"
+            )
+
+
+        if not isinstance(
+            results,
+            list
+        ) or not results:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Research results are required"
+            )
+
+
+        research_text = ""
+
+
+        for index, item in enumerate(
+            results[:6],
+            start=1
+        ):
+
+            title = str(
+                item.get(
+                    "title",
+                    ""
+                )
+            ).strip()
+
+
+            site = str(
+                item.get(
+                    "site_name",
+                    ""
+                )
+            ).strip()
+
+
+            snippet = str(
+                item.get(
+                    "snippet",
+                    ""
+                )
+            ).strip()
+
+
+            date = str(
+                item.get(
+                    "date",
+                    ""
+                )
+            ).strip()
+
+
+            research_text += (
+
+                "\nSOURCE "
+                + str(index)
+                + "\n"
+
+                + "Title: "
+                + title
+                + "\n"
+
+                + "Website: "
+                + site
+                + "\n"
+
+                + "Date: "
+                + date
+                + "\n"
+
+                + "Information: "
+                + snippet
+                + "\n"
+
+            )
+
+
+        prompt = """
+
+You are Aurora Smart AI Research.
+
+The user searched the web for:
+
+"""
+        prompt += query
+
+        prompt += """
+
+Below are web search results from multiple sources.
+
+Read the available information carefully.
+
+Create a concise, useful research summary.
+
+IMPORTANT RULES:
+
+1. Use only information contained in the
+   supplied search results.
+
+2. Do not invent facts.
+
+3. If the sources do not provide enough
+   information, clearly say so.
+
+4. Separate confirmed information from
+   uncertain or incomplete information.
+
+5. Mention important differences between
+   sources when they appear.
+
+6. Keep the answer easy to understand.
+
+7. Respond in the same language as the
+   user's research query when possible.
+
+8. For Telugu queries, use natural,
+   easy-to-understand Telugu.
+
+FORMAT:
+
+🧠 Research Summary
+
+Give a short overall summary.
+
+📌 Key Points
+
+- Important point
+- Important point
+- Important point
+
+🔎 Source Notes
+
+Briefly mention which sources provided
+the information.
+
+Do not include made-up URLs or sources.
+
+Web results:
+"""
+
+        prompt += research_text
+
+
+        response = client.models.generate_content(
+
+            model="gemini-3.6-flash",
+
+            contents=[
+
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+
+            ]
+
+        )
+
+
+        return {
+
+            "summary":
+                response.text
+
+        }
+
+
+    except HTTPException:
+
+        raise
+
+
+    except Exception as e:
+
+        raise HTTPException(
+
+            status_code=500,
+
+            detail=str(e)
+
+        )
+
 
 # =========================================
 # TEXT CHAT + SMART MEMORY
