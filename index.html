@@ -7033,253 +7033,899 @@ function regenerateResponse() {
 
 async function webSearch() {
 
-    const query = prompt(
-        "What do you want to search?"
-    );
+    /* ==============================
+       REMOVE OLD RESEARCH UI
+       ============================== */
 
-    if (!query || !query.trim()) {
-        return;
+    const oldPanel =
+        document.getElementById("auroraResearchPanel");
+
+    if (oldPanel) {
+        oldPanel.remove();
     }
 
-    const searchQuery = query.trim();
 
-    /* CREATE CHAT FOR RESEARCH */
+    /* ==============================
+       CREATE RESEARCH PANEL
+       ============================== */
 
-    if (!currentChat) {
+    const panel =
+        document.createElement("div");
 
-        currentChat = {
-            title: searchQuery.substring(0, 30),
-            messages: []
-        };
+    panel.id =
+        "auroraResearchPanel";
 
-        chats.unshift(currentChat);
+    panel.innerHTML = `
 
-        localStorage.setItem(
-            "auroraChats",
-            JSON.stringify(chats)
-        );
-    }
+        <div class="research-overlay">
 
-    const messagesContainer =
-        document.getElementById("messages");
+            <div class="research-card">
 
-    const welcome =
-        document.getElementById("welcome");
+                <div class="research-header">
 
-    if (messagesContainer) {
-        messagesContainer.classList.add("active");
-        messagesContainer.style.display = "flex";
-        messagesContainer.style.visibility = "visible";
-        messagesContainer.style.opacity = "1";
-    }
+                    <div class="research-icon">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
 
-    if (welcome) {
-        welcome.style.display = "none";
-    }
+                    <div>
+                        <div class="research-title">
+                            Aurora Research
+                        </div>
 
-    /* SAVE USER RESEARCH QUERY */
+                        <div class="research-subtitle">
+                            Search the web for the latest information
+                        </div>
+                    </div>
 
-    appendMessage(
-        "🔎 Research: " + searchQuery,
-        "user"
-    );
+                    <button
+                        type="button"
+                        class="research-close"
+                        id="researchCloseBtn"
+                    >
+                        ×
+                    </button>
 
-    currentChat.messages.push({
-        role: "user",
-        text: "🔎 Research: " + searchQuery
-    });
+                </div>
 
-    localStorage.setItem(
-        "auroraChats",
-        JSON.stringify(chats)
-    );
 
-    renderHistory();
+                <div class="research-search-row">
 
-    showTyping();
+                    <input
+                        type="text"
+                        id="researchSearchInput"
+                        class="research-search-input"
+                        placeholder="What do you want to research?"
+                        autocomplete="off"
+                    />
 
-    try {
+                    <button
+                        type="button"
+                        id="researchSearchBtn"
+                        class="research-search-btn"
+                    >
+                        <i class="fa-solid fa-arrow-right"></i>
+                        Search
+                    </button>
 
-        const response = await fetch(
-            "/web-search?query=" +
-            encodeURIComponent(searchQuery)
-        );
+                </div>
 
-        const data = await response.json();
 
-        hideTyping();
+                <div class="research-hint">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Search news, current events, facts, technology,
+                    education and more.
+                </div>
 
-        if (!response.ok) {
+            </div>
 
-            const errorText =
-                "🔍 Search error: " +
-                (
-                    data.detail ||
-                    "Search failed"
+        </div>
+    `;
+
+
+    document.body.appendChild(panel);
+
+
+    /* ==============================
+       RESEARCH CSS
+       ============================== */
+
+    if (
+        !document.getElementById(
+            "auroraResearchStyles"
+        )
+    ) {
+
+        const style =
+            document.createElement("style");
+
+        style.id =
+            "auroraResearchStyles";
+
+        style.textContent = `
+
+            .research-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                padding: 20px;
+
+                background:
+                    rgba(8, 4, 20, 0.72);
+
+                backdrop-filter:
+                    blur(14px);
+
+                -webkit-backdrop-filter:
+                    blur(14px);
+            }
+
+
+            .research-card {
+
+                width: min(
+                    680px,
+                    100%
                 );
 
-            appendMessage(
-                errorText,
-                "bot"
-            );
+                padding: 26px;
 
-            currentChat.messages.push({
-                role: "bot",
-                text: errorText
-            });
+                border-radius: 26px;
 
-            localStorage.setItem(
-                "auroraChats",
-                JSON.stringify(chats)
-            );
+                background:
+                    linear-gradient(
+                        145deg,
+                        rgba(35, 20, 70, 0.98),
+                        rgba(16, 10, 35, 0.98)
+                    );
 
-            renderHistory();
+                border:
+                    1px solid
+                    rgba(168, 85, 247, 0.35);
 
-            return;
-        }
+                box-shadow:
+                    0 25px 80px
+                    rgba(0,0,0,0.55),
 
-        if (
-            !data.results ||
-            data.results.length === 0
-        ) {
+                    0 0 45px
+                    rgba(124,58,237,0.18);
 
-            const noResults =
-                "🔍 No search results found.";
+                animation:
+                    researchCardIn
+                    .22s ease-out;
+            }
 
-            appendMessage(
-                noResults,
-                "bot"
-            );
 
-            currentChat.messages.push({
-                role: "bot",
-                text: noResults
-            });
+            @keyframes researchCardIn {
 
-            localStorage.setItem(
-                "auroraChats",
-                JSON.stringify(chats)
-            );
-
-            renderHistory();
-
-            return;
-        }
-
-        /* PROFESSIONAL SEARCH RESULT */
-
-        let resultText =
-            "🔎 Search results for: " +
-            searchQuery +
-            "\n\n";
-
-        data.results
-            .slice(0, 6)
-            .forEach(
-                (item, index) => {
-
-                    resultText +=
-                        "━━━━━━━━━━━━━━\n";
-
-                    resultText +=
-                        "🔹 " +
-                        (index + 1) +
-                        ". " +
-                        (
-                            item.title ||
-                            "Untitled"
-                        ) +
-                        "\n";
-
-                    if (item.site_name) {
-
-                        resultText +=
-                            "🌐 " +
-                            item.site_name +
-                            "\n";
-                    }
-
-                    if (item.date) {
-
-                        resultText +=
-                            "🕒 " +
-                            item.date +
-                            "\n";
-                    }
-
-                    if (item.snippet) {
-
-                        resultText +=
-                            item.snippet +
-                            "\n";
-                    }
-
-                    if (item.url) {
-
-                        resultText +=
-                            "🔗 " +
-                            item.url +
-                            "\n";
-                    }
-
-                    resultText +=
-                        "\n";
+                from {
+                    opacity: 0;
+                    transform:
+                        translateY(14px)
+                        scale(.97);
                 }
+
+                to {
+                    opacity: 1;
+                    transform:
+                        translateY(0)
+                        scale(1);
+                }
+            }
+
+
+            .research-header {
+
+                display: flex;
+                align-items: center;
+
+                gap: 14px;
+
+                margin-bottom: 22px;
+            }
+
+
+            .research-icon {
+
+                width: 48px;
+                height: 48px;
+
+                flex-shrink: 0;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border-radius: 15px;
+
+                color: white;
+
+                font-size: 19px;
+
+                background:
+                    linear-gradient(
+                        135deg,
+                        #7c3aed,
+                        #a855f7
+                    );
+
+                box-shadow:
+                    0 0 24px
+                    rgba(168,85,247,.35);
+            }
+
+
+            .research-title {
+
+                color: white;
+
+                font-size: 19px;
+
+                font-weight: 700;
+
+                letter-spacing: .2px;
+            }
+
+
+            .research-subtitle {
+
+                margin-top: 4px;
+
+                color:
+                    rgba(255,255,255,.58);
+
+                font-size: 12px;
+            }
+
+
+            .research-close {
+
+                margin-left: auto;
+
+                width: 36px;
+                height: 36px;
+
+                border: 0;
+
+                border-radius: 12px;
+
+                cursor: pointer;
+
+                color:
+                    rgba(255,255,255,.7);
+
+                background:
+                    rgba(255,255,255,.07);
+
+                font-size: 24px;
+
+                line-height: 1;
+
+                transition:
+                    .2s ease;
+            }
+
+
+            .research-close:hover {
+
+                color: white;
+
+                background:
+                    rgba(255,255,255,.14);
+
+                transform:
+                    rotate(90deg);
+            }
+
+
+            .research-search-row {
+
+                display: flex;
+
+                gap: 10px;
+            }
+
+
+            .research-search-input {
+
+                flex: 1;
+
+                min-width: 0;
+
+                height: 52px;
+
+                padding:
+                    0 17px;
+
+                border-radius: 15px;
+
+                outline: none;
+
+                border:
+                    1px solid
+                    rgba(255,255,255,.12);
+
+                color: white;
+
+                background:
+                    rgba(255,255,255,.06);
+
+                font-size: 14px;
+
+                transition:
+                    .2s ease;
+            }
+
+
+            .research-search-input::placeholder {
+
+                color:
+                    rgba(255,255,255,.38);
+            }
+
+
+            .research-search-input:focus {
+
+                border-color:
+                    rgba(168,85,247,.65);
+
+                box-shadow:
+                    0 0 0 3px
+                    rgba(168,85,247,.10);
+            }
+
+
+            .research-search-btn {
+
+                height: 52px;
+
+                padding:
+                    0 19px;
+
+                border: 0;
+
+                border-radius: 15px;
+
+                cursor: pointer;
+
+                color: white;
+
+                font-weight: 600;
+
+                background:
+                    linear-gradient(
+                        135deg,
+                        #7c3aed,
+                        #a855f7
+                    );
+
+                box-shadow:
+                    0 8px 25px
+                    rgba(124,58,237,.28);
+
+                transition:
+                    .2s ease;
+
+                white-space: nowrap;
+            }
+
+
+            .research-search-btn:hover {
+
+                transform:
+                    translateY(-1px);
+
+                box-shadow:
+                    0 11px 30px
+                    rgba(124,58,237,.38);
+            }
+
+
+            .research-search-btn:active {
+
+                transform:
+                    translateY(0);
+            }
+
+
+            .research-hint {
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 7px;
+
+                margin-top: 14px;
+
+                color:
+                    rgba(255,255,255,.45);
+
+                font-size: 11px;
+
+                line-height: 1.5;
+            }
+
+
+            .research-hint i {
+
+                color:
+                    #a855f7;
+            }
+
+
+            @media (max-width: 600px) {
+
+                .research-card {
+
+                    padding: 20px;
+
+                    border-radius: 22px;
+                }
+
+
+                .research-search-row {
+
+                    flex-direction: column;
+                }
+
+
+                .research-search-btn {
+
+                    width: 100%;
+                }
+
+
+                .research-title {
+
+                    font-size: 17px;
+                }
+
+
+                .research-subtitle {
+
+                    font-size: 11px;
+                }
+            }
+
+        `;
+
+        document.head.appendChild(style);
+    }
+
+
+    /* ==============================
+       ELEMENTS
+       ============================== */
+
+    const input =
+        document.getElementById(
+            "researchSearchInput"
+        );
+
+    const searchBtn =
+        document.getElementById(
+            "researchSearchBtn"
+        );
+
+    const closeBtn =
+        document.getElementById(
+            "researchCloseBtn"
+        );
+
+
+    /* ==============================
+       CLOSE
+       ============================== */
+
+    closeBtn.onclick = () => {
+
+        panel.remove();
+
+    };
+
+
+    /* ==============================
+       SEARCH FUNCTION
+       ============================== */
+
+    const performResearch =
+        async () => {
+
+            const searchQuery =
+                input.value.trim();
+
+            if (!searchQuery) {
+
+                input.focus();
+
+                return;
+            }
+
+
+            /* CLOSE RESEARCH PANEL */
+
+            panel.remove();
+
+
+            /* ==========================
+               CREATE CHAT
+               ========================== */
+
+            if (!currentChat) {
+
+                currentChat = {
+
+                    title:
+                        searchQuery.substring(
+                            0,
+                            30
+                        ),
+
+                    messages: []
+                };
+
+
+                chats.unshift(
+                    currentChat
+                );
+
+
+                localStorage.setItem(
+                    "auroraChats",
+                    JSON.stringify(chats)
+                );
+            }
+
+
+            const messagesContainer =
+                document.getElementById(
+                    "messages"
+                );
+
+            const welcome =
+                document.getElementById(
+                    "welcome"
+                );
+
+
+            if (messagesContainer) {
+
+                messagesContainer.classList.add(
+                    "active"
+                );
+
+                messagesContainer.style.display =
+                    "flex";
+
+                messagesContainer.style.visibility =
+                    "visible";
+
+                messagesContainer.style.opacity =
+                    "1";
+            }
+
+
+            if (welcome) {
+
+                welcome.style.display =
+                    "none";
+            }
+
+
+            /* ==========================
+               SAVE QUERY
+               ========================== */
+
+            appendMessage(
+                "🔎 Research: " +
+                searchQuery,
+                "user"
             );
 
-        resultText +=
-            "━━━━━━━━━━━━━━\n" +
-            "ℹ️ Showing the most relevant results.";
 
-        /* SHOW RESULTS */
+            currentChat.messages.push({
 
-        appendMessage(
-            resultText,
-            "bot"
-        );
+                role: "user",
 
-        /* SAVE RESULTS TO HISTORY */
+                text:
+                    "🔎 Research: " +
+                    searchQuery
+            });
 
-        currentChat.messages.push({
-            role: "bot",
-            text: resultText
-        });
 
-        localStorage.setItem(
-            "auroraChats",
-            JSON.stringify(chats)
-        );
+            localStorage.setItem(
+                "auroraChats",
+                JSON.stringify(chats)
+            );
 
-        renderHistory();
 
-    }
+            renderHistory();
 
-    catch (error) {
 
-        hideTyping();
+            showTyping();
 
-        const errorText =
-            "🔍 Search error: " +
-            error.message;
 
-        appendMessage(
-            errorText,
-            "bot"
-        );
+            /* ==========================
+               SEARCH
+               ========================== */
 
-        currentChat.messages.push({
-            role: "bot",
-            text: errorText
-        });
+            try {
 
-        localStorage.setItem(
-            "auroraChats",
-            JSON.stringify(chats)
-        );
+                const response =
+                    await fetch(
+                        "/web-search?query=" +
+                        encodeURIComponent(
+                            searchQuery
+                        )
+                    );
 
-        renderHistory();
-    }
-}               
+
+                const data =
+                    await response.json();
+
+
+                hideTyping();
+
+
+                if (!response.ok) {
+
+                    const errorText =
+                        "🔍 Search error: " +
+                        (
+                            data.detail ||
+                            "Search failed"
+                        );
+
+
+                    appendMessage(
+                        errorText,
+                        "bot"
+                    );
+
+
+                    currentChat.messages.push({
+
+                        role: "bot",
+
+                        text: errorText
+                    });
+
+
+                    localStorage.setItem(
+                        "auroraChats",
+                        JSON.stringify(chats)
+                    );
+
+
+                    renderHistory();
+
+                    return;
+                }
+
+
+                if (
+                    !data.results ||
+                    data.results.length === 0
+                ) {
+
+                    const noResults =
+                        "🔍 No search results found.";
+
+
+                    appendMessage(
+                        noResults,
+                        "bot"
+                    );
+
+
+                    currentChat.messages.push({
+
+                        role: "bot",
+
+                        text: noResults
+                    });
+
+
+                    localStorage.setItem(
+                        "auroraChats",
+                        JSON.stringify(chats)
+                    );
+
+
+                    renderHistory();
+
+                    return;
+                }
+
+
+                /* ==========================
+                   BUILD RESULTS
+                   ========================== */
+
+                let resultText =
+                    "🔎 Search results for: " +
+                    searchQuery +
+                    "\n\n";
+
+
+                data.results
+                    .slice(0, 6)
+                    .forEach(
+                        (item, index) => {
+
+                            resultText +=
+                                "━━━━━━━━━━━━━━\n";
+
+
+                            resultText +=
+                                "🔹 " +
+                                (index + 1) +
+                                ". " +
+                                (
+                                    item.title ||
+                                    "Untitled"
+                                ) +
+                                "\n";
+
+
+                            if (
+                                item.site_name
+                            ) {
+
+                                resultText +=
+                                    "🌐 " +
+                                    item.site_name +
+                                    "\n";
+                            }
+
+
+                            if (item.date) {
+
+                                resultText +=
+                                    "🕒 " +
+                                    item.date +
+                                    "\n";
+                            }
+
+
+                            if (item.snippet) {
+
+                                resultText +=
+                                    item.snippet +
+                                    "\n";
+                            }
+
+
+                            if (item.url) {
+
+                                resultText +=
+                                    "🔗 " +
+                                    item.url +
+                                    "\n";
+                            }
+
+
+                            resultText +=
+                                "\n";
+                        }
+                    );
+
+
+                resultText +=
+                    "━━━━━━━━━━━━━━\n" +
+                    "ℹ️ Showing the most relevant results.";
+
+
+                /* ==========================
+                   SHOW RESULTS
+                   ========================== */
+
+                appendMessage(
+                    resultText,
+                    "bot"
+                );
+
+
+                /* ==========================
+                   SAVE RESULTS
+                   ========================== */
+
+                currentChat.messages.push({
+
+                    role: "bot",
+
+                    text: resultText
+                });
+
+
+                localStorage.setItem(
+                    "auroraChats",
+                    JSON.stringify(chats)
+                );
+
+
+                renderHistory();
+
+            }
+
+
+            catch (error) {
+
+                hideTyping();
+
+
+                const errorText =
+                    "🔍 Search error: " +
+                    error.message;
+
+
+                appendMessage(
+                    errorText,
+                    "bot"
+                );
+
+
+                currentChat.messages.push({
+
+                    role: "bot",
+
+                    text: errorText
+                });
+
+
+                localStorage.setItem(
+                    "auroraChats",
+                    JSON.stringify(chats)
+                );
+
+
+                renderHistory();
+            }
+        };
+
+
+    /* ==============================
+       EVENTS
+       ============================== */
+
+    searchBtn.onclick =
+        performResearch;
+
+
+    input.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                performResearch();
+            }
+        }
+    );
+
+
+    /* ==============================
+       FOCUS
+       ============================== */
+
+    setTimeout(
+        () => {
+
+            input.focus();
+
+        },
+        50
+    );
+}
 
     /* PDF CHAT MEMORY */
 
