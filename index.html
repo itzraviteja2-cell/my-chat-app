@@ -9774,6 +9774,62 @@ function openDharma() {
 
 </script>
 
+    <script>
+/* =========================================
+   AURORA SMART AI — JAVASCRIPT DIAGNOSTIC
+   ========================================= */
+
+window.addEventListener("error", function (event) {
+
+    console.error(
+        "AURORA JS ERROR:",
+        event.message,
+        event.filename,
+        event.lineno,
+        event.colno,
+        event.error
+    );
+
+    alert(
+        "⚠️ Aurora JavaScript Error\n\n" +
+        "Message: " +
+        (event.message || "Unknown error") +
+        "\n\nLine: " +
+        (event.lineno || "Unknown") +
+        "\nColumn: " +
+        (event.colno || "Unknown")
+    );
+
+});
+
+
+window.addEventListener(
+    "unhandledrejection",
+    function (event) {
+
+        console.error(
+            "AURORA PROMISE ERROR:",
+            event.reason
+        );
+
+        alert(
+            "⚠️ Aurora Promise Error\n\n" +
+            String(
+                event.reason ||
+                "Unknown error"
+            )
+        );
+
+    }
+);
+
+
+console.log(
+    "✅ AURORA DIAGNOSTIC LOADED"
+);
+
+    </script>
+
         <!-- AURORA ASTROLOGER -->
 
 <div id="astrologerModal" class="aurora-modal">
