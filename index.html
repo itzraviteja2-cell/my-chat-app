@@ -4692,24 +4692,16 @@ function renderHistory() {
 
     /* MESSAGE */
 
-function appendMessage(
-    text,
-    role
-) {
+function appendMessage(text, role) {
 
     const container =
-        document.getElementById(
-            "messages"
-        );
+        document.getElementById("messages");
 
-    if (!container)
-        return;
+    if (!container) return;
 
 
     const row =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
     row.className =
         "row " + role;
@@ -4719,86 +4711,44 @@ function appendMessage(
        USER MESSAGE
        ========================= */
 
-    if (
-        role === "user"
-    ) {
+    if (role === "user") {
 
-        /* FORCE USER ROW VISIBLE */
-
-        row.style.display =
-            "flex";
-
-        row.style.flexDirection =
-            "column";
-
-        row.style.alignItems =
-            "flex-end";
-
-        row.style.width =
-            "100%";
-
-        row.style.boxSizing =
-            "border-box";
+        row.style.display = "flex";
+        row.style.flexDirection = "column";
+        row.style.alignItems = "flex-end";
+        row.style.width = "100%";
+        row.style.boxSizing = "border-box";
+        row.style.visibility = "visible";
+        row.style.opacity = "1";
 
 
         const bubble =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         bubble.className =
             "user-message-text";
 
 
-        bubble.style.display =
-            "block";
-
-        bubble.style.visibility =
-            "visible";
-
-        bubble.style.opacity =
-            "1";
-
-        bubble.style.color =
-            "var(--text)";
-
-        bubble.style.background =
-            "transparent";
-
-        bubble.style.maxWidth =
-            "85%";
-
-        bubble.style.width =
-            "auto";
-
-        bubble.style.padding =
-            "0";
-
-        bubble.style.margin =
-            "0";
-
-        bubble.style.fontSize =
-            "15px";
-
-        bubble.style.lineHeight =
-            "1.5";
-
-        bubble.style.whiteSpace =
-            "pre-wrap";
-
-        bubble.style.overflowWrap =
-            "anywhere";
-
-        bubble.style.wordBreak =
-            "break-word";
+        bubble.style.display = "block";
+        bubble.style.visibility = "visible";
+        bubble.style.opacity = "1";
+        bubble.style.color = "var(--text)";
+        bubble.style.background = "transparent";
+        bubble.style.maxWidth = "85%";
+        bubble.style.width = "auto";
+        bubble.style.padding = "0";
+        bubble.style.margin = "0";
+        bubble.style.fontSize = "15px";
+        bubble.style.lineHeight = "1.5";
+        bubble.style.whiteSpace = "pre-wrap";
+        bubble.style.overflowWrap = "anywhere";
+        bubble.style.wordBreak = "break-word";
 
 
         let userText = "";
 
 
-        /* =========================
-           IMAGE + TEXT
-           ========================= */
+        /* IMAGE + TEXT */
 
         if (
             typeof text === "object" &&
@@ -4807,49 +4757,29 @@ function appendMessage(
         ) {
 
             const image =
-                document.createElement(
-                    "img"
-                );
+                document.createElement("img");
 
-            image.src =
-                text.image;
+            image.src = text.image;
 
             image.className =
                 "chat-image";
 
-            image.style.width =
-                "140px";
+            image.style.width = "140px";
+            image.style.height = "180px";
+            image.style.objectFit = "cover";
+            image.style.display = "block";
+            image.style.borderRadius = "12px";
 
-            image.style.height =
-                "180px";
-
-            image.style.objectFit =
-                "cover";
-
-            image.style.display =
-                "block";
-
-            image.style.borderRadius =
-                "12px";
-
-            bubble.appendChild(
-                image
-            );
+            bubble.appendChild(image);
 
 
-            if (
-                text.message
-            ) {
+            if (text.message) {
 
                 userText =
-                    String(
-                        text.message
-                    );
+                    String(text.message);
 
                 const messageText =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
                 messageText.innerText =
                     userText;
@@ -4860,15 +4790,12 @@ function appendMessage(
                 bubble.appendChild(
                     messageText
                 );
-
             }
 
         }
 
 
-        /* =========================
-           NORMAL TEXT
-           ========================= */
+        /* NORMAL TEXT */
 
         else {
 
@@ -4881,195 +4808,96 @@ function appendMessage(
         }
 
 
-        row.appendChild(
-            bubble
-        );
+        row.appendChild(bubble);
 
 
-        /* =========================
-           USER ACTIONS
-           ========================= */
+        /* USER ACTIONS */
 
         const userActions =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         userActions.className =
             "user-message-actions";
 
-
-        userActions.style.display =
-            "flex";
-
-        userActions.style.gap =
-            "4px";
-
-        userActions.style.marginTop =
-            "3px";
-
-        userActions.style.padding =
-            "0";
-
-        userActions.style.alignItems =
-            "center";
-
-        userActions.style.background =
-            "transparent";
+        userActions.style.display = "flex";
+        userActions.style.gap = "4px";
+        userActions.style.marginTop = "3px";
+        userActions.style.padding = "0";
+        userActions.style.alignItems = "center";
+        userActions.style.background = "transparent";
 
 
-        /* =========================
-           EDIT
-           ========================= */
+        /* EDIT */
 
         const editBtn =
-            document.createElement(
-                "button"
-            );
+            document.createElement("button");
 
-        editBtn.type =
-            "button";
+        editBtn.type = "button";
 
         editBtn.innerHTML =
-            `
-            <i class="fa-solid fa-pen"></i>
-            `;
+            '<i class="fa-solid fa-pen"></i>';
 
-        editBtn.title =
-            "Edit";
+        editBtn.title = "Edit";
 
-
-        editBtn.style.width =
-            "22px";
-
-        editBtn.style.height =
-            "22px";
-
-        editBtn.style.minWidth =
-            "22px";
-
-        editBtn.style.padding =
-            "0";
-
-        editBtn.style.margin =
-            "0";
-
-        editBtn.style.border =
-            "none";
-
-        editBtn.style.borderRadius =
-            "0";
-
-        editBtn.style.background =
-            "transparent";
-
-        editBtn.style.boxShadow =
-            "none";
-
-        editBtn.style.display =
-            "inline-flex";
-
-        editBtn.style.alignItems =
-            "center";
-
-        editBtn.style.justifyContent =
-            "center";
-
-        editBtn.style.color =
-            "var(--tool)";
-
-        editBtn.style.cursor =
-            "pointer";
+        editBtn.style.width = "22px";
+        editBtn.style.height = "22px";
+        editBtn.style.minWidth = "22px";
+        editBtn.style.padding = "0";
+        editBtn.style.margin = "0";
+        editBtn.style.border = "none";
+        editBtn.style.background = "transparent";
+        editBtn.style.boxShadow = "none";
+        editBtn.style.display = "inline-flex";
+        editBtn.style.alignItems = "center";
+        editBtn.style.justifyContent = "center";
+        editBtn.style.color = "var(--tool)";
+        editBtn.style.cursor = "pointer";
 
 
-        editBtn.onclick =
-            () => {
+        editBtn.onclick = () => {
 
-                const input =
-                    document.getElementById(
-                        "input"
-                    );
+            const input =
+                document.getElementById("input");
 
-                if (!input)
-                    return;
+            if (!input) return;
 
+            input.value =
+                userText;
 
-                input.value =
-                    userText;
+            input.focus();
 
-                input.focus();
-
-
-                input.setSelectionRange(
-                    input.value.length,
-                    input.value.length
-                );
-
-            };
+            input.setSelectionRange(
+                input.value.length,
+                input.value.length
+            );
+        };
 
 
-        /* =========================
-           COPY
-           ========================= */
+        /* COPY */
 
         const copyUserBtn =
-            document.createElement(
-                "button"
-            );
+            document.createElement("button");
 
-        copyUserBtn.type =
-            "button";
+        copyUserBtn.type = "button";
 
         copyUserBtn.innerHTML =
-            `
-            <i class="fa-solid fa-copy"></i>
-            `;
+            '<i class="fa-solid fa-copy"></i>';
 
-        copyUserBtn.title =
-            "Copy";
+        copyUserBtn.title = "Copy";
 
-
-        copyUserBtn.style.width =
-            "22px";
-
-        copyUserBtn.style.height =
-            "22px";
-
-        copyUserBtn.style.minWidth =
-            "22px";
-
-        copyUserBtn.style.padding =
-            "0";
-
-        copyUserBtn.style.margin =
-            "0";
-
-        copyUserBtn.style.border =
-            "none";
-
-        copyUserBtn.style.borderRadius =
-            "0";
-
-        copyUserBtn.style.background =
-            "transparent";
-
-        copyUserBtn.style.boxShadow =
-            "none";
-
-        copyUserBtn.style.display =
-            "inline-flex";
-
-        copyUserBtn.style.alignItems =
-            "center";
-
-        copyUserBtn.style.justifyContent =
-            "center";
-
-        copyUserBtn.style.color =
-            "var(--tool)";
-
-        copyUserBtn.style.cursor =
-            "pointer";
+        copyUserBtn.style.width = "22px";
+        copyUserBtn.style.height = "22px";
+        copyUserBtn.style.minWidth = "22px";
+        copyUserBtn.style.padding = "0";
+        copyUserBtn.style.margin = "0";
+        copyUserBtn.style.border = "none";
+        copyUserBtn.style.background = "transparent";
+        copyUserBtn.style.boxShadow = "none";
+        copyUserBtn.style.display = "inline-flex";
+        copyUserBtn.style.alignItems = "center";
+        copyUserBtn.style.justifyContent = "center";
+        copyUserBtn.style.color = "var(--tool)";
+        copyUserBtn.style.cursor = "pointer";
 
 
         copyUserBtn.onclick =
@@ -5079,17 +4907,11 @@ function appendMessage(
 
                     await navigator
                         .clipboard
-                        .writeText(
-                            userText
-                        );
+                        .writeText(userText);
 
-                    showToast(
-                        "Copied!"
-                    );
+                    showToast("Copied!");
 
-                }
-
-                catch {
+                } catch {
 
                     showToast(
                         "Unable to copy"
@@ -5108,7 +4930,6 @@ function appendMessage(
             copyUserBtn
         );
 
-
         row.appendChild(
             userActions
         );
@@ -5122,180 +4943,106 @@ function appendMessage(
 
     else {
 
-        row.innerHTML =
-            `
+        row.innerHTML = `
+
             <div class="message-avatar">
-                <i
-                    class="
-                    fa-solid
-                    fa-sparkles
-                    "
-                ></i>
+                <i class="fa-solid fa-sparkles"></i>
             </div>
 
-            <div
-                class="bot-wrapper"
-            >
+            <div class="bot-wrapper">
 
-                <div
-                    class="bubble"
-                ></div>
+                <div class="bubble"></div>
 
-                <div
-                    class="actions"
-                >
+                <div class="actions">
 
                     <button
-                        class="
-                        action-btn
-                        listen-btn
-                        "
+                        type="button"
+                        class="action-btn listen-btn"
                     >
-                        <i
-                            class="
-                            fa-solid
-                            fa-volume-high
-                            "
-                        ></i>
-
+                        <i class="fa-solid fa-volume-high"></i>
                         Listen
                     </button>
 
-
                     <button
-                        class="
-                        action-btn
-                        copy-btn
-                        "
+                        type="button"
+                        class="action-btn copy-btn"
                     >
-                        <i
-                            class="
-                            fa-solid
-                            fa-copy
-                            "
-                        ></i>
-
+                        <i class="fa-solid fa-copy"></i>
                         Copy
                     </button>
 
-
                     <button
-                        class="
-                        action-btn
-                        regenerate-btn
-                        "
+                        type="button"
+                        class="action-btn regenerate-btn"
                     >
-                        <i
-                            class="
-                            fa-solid
-                            fa-rotate-right
-                            "
-                        ></i>
-
+                        <i class="fa-solid fa-rotate-right"></i>
                         Regenerate
                     </button>
 
-
                     <button
-                        class="
-                        action-btn
-                        share-btn
-                        "
+                        type="button"
+                        class="action-btn share-btn"
                     >
-                        <i
-                            class="
-                            fa-solid
-                            fa-share-nodes
-                            "
-                        ></i>
-
+                        <i class="fa-solid fa-share-nodes"></i>
                         Share
                     </button>
 
                 </div>
 
             </div>
-            `;
+        `;
 
 
         const bubble =
-            row.querySelector(
-                ".bubble"
-            );
+            row.querySelector(".bubble");
 
+        if (bubble) {
 
-        bubble.innerText =
-            text;
-
-
-        /* =========================
-           LISTEN
-           ========================= */
-
-        const listenBtn =
-            row.querySelector(
-                ".listen-btn"
-            );
-
-
-        if (listenBtn) {
-
-            listenBtn.onclick =
-                () => {
-
-                    window
-                        .speechSynthesis
-                        .cancel();
-
-
-                    const speech =
-                        new SpeechSynthesisUtterance(
-                            text
-                        );
-
-
-                    speech.lang =
-                        "en-US";
-
-                    speech.rate =
-                        1;
-
-                    speech.pitch =
-                        1;
-
-
-                    window
-                        .speechSynthesis
-                        .resume();
-
-
-                    setTimeout(
-                        () => {
-
-                            window
-                                .speechSynthesis
-                                .speak(
-                                    speech
-                                );
-
-                        },
-                        100
-                    );
-
-                };
+            bubble.innerText =
+                String(text ?? "");
 
         }
 
 
-        /* =========================
-           BOT COPY
-           ========================= */
+        /* LISTEN */
+
+        const listenBtn =
+            row.querySelector(".listen-btn");
+
+        if (listenBtn) {
+
+            listenBtn.onclick = () => {
+
+                window.speechSynthesis.cancel();
+
+                const speech =
+                    new SpeechSynthesisUtterance(
+                        String(text ?? "")
+                    );
+
+                speech.lang = "en-US";
+                speech.rate = 1;
+                speech.pitch = 1;
+
+                window.speechSynthesis.resume();
+
+                setTimeout(() => {
+
+                    window.speechSynthesis.speak(
+                        speech
+                    );
+
+                }, 100);
+
+            };
+
+        }
+
+
+        /* COPY */
 
         const copyBtn =
-            row.querySelector(
-                ".copy-btn"
-            );
-
+            row.querySelector(".copy-btn");
 
         if (copyBtn) {
 
@@ -5307,16 +5054,12 @@ function appendMessage(
                         await navigator
                             .clipboard
                             .writeText(
-                                text
+                                String(text ?? "")
                             );
 
-                        showToast(
-                            "Copied!"
-                        );
+                        showToast("Copied!");
 
-                    }
-
-                    catch {
+                    } catch {
 
                         showToast(
                             "Unable to copy"
@@ -5329,57 +5072,58 @@ function appendMessage(
         }
 
 
-        /* =========================
-           SHARE
-           ========================= */
+        /* SHARE */
 
         const shareBtn =
-            row.querySelector(
-                ".share-btn"
-            );
-
+            row.querySelector(".share-btn");
 
         if (shareBtn) {
 
             shareBtn.onclick =
                 async () => {
 
-                    if (
-                        navigator.share
-                    ) {
+                    const shareText =
+                        String(text ?? "");
+
+                    if (navigator.share) {
+
+                        try {
+
+                            await navigator.share({
+
+                                title:
+                                    "Aurora Smart AI",
+
+                                text:
+                                    shareText
+
+                            });
+
+                        } catch (error) {
+
+                        }
+
+                    } else {
 
                         try {
 
                             await navigator
-                                .share({
+                                .clipboard
+                                .writeText(
+                                    shareText
+                                );
 
-                                    title:
-                                        "Aurora Smart AI",
-
-                                    text:
-                                        text
-
-                                });
-
-                        }
-
-                        catch(error) {
-
-                        }
-
-                    }
-
-                    else {
-
-                        await navigator
-                            .clipboard
-                            .writeText(
-                                text
+                            showToast(
+                                "Copied for sharing"
                             );
 
-                        showToast(
-                            "Copied for sharing"
-                        );
+                        } catch {
+
+                            showToast(
+                                "Unable to copy"
+                            );
+
+                        }
 
                     }
 
@@ -5388,19 +5132,14 @@ function appendMessage(
         }
 
 
-        /* =========================
-           REGENERATE
-           ========================= */
+        /* REGENERATE */
 
         const regenerateBtn =
             row.querySelector(
                 ".regenerate-btn"
             );
 
-
-        if (
-            regenerateBtn
-        ) {
+        if (regenerateBtn) {
 
             regenerateBtn.onclick =
                 () => {
@@ -5415,21 +5154,16 @@ function appendMessage(
 
 
     /* =========================
-       ADD MESSAGE TO SCREEN
+       ADD TO CHAT
        ========================= */
 
-    container.appendChild(
-        row
-    );
+    container.appendChild(row);
 
 
-    /* SHOW CHAT AREA */
+    /* SHOW CHAT */
 
     const welcome =
-        document.getElementById(
-            "welcome"
-        );
-
+        document.getElementById("welcome");
 
     if (welcome) {
 
@@ -5439,21 +5173,21 @@ function appendMessage(
     }
 
 
-    container.classList.add(
-        "active"
-    );
+    container.classList.add("active");
+
+    container.style.display = "flex";
+    container.style.visibility = "visible";
+    container.style.opacity = "1";
 
 
-    /* SCROLL TO NEW MESSAGE */
+    /* SCROLL */
 
-    requestAnimationFrame(
-        () => {
+    requestAnimationFrame(() => {
 
-            container.scrollTop =
-                container.scrollHeight;
+        container.scrollTop =
+            container.scrollHeight;
 
-        }
-    );
+    });
 
 }
 
