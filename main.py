@@ -1686,6 +1686,172 @@ async def chat_docx(
         )
 
 # =========================================
+# EXCEL DOCUMENT CHAT
+# =========================================
+
+@app.post("/chat-excel")
+async def chat_excel(
+
+    message: str = Form(...),
+
+    excel: UploadFile = File(...)
+
+):
+
+    if not os.getenv("GEMINI_API_KEY"):
+
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured"
+        )
+
+    try:
+
+        import io
+        import openpyxl
+
+        excel_bytes = await excel.read()
+
+        if not excel_bytes:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Excel file is empty"
+            )
+
+        try:
+
+            workbook = openpyxl.load_workbook(
+                io.BytesIO(excel_bytes),
+                data_only=True,
+                read_only=True
+            )
+
+        except Exception:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Unable to read Excel file"
+            )
+
+        sheet_text = []
+
+        for sheet in workbook.worksheets:
+
+            sheet_text.append(
+                "\nSHEET: " + sheet.title
+            )
+
+            for row in sheet.iter_rows(
+                values_only=True
+            ):
+
+                values = []
+
+                for value in row:
+
+                    if value is not None:
+
+                        values.append(
+                            str(value)
+                        )
+
+                if values:
+
+                    sheet_text.append(
+                        " | ".join(values)
+                    )
+
+        workbook.close()
+
+        excel_text = "\n".join(
+            sheet_text
+        ).strip()
+
+        if not excel_text:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Excel file contains no readable data"
+            )
+
+        user_message = (
+            message.strip()
+            if message.strip()
+            else "Summarize this Excel document"
+        )
+
+        prompt = (
+
+            "Read the uploaded Excel document carefully.\n\n"
+
+            "Answer the user's question using ONLY "
+            "information from the Excel document.\n"
+
+            "Do not invent or add information.\n\n"
+
+            "STRICT LANGUAGE RULE:\n"
+
+            "Use exactly ONE output language.\n"
+
+            "If the user's question is in Telugu, "
+            "the ENTIRE answer must be in Telugu only.\n"
+
+            "If the user's question is in English, "
+            "the ENTIRE answer must be in English only.\n"
+
+            "Never provide translations.\n"
+
+            "Never repeat the same information "
+            "in another language.\n\n"
+
+            "User question:\n"
+            + user_message
+            + "\n\n"
+
+            "Excel document:\n"
+            + excel_text
+        )
+
+        response = client.models.generate_content(
+
+            model="gemini-3.6-flash",
+
+            contents=[
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
+        )
+
+        if response.text:
+
+            return {
+                "reply": response.text
+            }
+
+        raise HTTPException(
+            status_code=500,
+            detail="No response generated from Excel"
+        )
+
+    except HTTPException:
+
+        raise
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+# =========================================
 # VOICE TRANSCRIPTION
 # =========================================
 
