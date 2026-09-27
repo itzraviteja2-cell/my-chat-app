@@ -6106,14 +6106,16 @@ function toggleQuickTools() {
     }
 }
 
-function setQuickTool(
-    prompt
-) {
+function setQuickTool(prompt) {
+
+    /* RESEARCH */
+    if (prompt === "Research") {
+        webSearch();
+        return;
+    }
 
     const input =
-        document.getElementById(
-            "input"
-        );
+        document.getElementById("input");
 
     input.value = prompt;
 
@@ -6132,7 +6134,6 @@ function setQuickTool(
             : "hidden";
 
     input.focus();
-
 }
 
     /* =========================================
