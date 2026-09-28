@@ -6117,138 +6117,333 @@ function appendMessage(text, role) {
 
 
     /* =========================
-       BOT MESSAGE
+   BOT MESSAGE
+   ========================= */
+
+else {
+
+    row.innerHTML = `
+
+        <div class="message-avatar">
+            <i class="fa-solid fa-sparkles"></i>
+        </div>
+
+        <div class="bot-wrapper">
+
+            <div class="bubble"></div>
+
+            <div class="actions">
+
+                <button
+                    type="button"
+                    class="action-btn listen-btn"
+                >
+                    <i class="fa-solid fa-volume-high"></i>
+                    Listen
+                </button>
+
+                <button
+                    type="button"
+                    class="action-btn copy-btn"
+                >
+                    <i class="fa-solid fa-copy"></i>
+                    Copy
+                </button>
+
+                <button
+                    type="button"
+                    class="action-btn regenerate-btn"
+                >
+                    <i class="fa-solid fa-rotate-right"></i>
+                    Regenerate
+                </button>
+
+                <button
+                    type="button"
+                    class="action-btn share-btn"
+                >
+                    <i class="fa-solid fa-share-nodes"></i>
+                    Share
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+
+    const bubble =
+        row.querySelector(".bubble");
+
+
+    /* =========================
+       IMAGE RESPONSE
+       ========================= */
+
+    let displayText = "";
+
+
+    if (
+        typeof text === "object" &&
+        text !== null &&
+        text.image
+    ) {
+
+        const image =
+            document.createElement("img");
+
+
+        const mimeType =
+            text.mime_type ||
+            "image/jpeg";
+
+
+        image.src =
+            "data:" +
+            mimeType +
+            ";base64," +
+            text.image;
+
+
+        image.alt =
+            "Aurora Smart AI generated image";
+
+
+        image.style.display =
+            "block";
+
+        image.style.width =
+            "100%";
+
+        image.style.maxWidth =
+            "100%";
+
+        image.style.height =
+            "auto";
+
+        image.style.maxHeight =
+            "70vh";
+
+        image.style.objectFit =
+            "contain";
+
+        image.style.borderRadius =
+            "16px";
+
+        image.style.margin =
+            "4px 0 8px 0";
+
+        image.style.boxSizing =
+            "border-box";
+
+
+        bubble.innerHTML = "";
+
+        bubble.style.width =
+            "100%";
+
+        bubble.style.maxWidth =
+            "100%";
+
+        bubble.style.overflow =
+            "hidden";
+
+        bubble.style.boxSizing =
+            "border-box";
+
+
+        bubble.appendChild(
+            image
+        );
+
+
+        if (text.message) {
+
+            const messageText =
+                document.createElement("div");
+
+            messageText.innerText =
+                String(text.message);
+
+            messageText.style.marginTop =
+                "8px";
+
+            messageText.style.whiteSpace =
+                "pre-wrap";
+
+            bubble.appendChild(
+                messageText
+            );
+
+            displayText =
+                String(text.message);
+
+        }
+
+
+    }
+
+
+    /* =========================
+       NORMAL BOT TEXT
        ========================= */
 
     else {
 
-        row.innerHTML = `
-
-            <div class="message-avatar">
-                <i class="fa-solid fa-sparkles"></i>
-            </div>
-
-            <div class="bot-wrapper">
-
-                <div class="bubble"></div>
-
-                <div class="actions">
-
-                    <button
-                        type="button"
-                        class="action-btn listen-btn"
-                    >
-                        <i class="fa-solid fa-volume-high"></i>
-                        Listen
-                    </button>
-
-                    <button
-                        type="button"
-                        class="action-btn copy-btn"
-                    >
-                        <i class="fa-solid fa-copy"></i>
-                        Copy
-                    </button>
-
-                    <button
-                        type="button"
-                        class="action-btn regenerate-btn"
-                    >
-                        <i class="fa-solid fa-rotate-right"></i>
-                        Regenerate
-                    </button>
-
-                    <button
-                        type="button"
-                        class="action-btn share-btn"
-                    >
-                        <i class="fa-solid fa-share-nodes"></i>
-                        Share
-                    </button>
-
-                </div>
-
-            </div>
-        `;
-
-
-        const bubble =
-            row.querySelector(".bubble");
-
-        if (bubble) {
-
-    if (
-        typeof text === "string" &&
-        text.trim().startsWith("<div")
-    ) {
-
-        bubble.innerHTML =
-            text;
-
-    } else {
-
-        bubble.innerText =
+        displayText =
             String(text ?? "");
+
+
+        if (
+            displayText
+                .trim()
+                .startsWith("<div")
+        ) {
+
+            bubble.innerHTML =
+                displayText;
+
+        } else {
+
+            bubble.innerText =
+                displayText;
+
+        }
 
     }
 
-        }
+
+    /* =========================
+       LISTEN
+       ========================= */
+
+    const listenBtn =
+        row.querySelector(".listen-btn");
 
 
-        /* LISTEN */
+    if (listenBtn) {
 
-        const listenBtn =
-            row.querySelector(".listen-btn");
+        listenBtn.onclick = () => {
 
-        if (listenBtn) {
+            window.speechSynthesis.cancel();
 
-            listenBtn.onclick = () => {
 
-                window.speechSynthesis.cancel();
+            const speech =
+                new SpeechSynthesisUtterance(
+                    displayText
+                );
 
-                const speech =
-                    new SpeechSynthesisUtterance(
-                        String(text ?? "")
+
+            speech.lang =
+                "en-US";
+
+            speech.rate =
+                1;
+
+            speech.pitch =
+                1;
+
+
+            window.speechSynthesis.resume();
+
+
+            setTimeout(() => {
+
+                window.speechSynthesis.speak(
+                    speech
+                );
+
+            }, 100);
+
+        };
+
+    }
+
+
+    /* =========================
+       COPY
+       ========================= */
+
+    const copyBtn =
+        row.querySelector(".copy-btn");
+
+
+    if (copyBtn) {
+
+        copyBtn.onclick =
+            async () => {
+
+                try {
+
+                    await navigator
+                        .clipboard
+                        .writeText(
+                            displayText
+                        );
+
+                    showToast(
+                        "Copied!"
                     );
 
-                speech.lang = "en-US";
-                speech.rate = 1;
-                speech.pitch = 1;
+                } catch {
 
-                window.speechSynthesis.resume();
-
-                setTimeout(() => {
-
-                    window.speechSynthesis.speak(
-                        speech
+                    showToast(
+                        "Unable to copy"
                     );
 
-                }, 100);
+                }
 
             };
 
-        }
+    }
 
 
-        /* COPY */
+    /* =========================
+       SHARE
+       ========================= */
 
-        const copyBtn =
-            row.querySelector(".copy-btn");
+    const shareBtn =
+        row.querySelector(".share-btn");
 
-        if (copyBtn) {
 
-            copyBtn.onclick =
-                async () => {
+    if (shareBtn) {
+
+        shareBtn.onclick =
+            async () => {
+
+                if (
+                    navigator.share
+                ) {
+
+                    try {
+
+                        await navigator.share({
+
+                            title:
+                                "Aurora Smart AI",
+
+                            text:
+                                displayText
+
+                        });
+
+                    } catch {
+
+                    }
+
+                } else {
 
                     try {
 
                         await navigator
                             .clipboard
                             .writeText(
-                                String(text ?? "")
+                                displayText
                             );
 
-                        showToast("Copied!");
+                        showToast(
+                            "Copied for sharing"
+                        );
 
                     } catch {
 
@@ -6258,90 +6453,35 @@ function appendMessage(text, role) {
 
                     }
 
-                };
+                }
 
-        }
-
-
-        /* SHARE */
-
-        const shareBtn =
-            row.querySelector(".share-btn");
-
-        if (shareBtn) {
-
-            shareBtn.onclick =
-                async () => {
-
-                    const shareText =
-                        String(text ?? "");
-
-                    if (navigator.share) {
-
-                        try {
-
-                            await navigator.share({
-
-                                title:
-                                    "Aurora Smart AI",
-
-                                text:
-                                    shareText
-
-                            });
-
-                        } catch (error) {
-
-                        }
-
-                    } else {
-
-                        try {
-
-                            await navigator
-                                .clipboard
-                                .writeText(
-                                    shareText
-                                );
-
-                            showToast(
-                                "Copied for sharing"
-                            );
-
-                        } catch {
-
-                            showToast(
-                                "Unable to copy"
-                            );
-
-                        }
-
-                    }
-
-                };
-
-        }
-
-
-        /* REGENERATE */
-
-        const regenerateBtn =
-            row.querySelector(
-                ".regenerate-btn"
-            );
-
-        if (regenerateBtn) {
-
-            regenerateBtn.onclick =
-                () => {
-
-                    regenerateResponse();
-
-                };
-
-        }
+            };
 
     }
+
+
+    /* =========================
+       REGENERATE
+       ========================= */
+
+    const regenerateBtn =
+        row.querySelector(
+            ".regenerate-btn"
+        );
+
+
+    if (regenerateBtn) {
+
+        regenerateBtn.onclick =
+            () => {
+
+                regenerateResponse();
+
+            };
+
+    }
+
+}
 
 
     /* =========================
