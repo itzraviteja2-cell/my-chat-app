@@ -1852,6 +1852,125 @@ async def chat_excel(
         )
 
 # =========================================
+# CSV DOCUMENT CHAT
+# =========================================
+
+@app.post("/chat-csv")
+async def chat_csv(
+
+    message: str = Form(...),
+
+    csv: UploadFile = File(...)
+
+):
+
+    if not os.getenv("GEMINI_API_KEY"):
+
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured"
+        )
+
+    try:
+
+        csv_bytes = await csv.read()
+
+        if not csv_bytes:
+
+            raise HTTPException(
+                status_code=400,
+                detail="CSV file is empty"
+            )
+
+        csv_text = csv_bytes.decode(
+            "utf-8",
+            errors="replace"
+        ).strip()
+
+        if not csv_text:
+
+            raise HTTPException(
+                status_code=400,
+                detail="CSV file contains no readable data"
+            )
+
+        user_message = (
+            message.strip()
+            if message.strip()
+            else "Summarize this CSV document"
+        )
+
+        prompt = (
+
+            "Read the uploaded CSV document carefully.\n\n"
+
+            "Answer the user's question using ONLY "
+            "information from the CSV document.\n"
+
+            "Do not invent or add information.\n\n"
+
+            "STRICT LANGUAGE RULE:\n"
+
+            "Use exactly ONE output language.\n"
+
+            "If the user's question is in Telugu, "
+            "the ENTIRE answer must be in Telugu only.\n"
+
+            "If the user's question is in English, "
+            "the ENTIRE answer must be in English only.\n"
+
+            "Never provide translations.\n"
+
+            "Never repeat the same information "
+            "in another language.\n\n"
+
+            "User question:\n"
+            + user_message
+            + "\n\n"
+
+            "CSV document:\n"
+            + csv_text
+        )
+
+        response = client.models.generate_content(
+
+            model="gemini-3.6-flash",
+
+            contents=[
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
+        )
+
+        if response.text:
+
+            return {
+                "reply": response.text
+            }
+
+        raise HTTPException(
+            status_code=500,
+            detail="No response generated from CSV"
+        )
+
+    except HTTPException:
+
+        raise
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+# =========================================
 # VOICE TRANSCRIPTION
 # =========================================
 
