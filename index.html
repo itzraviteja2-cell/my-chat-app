@@ -5266,7 +5266,36 @@ body {
         .classList
         .toggle("show");
 
+}
+
+
+/* CLOSE UPLOAD MENU ON OUTSIDE TAP */
+
+document.addEventListener("click", function (event) {
+
+    const uploadMenu =
+        document.getElementById("uploadMenu");
+
+    if (!uploadMenu) return;
+
+    const clickedInsideMenu =
+        uploadMenu.contains(event.target);
+
+    const clickedPlus =
+        event.target.closest(
+            '[onclick*="toggleUploadMenu"]'
+        );
+
+    if (
+        !clickedInsideMenu &&
+        !clickedPlus
+    ) {
+
+        uploadMenu.classList.remove("show");
+
     }
+
+});
 
     async function uploadPDF(event) {
 
