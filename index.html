@@ -5456,6 +5456,12 @@ document.addEventListener("click", function (event) {
 
     if (!settingsPanel) return;
 
+    if (
+        !settingsPanel.classList.contains("show")
+    ) {
+        return;
+    }
+
     const clickedInsidePanel =
         settingsPanel.contains(event.target);
 
@@ -5466,18 +5472,18 @@ document.addEventListener("click", function (event) {
 
     if (
         !clickedInsidePanel &&
-        !clickedSettingsButton &&
-        settingsPanel.classList.contains("show")
+        !clickedSettingsButton
     ) {
 
         settingsPanel.classList.remove("show");
 
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
 
     }
 
-});
+}, true);
 
     let chats = JSON.parse(
     localStorage.getItem("auroraChats")
