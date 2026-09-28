@@ -5515,6 +5515,12 @@ document.addEventListener("click", function (event) {
 
     if (!sidebar) return;
 
+    if (
+        !sidebar.classList.contains("show")
+    ) {
+        return;
+    }
+
     const clickedInsideSidebar =
         sidebar.contains(event.target);
 
@@ -5525,18 +5531,18 @@ document.addEventListener("click", function (event) {
 
     if (
         !clickedInsideSidebar &&
-        !clickedMenuButton &&
-        sidebar.classList.contains("show")
+        !clickedMenuButton
     ) {
 
         sidebar.classList.remove("show");
 
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
 
     }
 
-});
+}, true);
 
 
     /* THEME */
