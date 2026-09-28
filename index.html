@@ -5492,12 +5492,45 @@ document.addEventListener("click", function (event) {
 
     function toggleSidebar() {
 
-        document
-            .getElementById("sidebar")
-            .classList
-            .toggle("show");
+    document
+        .getElementById("sidebar")
+        .classList
+        .toggle("show");
+
+}
+
+
+/* CLOSE SIDEBAR ON OUTSIDE TAP */
+
+document.addEventListener("click", function (event) {
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    if (!sidebar) return;
+
+    const clickedInsideSidebar =
+        sidebar.contains(event.target);
+
+    const clickedMenuButton =
+        event.target.closest(
+            '[onclick*="toggleSidebar"]'
+        );
+
+    if (
+        !clickedInsideSidebar &&
+        !clickedMenuButton &&
+        sidebar.classList.contains("show")
+    ) {
+
+        sidebar.classList.remove("show");
+
+        event.preventDefault();
+        event.stopPropagation();
 
     }
+
+});
 
 
     /* THEME */
