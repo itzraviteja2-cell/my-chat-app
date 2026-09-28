@@ -9375,62 +9375,75 @@ if (!isRegenerate) {
 
         /* IMAGE GENERATION */
 
-        else if (
+else if (
+    lowerMessage.includes("ఫోటో కావాలి") ||
+    lowerMessage.includes("ఫోటో తయారు చేయి") ||
+    lowerMessage.includes("చిత్రం కావాలి") ||
+    lowerMessage.includes("చిత్రం తయారు చేయి") ||
+    lowerMessage.includes("image కావాలి") ||
+    lowerMessage.includes("image తయారు చేయి") ||
+    lowerMessage.includes("image create చేయి") ||
+    lowerMessage.includes("image generate చేయి") ||
+    lowerMessage.includes("photo create చేయి") ||
+    lowerMessage.includes("photo generate చేయి") ||
+    lowerMessage.includes("create image") ||
+    lowerMessage.includes("generate image") ||
+    lowerMessage.includes("create a photo") ||
+    lowerMessage.includes("generate a photo") ||
+    lowerMessage.includes("make an image") ||
+    lowerMessage.includes("make a photo") ||
+    lowerMessage.includes("make image") ||
+    lowerMessage.includes("make photo") ||
+    lowerMessage.includes("image create") ||
+    lowerMessage.includes("image generate") ||
+    lowerMessage.includes("photo create") ||
+    lowerMessage.includes("photo generate") ||
+    lowerMessage.includes("చిత్రం create") ||
+    lowerMessage.includes("చిత్రం generate") ||
+    lowerMessage.includes("ఫోటో create") ||
+    lowerMessage.includes("ఫోటో generate")
+) {
 
-            lowerMessage.includes("ఫోటో కావాలి") ||
-            lowerMessage.includes("photo కావాలి") ||
-            lowerMessage.includes("ఫోటో తయారు చేయి") ||
-            lowerMessage.includes("photo తయారు చేయి") ||
-            lowerMessage.includes("చిత్రం కావాలి") ||
-            lowerMessage.includes("image కావాలి") ||
-            lowerMessage.includes("generate image") ||
-            lowerMessage.includes("create image") ||
-            lowerMessage.includes("photo generate")
+    const pollinationsKey =
+        sessionStorage.getItem(
+            "pollinationsKey"
+        );
 
-        ) {
+    if (!pollinationsKey) {
 
-            const pollinationsKey =
-                sessionStorage.getItem(
-                    "pollinationsKey"
-                );
+        hideTyping();
 
-            if (!pollinationsKey) {
+        appendMessage(
+            "Connect Images నొక్కి Pollinations account connect చేయండి.",
+            "bot"
+        );
 
-                hideTyping();
+        return;
+    }
 
-                appendMessage(
-                    "Connect Images నొక్కి Pollinations account connect చేయండి.",
-                    "bot"
-                );
+    response =
+        await fetch(
+            "/generate-image",
+            {
+                method: "POST",
 
-                return;
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        "Bearer " +
+                        pollinationsKey
+                },
+
+                body:
+                    JSON.stringify({
+                        prompt:
+                            message
+                    })
             }
-
-
-            response =
-                await fetch(
-                    "/generate-image",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json",
-
-                            "Authorization":
-                                "Bearer " +
-                                pollinationsKey
-                        },
-
-                        body:
-                            JSON.stringify({
-                                prompt:
-                                    message
-                            })
-                    }
-                );
-
-        }
+        );
+}
 
 
         /* PDF CHAT / NORMAL CHAT */
