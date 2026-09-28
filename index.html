@@ -7066,30 +7066,109 @@ if (fileName.endsWith(".csv")) {
     /* QUICK TOOLS TOGGLE */
 
 function toggleQuickTools() {
-    const section = document.querySelector(".quick-tools-section");
-    const panel = document.getElementById("quickToolsPanel");
-    const arrow = document.getElementById("quickToolsArrow");
+
+    const section =
+        document.querySelector(".quick-tools-section");
+
+    const panel =
+        document.getElementById("quickToolsPanel");
+
+    const arrow =
+        document.getElementById("quickToolsArrow");
 
     if (!section || !panel) return;
 
-    const isCollapsed = section.classList.contains("collapsed");
+    const isCollapsed =
+        section.classList.contains("collapsed");
 
     if (isCollapsed) {
+
         section.classList.remove("collapsed");
-        panel.style.setProperty("display", "grid", "important");
+
+        panel.style.setProperty(
+            "display",
+            "grid",
+            "important"
+        );
 
         if (arrow) {
             arrow.textContent = "⌄";
         }
+
     } else {
+
         section.classList.add("collapsed");
-        panel.style.setProperty("display", "none", "important");
+
+        panel.style.setProperty(
+            "display",
+            "none",
+            "important"
+        );
 
         if (arrow) {
             arrow.textContent = "›";
         }
+
     }
+
 }
+
+
+/* CLOSE QUICK TOOLS ON OUTSIDE TAP */
+
+document.addEventListener("click", function (event) {
+
+    const section =
+        document.querySelector(".quick-tools-section");
+
+    const panel =
+        document.getElementById("quickToolsPanel");
+
+    if (!section || !panel) return;
+
+    if (
+        section.classList.contains("collapsed")
+    ) {
+        return;
+    }
+
+    const clickedInsideTools =
+        section.contains(event.target);
+
+    const clickedToolsButton =
+        event.target.closest(
+            '[onclick*="toggleQuickTools"]'
+        );
+
+    if (
+        !clickedInsideTools &&
+        !clickedToolsButton
+    ) {
+
+        section.classList.add("collapsed");
+
+        panel.style.setProperty(
+            "display",
+            "none",
+            "important"
+        );
+
+        const arrow =
+            document.getElementById(
+                "quickToolsArrow"
+            );
+
+        if (arrow) {
+            arrow.textContent = "›";
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+    }
+
+}, true);
 
 function setQuickTool(prompt) {
 
