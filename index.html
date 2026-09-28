@@ -5446,6 +5446,39 @@ function toggleSettings() {
 
 }
 
+
+/* CLOSE SETTINGS ON OUTSIDE TAP */
+
+document.addEventListener("click", function (event) {
+
+    const settingsPanel =
+        document.getElementById("settingsPanel");
+
+    if (!settingsPanel) return;
+
+    const clickedInsidePanel =
+        settingsPanel.contains(event.target);
+
+    const clickedSettingsButton =
+        event.target.closest(
+            '[onclick*="toggleSettings"]'
+        );
+
+    if (
+        !clickedInsidePanel &&
+        !clickedSettingsButton &&
+        settingsPanel.classList.contains("show")
+    ) {
+
+        settingsPanel.classList.remove("show");
+
+        event.preventDefault();
+        event.stopPropagation();
+
+    }
+
+});
+
     let chats = JSON.parse(
     localStorage.getItem("auroraChats")
 ) || [];
