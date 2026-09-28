@@ -7170,6 +7170,10 @@ document.addEventListener("click", function (event) {
 
 }, true);
 
+/* QUICK TOOL MODE */
+
+let activeQuickToolPrompt = "";
+
 function setQuickTool(prompt) {
 
     /* RESEARCH */
@@ -7178,24 +7182,20 @@ function setQuickTool(prompt) {
         return;
     }
 
+    activeQuickToolPrompt = prompt || "";
+
     const input =
         document.getElementById("input");
 
-    input.value = prompt;
+    if (!input) return;
 
-    /* Auto resize */
+    input.value = "";
+
+    input.placeholder =
+        "Type your message...";
+
     input.style.height = "auto";
-
-    input.style.height =
-        Math.min(
-            input.scrollHeight,
-            120
-        ) + "px";
-
-    input.style.overflowY =
-        input.scrollHeight > 120
-            ? "auto"
-            : "hidden";
+    input.style.overflowY = "hidden";
 
     input.focus();
 }
