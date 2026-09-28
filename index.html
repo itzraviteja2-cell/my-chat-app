@@ -6724,6 +6724,77 @@ function handleKey(event) {
         return;
     }
 
+        // CSV
+if (fileName.endsWith(".csv")) {
+
+    const formData =
+        new FormData();
+
+    formData.append("csv", file);
+
+    formData.append(
+        "message",
+        "Summarize this CSV document and give one clear answer."
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                window.location.origin +
+                "/chat-csv",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            appendMessage(
+                "📊 CSV error: " +
+                (
+                    data.detail ||
+                    "CSV upload failed"
+                ),
+                "bot"
+            );
+
+            return;
+        }
+
+        appendMessage(
+            "📊 CSV Summary\n\n" +
+            (
+                data.reply ||
+                "CSV summary అందుబాటులో లేదు."
+            ),
+            "bot"
+        );
+
+    } catch (error) {
+
+        appendMessage(
+            "📊 CSV error: " +
+            (
+                error?.message ||
+                "Unable to connect to CSV server"
+            ),
+            "bot"
+        );
+
+    } finally {
+
+        event.target.value = "";
+
+    }
+
+    return;
+}
+
     // Other files
     appendMessage(
         "📄 " +
