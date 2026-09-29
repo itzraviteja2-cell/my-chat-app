@@ -6000,10 +6000,15 @@ function renderHistory() {
 
 function appendMessage(text, role) {
 
-    const container =
-        document.getElementById("messages");
+    const retryRequested =
+    typeof text === "object" &&
+    text !== null &&
+    text.retry === true;
 
-    if (!container) return;
+const retryText =
+    retryRequested
+        ? String(text.message ?? "")
+        : "";
 
 
     const row =
