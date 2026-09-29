@@ -9688,7 +9688,11 @@ else {
                     JSON.stringify({
 
                         message:
-                            aiMessage,
+    activeQuickToolPrompt
+        ? activeQuickToolPrompt +
+          "\n\nUser message:\n" +
+          aiMessage
+        : aiMessage,
 
                         history:
                             currentChat.messages
