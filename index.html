@@ -9867,16 +9867,16 @@ else {
 
     catch (error) {
 
-        hideTyping();
+    hideTyping();
 
-        appendMessage(
-
-            "Network error: " +
-            error.message,
-
-            "bot"
-
-        );
+    appendMessage(
+        {
+            message:
+                "⚠️ Something went wrong. Please try again.",
+            retry: true
+        },
+        "bot"
+    );
 
     }
 
