@@ -9710,41 +9710,44 @@ else if (selectedPDF) {
 else {
 
     response =
-        await fetch(
-            "/chat",
-            {
-                method: "POST",
+    await fetch(
+        "/chat",
+        {
+            method: "POST",
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
 
-                body:
-                    JSON.stringify({
+            signal:
+                AbortSignal.timeout(30000),
 
-                        message:
-    activeQuickToolPrompt
-        ? activeQuickToolPrompt +
-          "\n\nUser message:\n" +
-          aiMessage
-        : aiMessage,
+            body:
+                JSON.stringify({
 
-                        history:
-                            currentChat.messages
-                                .slice(-10, -1),
+                    message:
+                        activeQuickToolPrompt
+                            ? activeQuickToolPrompt +
+                              "\n\nUser message:\n" +
+                              aiMessage
+                            : aiMessage,
 
-                        regenerate:
-                            isRegenerate,
+                    history:
+                        currentChat.messages
+                            .slice(-10, -1),
 
-                        memory:
-                            localStorage.getItem(
-                                "auroraMemory"
-                            ) || ""
+                    regenerate:
+                        isRegenerate,
 
-                    })
-            }
-        );
+                    memory:
+                        localStorage.getItem(
+                            "auroraMemory"
+                        ) || ""
+
+                })
+        }
+    );
 
 }
 
