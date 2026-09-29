@@ -9354,9 +9354,16 @@ async function sendMessage(isRegenerate = false) {
     if (!message && !selectedImage)
         return;
 
-    // saveSmartMemory(message);
+    try {
+    saveSmartMemory(message);
+} catch (error) {
+    console.error(
+        "SMART MEMORY ERROR:",
+        error
+    );
+}
 
-    console.log(
+console.log(
     "AURORA MEMORY:",
     localStorage.getItem("auroraMemory")
 );
