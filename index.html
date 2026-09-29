@@ -9354,9 +9354,6 @@ async function sendMessage(isRegenerate = false) {
     if (!message && !selectedImage)
         return;
 
-    input.value = "";
-    return;
-
     try {
     saveSmartMemory(message);
 } catch (error) {
