@@ -9266,25 +9266,46 @@ try {
 let selectedPDF = null;
     
 function autoResizeInput() {
-    const input = document.getElementById("input");
-    const box = document.querySelector(".input-box");
+
+    const input =
+        document.getElementById("input");
+
+    const box =
+        document.querySelector(".input-box");
 
     if (!input || !box) return;
 
-    input.style.height = "auto";
+    input.style.setProperty(
+        "height",
+        "auto",
+        "important"
+    );
 
-    const newHeight = Math.min(input.scrollHeight, 220);
+    const newHeight =
+        Math.min(
+            input.scrollHeight,
+            220
+        );
 
-    input.style.height = newHeight + "px";
+    input.style.setProperty(
+        "height",
+        newHeight + "px",
+        "important"
+    );
 
     input.style.overflowY =
-        input.scrollHeight > 120 ? "auto" : "hidden";
+        input.scrollHeight > 220
+            ? "auto"
+            : "hidden";
 
     box.style.setProperty(
-    "height",
-    Math.max(46, newHeight + 12) + "px",
-    "important"
-);
+        "height",
+        Math.max(
+            46,
+            newHeight + 12
+        ) + "px",
+        "important"
+    );
 }
     
     /* SEND MESSAGE */
