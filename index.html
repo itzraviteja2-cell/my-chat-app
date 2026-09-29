@@ -6423,7 +6423,9 @@ else {
     else {
 
         displayText =
-            String(text ?? "");
+    retryRequested
+        ? retryText
+        : String(text ?? "");
 
 
         if (
