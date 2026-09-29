@@ -7135,15 +7135,16 @@ document.addEventListener("click", function (event) {
     const clickedInsideTools =
         section.contains(event.target);
 
-    const clickedToolsButton =
-        event.target.closest(
-            '[onclick*="toggleQuickTools"]'
-        );
+    const clickedSendButton =
+    event.target.closest(
+        '[onclick*="sendMessage"]'
+    );
 
     if (
-        !clickedInsideTools &&
-        !clickedToolsButton
-    ) {
+    !clickedInsideTools &&
+    !clickedToolsButton &&
+    !clickedSendButton
+) {
 
         section.classList.add("collapsed");
 
