@@ -6593,6 +6593,30 @@ else {
 
     }
 
+    /* RETRY */
+
+if (retryRequested) {
+
+    const retryBtn =
+        document.createElement("button");
+
+    retryBtn.type = "button";
+    retryBtn.className = "action-btn retry-btn";
+
+    retryBtn.innerHTML =
+        '<i class="fa-solid fa-rotate-right"></i> Retry';
+
+    retryBtn.onclick = () => {
+        regenerateResponse();
+    };
+
+    const actions =
+        row.querySelector(".actions");
+
+    if (actions) {
+        actions.appendChild(retryBtn);
+    }
+}
 
     /* =========================
        REGENERATE
