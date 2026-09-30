@@ -5351,6 +5351,8 @@ document.addEventListener("click", function (event) {
             );
         }
 
+        console.log("CHAT RESPONSE:", response.status);
+
         const data =
             await response.json();
 
@@ -9756,9 +9758,9 @@ else if (selectedPDF) {
 
 else {
 
-    console.log("CHAT RESPONSE:", response.status);
+    console.log("CHAT REQUEST STARTED");
 
-    response =
+response =
     await fetch(
         "/chat",
         {
