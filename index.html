@@ -5922,20 +5922,21 @@ function renderHistory() {
         return;
     }
 
-    /* CLEAR CURRENT CHAT AREA */
+    /* CLEAR CURRENT CHAT */
     container.innerHTML = "";
 
-    /* HIDE WELCOME SCREEN */
+    /* HIDE WELCOME */
     if (welcome) {
         welcome.style.display = "none";
     }
 
-    /* SHOW CHAT SCREEN */
+    /* SHOW MESSAGES */
     container.classList.add("active");
     container.style.display = "flex";
     container.style.visibility = "visible";
+    container.style.opacity = "1";
 
-    /* LOAD SAVED MESSAGES */
+    /* GET SAVED MESSAGES */
     const savedMessages =
         Array.isArray(currentChat.messages)
             ? currentChat.messages
@@ -5943,58 +5944,55 @@ function renderHistory() {
 
     savedMessages.forEach(msg => {
 
-        if (!msg) {
+        if (!msg || typeof msg !== "object") {
             return;
         }
 
-        /* USER IMAGE MESSAGE */
-        if (
-            msg.role === "user" &&
-            msg.image
-        ) {
+        /* MESSAGE TEXT
+           Supports old and new chat formats */
+        const messageText =
+            msg.text ??
+            msg.message ??
+            msg.content ??
+            "";
+
+        /* IMAGE MESSAGE */
+        if (msg.image) {
+
             appendMessage(
                 {
                     image: msg.image,
-                    message: msg.text || ""
+                    message: messageText
                 },
-                "user"
+                msg.role === "bot"
+                    ? "bot"
+                    : "user"
             );
 
             return;
         }
 
-        /* BOT IMAGE MESSAGE */
-        if (
-            msg.role === "bot" &&
-            msg.image
-        ) {
-            appendMessage(
-                {
-                    image: msg.image,
-                    message: msg.text || ""
-                },
-                "bot"
-            );
+        /* NORMAL MESSAGE */
+        if (messageText !== "") {
 
-            return;
+            appendMessage(
+                messageText,
+                msg.role === "bot"
+                    ? "bot"
+                    : "user"
+            );
         }
 
-        /* NORMAL TEXT MESSAGE */
-        appendMessage(
-            msg.text || "",
-            msg.role === "bot"
-                ? "bot"
-                : "user"
-        );
     });
 
-    /* SCROLL TO LATEST MESSAGE */
+    /* SCROLL TO LAST MESSAGE */
     requestAnimationFrame(() => {
 
         container.scrollTop =
             container.scrollHeight;
 
     });
+
     }
 
 
