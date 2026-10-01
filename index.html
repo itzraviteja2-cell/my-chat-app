@@ -10561,7 +10561,94 @@ function openDharma() {
     );
 }
 
+    function openStudent() {
+    const modal = document.getElementById("studentModal");
+
+    if (modal) {
+        modal.style.display = "flex";
+    }
+}
+
+function closeStudent() {
+    const modal = document.getElementById("studentModal");
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+function selectStudentMode(mode) {
+    closeStudent();
+
+    const prompts = {
+        learn:
+            "You are Aurora Student Tutor. Teach the student clearly and simply. Adapt the explanation to the student's level. Use examples and step-by-step explanations when useful.",
+
+        quiz:
+            "You are Aurora Student Quiz Master. Give one question at a time. Wait for the student's answer, check it, explain the answer, and then give the next question.",
+
+        exam:
+            "You are Aurora Exam Preparation Tutor. Help the student prepare for exams. Give important questions, model answers, key points, and exam-focused explanations.",
+
+        practice:
+            "You are Aurora Practice Tutor. Give practice questions one at a time. Wait for the student's answer, evaluate it, and explain mistakes clearly.",
+
+        hint:
+            "You are Aurora Student Hint Tutor. Do not immediately give the full answer. First give a useful hint and guide the student toward solving the problem."
+    };
+
+    setQuickTool(prompts[mode] || prompts.learn);
+}
+
 </script>
+
+    <div id="studentModal" class="aurora-modal">
+
+    <div class="aurora-modal-card">
+
+        <button
+            type="button"
+            class="aurora-modal-close"
+            onclick="closeStudent()"
+        >
+            ✕
+        </button>
+
+        <div class="astro-title">
+            🎓 Aurora Student
+        </div>
+
+        <div class="astro-subtitle">
+            Learn • Practice • Prepare
+        </div>
+
+        <p class="astro-description">
+            మీకు కావాల్సిన Student Mode ఎంచుకోండి.
+        </p>
+
+        <button onclick="selectStudentMode('learn')">
+            📚 Learn
+        </button>
+
+        <button onclick="selectStudentMode('quiz')">
+            ❓ Quiz
+        </button>
+
+        <button onclick="selectStudentMode('exam')">
+            📝 Exam Preparation
+        </button>
+
+        <button onclick="selectStudentMode('practice')">
+            ✍️ Practice
+        </button>
+
+        <button onclick="selectStudentMode('hint')">
+            💡 Hint Mode
+        </button>
+
+    </div>
+
+    </div>
 
         <!-- AURORA ASTROLOGER -->
 
