@@ -10628,7 +10628,67 @@ function selectStudentMode(mode) {
     setQuickTool(prompts[choice] || prompts["1"]);
     }
 
+    function selectWhatsAppMode(mode) {
+
+    document.getElementById("whatsappModal").style.display = "none";
+
+    const prompts = {
+        casual: "నా WhatsApp message కి చిన్న, natural, casual reply మాత్రమే ఇవ్వు: ",
+        funny: "నా WhatsApp message కి చిన్న, funny మరియు friendly reply మాత్రమే ఇవ్వు: ",
+        polite: "నా WhatsApp message కి చిన్న, polite మరియు respectful reply మాత్రమే ఇవ్వు: ",
+        professional: "నా WhatsApp message కి చిన్న, professional reply మాత్రమే ఇవ్వు: ",
+        short: "నా WhatsApp message కి చాలా చిన్న, natural reply మాత్రమే ఇవ్వు: "
+    };
+
+    setQuickTool(prompts[mode] || prompts.casual);
+    }
+
 </script>
+
+    <!-- WHATSAPP REPLY MODAL -->
+<div id="whatsappModal" class="aurora-modal">
+
+    <div class="aurora-modal-card">
+
+        <button
+            type="button"
+            class="aurora-modal-close"
+            onclick="document.getElementById('whatsappModal').style.display='none'"
+        >
+            ✕
+        </button>
+
+        <div class="astro-title">
+            💬 WhatsApp Reply
+        </div>
+
+        <div class="astro-subtitle">
+            Choose your reply style
+        </div>
+
+        <button onclick="selectWhatsAppMode('casual')">
+            😊 Casual Reply
+        </button>
+
+        <button onclick="selectWhatsAppMode('funny')">
+            😂 Funny Reply
+        </button>
+
+        <button onclick="selectWhatsAppMode('polite')">
+            🙏 Polite Reply
+        </button>
+
+        <button onclick="selectWhatsAppMode('professional')">
+            💼 Professional Reply
+        </button>
+
+        <button onclick="selectWhatsAppMode('short')">
+            ⚡ Short Reply
+        </button>
+
+    </div>
+
+</div>
 
     <div id="studentModal" class="aurora-modal">
 
