@@ -10600,6 +10600,28 @@ function selectStudentMode(mode) {
     setQuickTool(prompts[mode] || prompts.learn);
 }
 
+    function openWhatsApp() {
+    const choice = prompt(
+        "WhatsApp Reply\n\n" +
+        "1. Casual Reply\n" +
+        "2. Funny Reply\n" +
+        "3. Polite Reply\n" +
+        "4. Professional Reply\n" +
+        "5. Short Reply\n\n" +
+        "Enter 1-5:"
+    );
+
+    const prompts = {
+        "1": "Write a short, natural, casual WhatsApp reply to the user's message: ",
+        "2": "Write a short, funny and friendly WhatsApp reply to the user's message: ",
+        "3": "Write a short, polite and respectful WhatsApp reply to the user's message: ",
+        "4": "Write a short, professional WhatsApp reply to the user's message: ",
+        "5": "Write the shortest natural WhatsApp reply possible to the user's message: "
+    };
+
+    setQuickTool(prompts[choice] || prompts["1"]);
+    }
+
 </script>
 
     <div id="studentModal" class="aurora-modal">
