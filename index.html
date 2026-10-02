@@ -10627,11 +10627,11 @@ function selectStudentMode(mode) {
     document.getElementById("whatsappModal").style.display = "none";
 
     const prompts = {
-        casual: "నా WhatsApp message కి చిన్న, natural, casual reply మాత్రమే ఇవ్వు: ",
-        funny: "నా WhatsApp message కి చిన్న, funny మరియు friendly reply మాత్రమే ఇవ్వు: ",
-        polite: "నా WhatsApp message కి చిన్న, polite మరియు respectful reply మాత్రమే ఇవ్వు: ",
-        professional: "నా WhatsApp message కి చిన్న, professional reply మాత్రమే ఇవ్వు: ",
-        short: "నా WhatsApp message కి చాలా చిన్న, natural reply మాత్రమే ఇవ్వు: "
+        casual: "నా WhatsApp message కి direct గా పంపించగల చిన్న, natural casual reply మాత్రమే ఇవ్వు. Explanation, options లేదా extra text ఇవ్వకు: ",
+funny: "నా WhatsApp message కి direct గా పంపించగల చిన్న, funny మరియు friendly reply మాత్రమే ఇవ్వు. Explanation, options లేదా extra text ఇవ్వకు: ",
+polite: "నా WhatsApp message కి direct గా పంపించగల చిన్న, polite మరియు respectful reply మాత్రమే ఇవ్వు. Explanation, options లేదా extra text ఇవ్వకు: ",
+professional: "నా WhatsApp message కి direct గా పంపించగల చిన్న, professional reply మాత్రమే ఇవ్వు. Explanation, options లేదా extra text ఇవ్వకు: ",
+short: "నా WhatsApp message కి direct గా పంపించగల చాలా చిన్న, natural reply మాత్రమే ఇవ్వు. Explanation, options లేదా extra text ఇవ్వకు: "
     };
 
     setQuickTool(prompts[mode] || prompts.casual);
