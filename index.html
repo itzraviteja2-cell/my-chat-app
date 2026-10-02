@@ -4811,7 +4811,13 @@ body {
 
         <!-- WHATSAPP REPLY -->
         <button
-            onclick="openWhatsApp()"
+            function openWhatsApp() {
+    const modal = document.getElementById("whatsappModal");
+
+    if (modal) {
+        modal.style.display = "flex";
+    }
+}
         >
             <svg viewBox="0 0 24 24" class="tool-icon whatsapp-icon">
                 <path
