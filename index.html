@@ -10701,6 +10701,63 @@ short: "నా WhatsApp message కి direct గా పంపించగల �
 
 </script>
 
+    <!-- LETTER MODAL -->
+<div id="letterModal" class="aurora-modal">
+
+    <div class="aurora-modal-card">
+
+        <button
+            type="button"
+            class="aurora-modal-close"
+            onclick="document.getElementById('letterModal').style.display='none'"
+        >
+            ✕
+        </button>
+
+        <div class="astro-title">
+            ✉️ Letter
+        </div>
+
+        <div class="astro-subtitle">
+            Choose your letter type
+        </div>
+
+        <button onclick="selectLetterMode('leave')">
+            🏫 Leave Letter
+        </button>
+
+        <button onclick="selectLetterMode('application')">
+            📝 Application Letter
+        </button>
+
+        <button onclick="selectLetterMode('request')">
+            🙏 Request Letter
+        </button>
+
+        <button onclick="selectLetterMode('complaint')">
+            📢 Complaint Letter
+        </button>
+
+        <button onclick="selectLetterMode('business')">
+            💼 Business Letter
+        </button>
+
+        <button onclick="selectLetterMode('school')">
+            🎓 School / College Letter
+        </button>
+
+        <button onclick="selectLetterMode('job')">
+            👔 Job / Permission Letter
+        </button>
+
+        <button onclick="selectLetterMode('other')">
+            📄 Other Formal Letter
+        </button>
+
+    </div>
+
+</div>
+
     <!-- AD MODAL -->
 <div id="adModal" class="aurora-modal">
 
