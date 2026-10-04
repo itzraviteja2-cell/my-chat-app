@@ -10926,6 +10926,55 @@ short: "నా WhatsApp message కి direct గా పంపించగల �
 
 </div>
 
+    <!-- TRANSLATOR MODAL -->
+<div id="translatorModal" class="aurora-modal">
+
+    <div class="aurora-modal-card">
+
+        <button
+            type="button"
+            class="aurora-modal-close"
+            onclick="document.getElementById('translatorModal').style.display='none'"
+        >
+            ✕
+        </button>
+
+        <div class="astro-title">
+            🌐 Translator
+        </div>
+
+        <div class="astro-subtitle">
+            Choose your translation
+        </div>
+
+        <button onclick="selectTranslatorMode('en_te')">
+            🇬🇧 English → Telugu
+        </button>
+
+        <button onclick="selectTranslatorMode('te_en')">
+            🇮🇳 Telugu → English
+        </button>
+
+        <button onclick="selectTranslatorMode('hi_te')">
+            🇮🇳 Hindi → Telugu
+        </button>
+
+        <button onclick="selectTranslatorMode('te_hi')">
+            🇮🇳 Telugu → Hindi
+        </button>
+
+        <button onclick="selectTranslatorMode('en_hi')">
+            🇬🇧 English → Hindi
+        </button>
+
+        <button onclick="selectTranslatorMode('auto')">
+            🔄 Auto Detect → English
+        </button>
+
+    </div>
+
+</div>
+
     <div id="studentModal" class="aurora-modal">
 
     <div class="aurora-modal-card">
