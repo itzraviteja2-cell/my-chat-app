@@ -10732,6 +10732,21 @@ short: "నా WhatsApp message కి direct గా పంపించగల �
     }
     }
 
+    function selectTranslatorMode(mode) {
+    document.getElementById("translatorModal").style.display = "none";
+
+    const prompts = {
+        en_te: "Translate the user's text from English to natural Telugu. Give only the translation. Do not add explanation or extra text: ",
+        te_en: "Translate the user's text from Telugu to natural English. Give only the translation. Do not add explanation or extra text: ",
+        hi_te: "Translate the user's text from Hindi to natural Telugu. Give only the translation. Do not add explanation or extra text: ",
+        te_hi: "Translate the user's text from Telugu to natural Hindi. Give only the translation. Do not add explanation or extra text: ",
+        en_hi: "Translate the user's text from English to natural Hindi. Give only the translation. Do not add explanation or extra text: ",
+        auto: "Detect the language of the user's text and translate it into natural English. Give only the translation. Do not add explanation or extra text: "
+    };
+
+    setQuickTool(prompts[mode] || prompts.en_te);
+    }
+
 </script>
 
     <!-- LETTER MODAL -->
