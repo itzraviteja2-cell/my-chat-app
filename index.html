@@ -10748,11 +10748,36 @@ short: "నా WhatsApp message కి direct గా పంపించగల �
     }
 
     function openGovernmentInfo() {
-    const prompt =
+    const modal = document.getElementById("governmentInfoModal");
+    if (modal) {
+        modal.style.display = "flex";
+    }
+}
+
+function closeGovernmentInfo() {
+    const modal = document.getElementById("governmentInfoModal");
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+function selectGovernmentMode(mode) {
+    closeGovernmentInfo();
+
+    const base =
         "You are Aurora Government Information Assistant. Answer using real, current official Indian government sources whenever possible. Prefer official government websites such as gov.in, nic.in, mygov.in, india.gov.in and official ministry/department websites. Do not invent sources or URLs. Give the answer clearly and include the official source name and URL when available. User query: ";
 
-    setQuickTool(prompt);
-    }
+    const prompts = {
+        schemes: base + "Tell me about relevant Indian government schemes and explain eligibility, benefits, required documents and how to apply.",
+        documents: base + "Tell me about required government documents or certificates, eligibility, required documents and how to apply.",
+        passport: base + "Tell me about passport or visa-related government procedures, required documents, fees if officially available, and how to apply.",
+        transport: base + "Tell me about driving licence, vehicle registration or other transport-related government procedures and required documents.",
+        tax: base + "Tell me about Indian government tax or banking-related rules, procedures and required documents using official sources.",
+        services: base + "Tell me how to access the relevant Indian government service, including eligibility, required documents and official application process."
+    };
+
+    setQuickTool(prompts[mode] || prompts.services);
+}
 
 </script>
 
