@@ -5335,42 +5335,39 @@ document.addEventListener("click", function (event) {
     const formData = new FormData();
 
     formData.append("pdf", pdfFile);
-    formData.append(
-        "message",
-        "Summarize this PDF and give one clear answer."
-    );
+
+    const pdfPrompt =
+        window.pdfModePrompt ||
+        "Summarize this PDF and give one clear answer.";
+
+    formData.append("message", pdfPrompt);
 
     try {
 
         const response = await fetch(
-    "https://my-chat-app-production-c4fa.up.railway.app/chat-pdf",
-    {
-        method: "POST",
-        body: formData
-    }
-);
+            "/chat-pdf",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
 
         const contentType =
             response.headers.get("content-type") || "";
 
         if (!contentType.includes("application/json")) {
-
             throw new Error(
                 "Server returned an invalid response"
             );
         }
 
-        console.log("CHAT RESPONSE:", response.status);
-
-        const data =
-            await response.json();
+        const data = await response.json();
 
         if (!response.ok) {
 
             appendMessage(
                 "📄 PDF error: " +
-                (data.detail ||
-                    "PDF upload failed"),
+                (data.detail || "PDF upload failed"),
                 "bot"
             );
 
@@ -5378,10 +5375,10 @@ document.addEventListener("click", function (event) {
         }
 
         appendMessage(
-            "📄 PDF Summary\n\n" +
+            "📄 PDF Response\n\n" +
             (
                 data.reply ||
-                "PDF summary అందుబాటులో లేదు."
+                "PDF response అందుబాటులో లేదు."
             ),
             "bot"
         );
@@ -5406,8 +5403,9 @@ document.addEventListener("click", function (event) {
 
         event.target.value = "";
 
+        window.pdfModePrompt = null;
     }
-}
+    }
 
 function openCamera() {
 
