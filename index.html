@@ -10815,16 +10815,18 @@ function selectPDFMode(mode) {
     closePDF();
 
     const prompts = {
-        summary: "Summarize the uploaded PDF clearly and concisely. Give only the summary: ",
-        questions: "Answer the user's questions based only on the uploaded PDF. If the answer is not found in the PDF, say so clearly: ",
-        keypoints: "Extract the most important key points from the uploaded PDF. Give only the key points: ",
-        translate: "Translate the uploaded PDF content into the language requested by the user. Give only the translation: ",
-        study: "Create clear exam-focused study notes from the uploaded PDF. Give only the study notes: "
+        summary: "Summarize this PDF clearly and concisely.",
+        questions: "Answer my questions using only the uploaded PDF.",
+        keypoints: "Give the most important key points from this PDF.",
+        translate: "Translate the uploaded PDF content into the language I request.",
+        study: "Create clear exam-focused study notes from this PDF."
     };
 
-    setQuickTool(prompts[mode] || prompts.summary);
+    window.pdfModePrompt =
+        prompts[mode] || prompts.summary;
 
-    const pdfInput = document.getElementById("pdfInput");
+    const pdfInput =
+        document.getElementById("pdfInput");
 
     if (pdfInput) {
         pdfInput.click();
