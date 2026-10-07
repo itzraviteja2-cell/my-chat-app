@@ -5462,11 +5462,6 @@ function openPDF() {
         modal.style.display = "flex";
     }
 }
-        const pdfInput = document.getElementById("pdfInput");
-
-    if (pdfInput) {
-        pdfInput.click();
-    }
     
 function toggleSettings() {
 
@@ -10833,7 +10828,11 @@ function selectPDFMode(mode) {
     const pdfInput =
         document.getElementById("pdfInput");
 
-    if (pdfInput) {
+    if (!pdfInput) return;
+
+    if (typeof pdfInput.showPicker === "function") {
+        pdfInput.showPicker();
+    } else {
         pdfInput.click();
     }
 }
