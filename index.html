@@ -10780,6 +10780,34 @@ function selectGovernmentMode(mode) {
     setQuickTool(prompts[mode] || prompts.services);
 }
 
+    function openCreative() {
+    const modal = document.getElementById("creativeModal");
+    if (modal) {
+        modal.style.display = "flex";
+    }
+}
+
+function closeCreative() {
+    const modal = document.getElementById("creativeModal");
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+function selectCreativeMode(mode) {
+    closeCreative();
+
+    const prompts = {
+        story: "Write a short creative story based on the user's idea. Keep it engaging and concise. Give only the story: ",
+        poem: "Write a short creative poem based on the user's idea. Give only the poem: ",
+        caption: "Write a short catchy creative caption based on the user's idea. Give only the caption: ",
+        ideas: "Give 5 short creative ideas based on the user's topic. Give only the ideas: ",
+        dialogue: "Write a short natural dialogue based on the user's idea. Give only the dialogue: "
+    };
+
+    setQuickTool(prompts[mode] || prompts.story);
+}
+
 </script>
 
     <!-- LETTER MODAL -->
