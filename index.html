@@ -10820,9 +10820,18 @@ function selectPDFMode(mode) {
         summary: "Summarize the uploaded PDF clearly and concisely. Give only the summary: ",
         questions: "Answer the user's questions based only on the uploaded PDF. If the answer is not found in the PDF, say so clearly: ",
         keypoints: "Extract the most important key points from the uploaded PDF. Give only the key points: ",
-        translate: "Translate the relevant content from the uploaded PDF into the language requested by the user. Give only the translation: ",
-        study: "Create clear exam-focused study notes from the uploaded PDF. Include important concepts, definitions and key points. Give only the study notes: "
+        translate: "Translate the uploaded PDF content into the language requested by the user. Give only the translation: ",
+        study: "Create clear exam-focused study notes from the uploaded PDF. Give only the study notes: "
     };
+
+    setQuickTool(prompts[mode] || prompts.summary);
+
+    const pdfInput = document.getElementById("pdfInput");
+
+    if (pdfInput) {
+        pdfInput.click();
+    }
+}
 
     setQuickTool(prompts[mode] || prompts.summary);
 
