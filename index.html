@@ -5458,14 +5458,11 @@ function openFiles() {
 
 function openPDF() {
 
-    document
-        .getElementById("uploadMenu")
-        .classList
-        .remove("show");
+    const modal = document.getElementById("pdfModal");
 
-    document
-        .getElementById("pdfInput")
-        .click();
+    if (modal) {
+        modal.style.display = "flex";
+    }
 }
     
 function toggleSettings() {
