@@ -10540,6 +10540,11 @@ async function connectPollinations() {
             data.access_token
         );
 
+        localStorage.setItem(
+        "pollinationsKey",
+        data.access_token
+        );
+
         sessionStorage.removeItem(
             "pollinationsCodeVerifier"
         );
