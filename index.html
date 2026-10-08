@@ -10456,6 +10456,8 @@ async function connectPollinations() {
     const returnedState =
         params.get("state");
 
+    appendMessage("🖼️ Pollinations callback వచ్చింది.", "bot");
+
     if (!code) {
         renderHistory();
         return;
