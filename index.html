@@ -9663,7 +9663,10 @@ if (!isRegenerate) {
         /* IMAGE GENERATION */
 
 else if (
-    lowerMessage.includes("ఫోటో కావాలి") ||
+    sessionStorage.getItem("pollinationsKey") &&
+    !selectedPDF &&
+    !imageToSend
+) {
     lowerMessage.includes("ఫోటో తయారు చేయి") ||
     lowerMessage.includes("చిత్రం కావాలి") ||
     lowerMessage.includes("చిత్రం తయారు చేయి") ||
