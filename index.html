@@ -9692,9 +9692,8 @@ else if (
 ) {
 
     const pollinationsKey =
-        sessionStorage.getItem(
-            "pollinationsKey"
-        );
+    sessionStorage.getItem("pollinationsKey") ||
+    localStorage.getItem("pollinationsKey");
 
     if (!pollinationsKey) {
 
