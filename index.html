@@ -6394,6 +6394,15 @@ else {
             image
         );
 
+        image.onload = () => {
+    console.log("Aurora image loaded successfully");
+};
+
+image.onerror = () => {
+    console.error("Aurora image failed to load");
+    bubble.innerText = "🖼️ Image display failed. Please try again.";
+};
+
 
         if (text.message) {
 
