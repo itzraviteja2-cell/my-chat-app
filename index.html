@@ -10440,6 +10440,14 @@ if (
 
 async function connectPollinations() {
 
+        if (sessionStorage.getItem("pollinationsKey")) {
+        appendMessage(
+            "✅ Pollinations Images already connected!",
+            "bot"
+        );
+        return;
+        }
+
     const clientId =
         "pk_4F4rveLoLzVTLf22";
 
