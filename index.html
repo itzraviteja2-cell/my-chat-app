@@ -6337,10 +6337,9 @@ else {
 
 
         image.src =
-            "data:" +
-            mimeType +
-            ";base64," +
-            text.image;
+          text.image.startsWith("data:")
+        ? text.image
+        : "data:" + mimeType + ";base64," + text.image;
 
 
         image.alt =
