@@ -10439,6 +10439,9 @@ if (
 // POLLINATIONS CONNECT - OAuth PKCE
 
 async function connectPollinations() {
+        if (sessionStorage.getItem("pollinationsKey")) {
+        return;
+        }
 
     const clientId =
         "pk_4F4rveLoLzVTLf22";
@@ -10628,11 +10631,6 @@ async function connectPollinations() {
     "✅ Pollinations Images connected successfully!",
     "bot"
 );
-
-        localStorage.setItem(
-        "pollinationsKey",
-        data.access_token
-        );
 
         sessionStorage.removeItem(
             "pollinationsCodeVerifier"
