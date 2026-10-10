@@ -2115,73 +2115,80 @@ async def astrologer_kundali(data: dict):
 
         # GEOCODING
 
-        geocode_url = (
-            "https://nominatim.openstreetmap.org/search"
-            "?format=json"
-            "&limit=1"
-            "&countrycodes=in"
-            "&q="
-            + quote(birth_place)
-        )
+        city_coordinates = {
+            "warangal": (17.9689, 79.5941),
+            "hyderabad": (17.3850, 78.4867),
+            "secunderabad": (17.4399, 78.4983),
+            "vijayawada": (16.5062, 80.6480),
+            "visakhapatnam": (17.6868, 83.2185),
+            "tirupati": (13.6288, 79.4192),
+            "chennai": (13.0827, 80.2707),
+            "bengaluru": (12.9716, 77.5946),
+            "mumbai": (19.0760, 72.8777),
+            "delhi": (28.6139, 77.2090)
+        }
 
-        geocode_request = Request(
-            geocode_url,
-            headers={
-                "User-Agent": "Aurora-Smart-AI/1.0",
-                "Accept": "application/json"
-            }
-        )
+        normalized_place = birth_place.strip().lower()
+        matched_city = None
 
-        try:
+        for city in city_coordinates:
+            if city in normalized_place:
+                matched_city = city
+                break
 
-            with urlopen(
-                geocode_request,
-                timeout=15
-            ) as geo_response:
+        if matched_city:
+            latitude, longitude = city_coordinates[matched_city]
 
-                geo_data = json.loads(
-                    geo_response
-                    .read()
-                    .decode("utf-8")
-                )
-
-        except HTTPError as e:
-
-            raise HTTPException(
-                status_code=502,
-                detail=(
-                    "GEOCODING ERROR: Nominatim HTTP "
-                    + str(e.code)
-                )
+        else:
+            geocode_url = (
+                "https://nominatim.openstreetmap.org/search"
+                "?format=json"
+                "&limit=1"
+                "&countrycodes=in"
+                "&q="
+                + quote(birth_place)
             )
 
-        except Exception as e:
-
-            raise HTTPException(
-                status_code=502,
-                detail=(
-                    "GEOCODING ERROR: "
-                    + str(e)
-                )
+            geocode_request = Request(
+                geocode_url,
+                headers={
+                    "User-Agent": "Aurora-Smart-AI/1.0",
+                    "Accept": "application/json"
+                }
             )
 
-        if not geo_data:
+            try:
+                with urlopen(
+                    geocode_request,
+                    timeout=15
+                ) as geo_response:
+                    geo_data = json.loads(
+                        geo_response.read().decode("utf-8")
+                    )
 
-            raise HTTPException(
-                status_code=400,
-                detail=(
-                    "Birth place not found. "
-                    "Please enter a valid city and state."
+            except HTTPError as e:
+                raise HTTPException(
+                    status_code=502,
+                    detail="GEOCODING ERROR: Nominatim HTTP " + str(e.code)
                 )
-            )
 
-        latitude = float(
-            geo_data[0]["lat"]
-        )
+            except Exception as e:
+                raise HTTPException(
+                    status_code=502,
+                    detail="GEOCODING ERROR: " + str(e)
+                )
 
-        longitude = float(
-            geo_data[0]["lon"]
-        )
+            if not geo_data:
+                raise HTTPException(
+                    status_code=400,
+                    detail=(
+                        "Birth place not found. "
+                        "Please enter a valid city and state."
+                    )
+                )
+
+            latitude = float(geo_data[0]["lat"])
+            longitude = float(geo_data[0]["lon"])
 
         # NAVAMSHA
 
