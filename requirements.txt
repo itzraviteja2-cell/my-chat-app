@@ -4,3 +4,4 @@ google-genai
 python-multipart
 openpyxl
 itsdangerous
+SQLAlchemy
