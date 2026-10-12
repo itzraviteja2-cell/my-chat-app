@@ -149,12 +149,26 @@ def pollinations_callback():
 # HEALTH CHECK
 # =========================================
 
+
 @app.get("/health")
 def health():
+    try:
+        from sqlalchemy import text
 
-    return {
-        "status": "healthy"
-    }
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+
+        return {
+            "status": "healthy",
+            "database": "connected"
+        }
+
+    except Exception:
+        return {
+            "status": "unhealthy",
+            "database": "disconnected"
+        }
+        
 
 
 # =========================================
