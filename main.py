@@ -2372,7 +2372,9 @@ async def astrologer_kundali(data: dict):
 class AuthRequest(BaseModel):
     email: str
     password: str
-    def hash_password(password: str) -> str:
+
+
+def hash_password(password: str) -> str:
     salt = secrets.token_bytes(16)
     hashed = hashlib.pbkdf2_hmac(
         "sha256",
