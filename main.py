@@ -20,6 +20,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from sqlalchemy import create_engine, Column, Integer, String
+from itsdangerous import URLSafeTimedSerializer
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 
