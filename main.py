@@ -2369,3 +2369,6 @@ async def astrologer_kundali(data: dict):
             status_code=500,
             detail=str(e)
         )
+    class AuthRequest(BaseModel):
+        email: str
+        password: str
