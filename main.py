@@ -2372,3 +2372,29 @@ async def astrologer_kundali(data: dict):
 class AuthRequest(BaseModel):
     email: str
     password: str
+    def hash_password(password: str) -> str:
+    salt = secrets.token_bytes(16)
+    hashed = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt,
+        600000
+    )
+    return salt.hex() + ":" + hashed.hex()
+
+
+def verify_password(password: str, stored_hash: str) -> bool:
+    try:
+        salt_hex, hash_hex = stored_hash.split(":")
+        salt = bytes.fromhex(salt_hex)
+        expected_hash = bytes.fromhex(hash_hex)
+
+        actual_hash = hashlib.pbkdf2_hmac(
+            "sha256",
+            password.encode("utf-8"),
+            salt,
+            600000
+        )
+        return secrets.compare_digest(actual_hash, expected_hash)
+    except (ValueError, TypeError):
+        return False
