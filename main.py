@@ -2,6 +2,8 @@ import os
 import base64
 import time
 import json
+import secrets
+import hashlib
 
 from urllib.parse import quote
 from urllib.request import Request, urlopen
