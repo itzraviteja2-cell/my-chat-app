@@ -2400,3 +2400,44 @@ def verify_password(password: str, stored_hash: str) -> bool:
         return secrets.compare_digest(actual_hash, expected_hash)
     except (ValueError, TypeError):
         return False
+
+@app.post("/auth/signup")
+def signup(data: AuthRequest):
+    email = data.email.strip().lower()
+    password = data.password
+
+    if not email or not password:
+        raise HTTPException(
+            status_code=400,
+            detail="Email and password are required"
+        )
+
+    if len(password) < 8:
+        raise HTTPException(
+            status_code=400,
+            detail="Password must be at least 8 characters"
+        )
+
+    db = SessionLocal()
+    try:
+        existing_user = db.query(User).filter(
+            User.email == email
+        ).first()
+
+        if existing_user:
+            raise HTTPException(
+                status_code=409,
+                detail="Email already registered"
+            )
+
+        user = User(
+            email=email,
+            password_hash=hash_password(password)
+        )
+        db.add(user)
+        db.commit()
+
+        return {"message": "Account created successfully"}
+
+    finally:
+        db.close()
