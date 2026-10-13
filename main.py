@@ -38,6 +38,11 @@ app = FastAPI(
     title="Aurora Smart AI",
     version="2.0.0"
 )
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY environment variable is missing")
+
+serializer = URLSafeTimedSerializer(SECRET_KEY)
 
 
 # =========================================
