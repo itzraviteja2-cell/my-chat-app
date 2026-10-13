@@ -2364,11 +2364,11 @@ async def astrologer_kundali(data: dict):
         raise
 
     except Exception as e:
-
         raise HTTPException(
             status_code=500,
             detail=str(e)
         )
-    class AuthRequest(BaseModel):
-        email: str
-        password: str
+
+class AuthRequest(BaseModel):
+    email: str
+    password: str
