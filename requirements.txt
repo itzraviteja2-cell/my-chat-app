@@ -6,3 +6,4 @@ openpyxl
 itsdangerous
 SQLAlchemy
 psycopg[binary]
+google-auth
