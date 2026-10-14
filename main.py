@@ -89,7 +89,9 @@ with engine.begin() as connection:
         connection.execute(
             text("ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL")
         )
-
+        connection.execute(
+            text("ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id VARCHAR")
+        )
 
 # =========================================
 # STATIC FILES
