@@ -79,8 +79,15 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
-    password_hash = Column(String, nullable=False) 
+    password_hash = Column(String, nullable=True) 
 Base.metadata.create_all(bind=engine)
+from sqlalchemy import text
+
+with engine.begin() as connection:
+    if not DATABASE_URL.startswith("sqlite"):
+        connection.execute(
+            text("ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL")
+        )
 
 
 # =========================================
