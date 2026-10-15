@@ -11713,7 +11713,7 @@ async function emailLogin() {
     }
 
     window.google.accounts.id.initialize({
-        client_id: "https://655470666906-k00dhtl25j6d2751unf1gds2vuo9c4k1.apps.googleusercontent.com"
+        client_id: "https://655470666906-k00dhtl25j6d2751unf1gds2vuo9c4k1.apps.googleusercontent.com",
         callback: async function(response) {
             try {
                 const result = await fetch("/auth/google", {
