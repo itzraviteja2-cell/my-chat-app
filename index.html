@@ -11726,6 +11726,7 @@ async function emailLogin() {
                         credential: response.credential
                     })
                 });
+                message.textContent = "Google callback received. Checking server...";
 
                 const data = await result.json();
 
