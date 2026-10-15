@@ -2458,3 +2458,75 @@ def signup(data: AuthRequest):
 
     finally:
         db.close()
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+
+
+class GoogleLoginRequest(BaseModel):
+    credential: str
+
+@app.post("/auth/google")
+def google_login(data: GoogleLoginRequest):
+    if not GOOGLE_CLIENT_ID:
+        raise HTTPException(
+            status_code=503,
+            detail="Google Login is not configured yet"
+        )
+
+    try:
+        idinfo = id_token.verify_oauth2_token(
+            data.credential,
+            google_requests.Request(),
+            GOOGLE_CLIENT_ID
+        )
+    except ValueError:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid Google credential"
+        )
+
+    if not idinfo.get("email") or not idinfo.get("email_verified"):
+        raise HTTPException(
+            status_code=401,
+            detail="Google email is not verified"
+        )
+
+    email = idinfo["email"].strip().lower()
+    google_id = idinfo["sub"]
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(
+            User.google_id == google_id
+        ).first()
+
+        if not user:
+            existing_user = db.query(User).filter(
+                User.email == email
+            ).first()
+
+            if existing_user:
+                raise HTTPException(
+                    status_code=409,
+                    detail="An account with this email already exists. Please use email login."
+                )
+
+            user = User(
+                email=email,
+                password_hash=None,
+                google_id=google_id
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+
+        return {
+            "message": "Google account verified successfully",
+            "user": {
+                "id": user.id,
+                "email": user.email
+            }
+        }
+
+    finally:
+        db.close()
