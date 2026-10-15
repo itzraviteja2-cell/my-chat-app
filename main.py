@@ -2418,6 +2418,40 @@ def verify_password(password: str, stored_hash: str) -> bool:
     except (ValueError, TypeError):
         return False
 
+@app.post("/auth/login")
+def login(data: AuthRequest):
+    email = data.email.strip().lower()
+    password = data.password
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(
+            User.email == email
+        ).first()
+
+        if not user or not user.password_hash:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid email or password"
+            )
+
+        if not verify_password(password, user.password_hash):
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid email or password"
+            )
+
+        return {
+            "message": "Login credentials verified",
+            "user": {
+                "id": user.id,
+                "email": user.email
+            }
+        }
+
+    finally:
+        db.close()
+
 @app.post("/auth/signup")
 def signup(data: AuthRequest):
     email = data.email.strip().lower()
