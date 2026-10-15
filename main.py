@@ -2441,8 +2441,15 @@ def login(data: AuthRequest):
                 detail="Invalid email or password"
             )
 
+                token = serializer.dumps({
+            "user_id": user.id,
+            "email": user.email
+        })
+
         return {
-            "message": "Login credentials verified",
+            "message": "Login successful",
+            "access_token": token,
+            "token_type": "bearer",
             "user": {
                 "id": user.id,
                 "email": user.email
