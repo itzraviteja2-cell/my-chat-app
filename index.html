@@ -11575,6 +11575,55 @@ function selectPDFMode(mode) {
 
 </div>
 
+    <!-- AURORA LOGIN MODAL -->
+<div id="authModal" class="aurora-modal">
+    <div class="aurora-modal-card">
+
+        <button
+            type="button"
+            class="aurora-modal-close"
+            onclick="closeAuthModal()"
+        >
+            ✕
+        </button>
+
+        <div class="astro-title">
+            🔐 Aurora Smart AI
+        </div>
+
+        <div class="astro-subtitle">
+            Sign in or create your account
+        </div>
+
+        <label for="authEmail">Email</label>
+        <input
+            type="email"
+            id="authEmail"
+            placeholder="Enter your email"
+            autocomplete="email"
+        >
+
+        <label for="authPassword">Password</label>
+        <input
+            type="password"
+            id="authPassword"
+            placeholder="At least 8 characters"
+            autocomplete="current-password"
+        >
+
+        <button type="button" onclick="emailLogin()">
+            Login
+        </button>
+
+        <button type="button" onclick="emailSignup()">
+            Create Account
+        </button>
+
+        <div id="authMessage" role="status"></div>
+
+    </div>
+</div>
+
 </body>
 
 </html>
