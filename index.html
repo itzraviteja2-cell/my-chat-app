@@ -11739,6 +11739,8 @@ async function emailLogin() {
                 );
 
                 message.textContent = "Google Login successful!";
+                closeAuthModal();
+                window.location.reload();
             } catch (error) {
                 message.textContent =
                     error.message || "Google Login failed.";
