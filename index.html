@@ -11698,6 +11698,8 @@ async function emailLogin() {
 
         sessionStorage.setItem("auroraAccessToken", result.access_token);
         message.textContent = "Login successful!";
+        closeAuthModal();
+        window.location.reload();
     } catch (error) {
         message.textContent = error.message || "Login failed.";
     }
