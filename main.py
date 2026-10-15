@@ -2429,13 +2429,13 @@ def login(data: AuthRequest):
             User.email == email
         ).first()
 
-        if not user or not user.password_hash:
+                if not user or not user.password_hash:
             raise HTTPException(
                 status_code=401,
                 detail="Invalid email or password"
             )
 
-                if not verify_password(password, user.password_hash):
+        if not verify_password(password, user.password_hash):
             raise HTTPException(
                 status_code=401,
                 detail="Invalid email or password"
