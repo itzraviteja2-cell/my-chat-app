@@ -82,6 +82,14 @@ def get_current_user(authorization: str = Header(None)):
     finally:
         db.close()
 
+@app.get("/auth/me")
+def auth_me(authorization: str = Header(None)):
+    user = get_current_user(authorization)
+    return {
+        "message": "Authenticated",
+        "user": user
+    }
+
 
 # =========================================
 # BASE DIRECTORY
