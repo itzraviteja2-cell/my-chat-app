@@ -11701,8 +11701,45 @@ async function emailLogin() {
         async function googleLogin() {
     const message = document.getElementById("authMessage");
 
-    message.textContent =
-        "Google Login setup is in progress. Please wait.";
+    if (!window.google || !window.google.accounts) {
+        message.textContent = "Google Login is loading. Please try again.";
+        return;
+    }
+
+    window.google.accounts.id.initialize({
+        client_id: "https://655470666906-k00dhtl25j6d2751unf1gds2vuo9c4k1.apps.googleusercontent.com",
+        callback: async function(response) {
+            try {
+                const result = await fetch("/auth/google", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        credential: response.credential
+                    })
+                });
+
+                const data = await result.json();
+
+                if (!result.ok) {
+                    throw new Error(data.detail || "Google Login failed.");
+                }
+
+                sessionStorage.setItem(
+                    "auroraAccessToken",
+                    data.access_token
+                );
+
+                message.textContent = "Google Login successful!";
+            } catch (error) {
+                message.textContent =
+                    error.message || "Google Login failed.";
+            }
+        }
+    });
+
+    window.google.accounts.id.prompt();
         }
     </script>
 
