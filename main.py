@@ -2604,8 +2604,7 @@ def google_login(data: GoogleLoginRequest):
             db.add(user)
             db.commit()
             db.refresh(user)
-
-                token = serializer.dumps({
+                    token = serializer.dumps({
             "user_id": user.id,
             "email": user.email
         })
