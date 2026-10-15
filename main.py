@@ -2605,8 +2605,15 @@ def google_login(data: GoogleLoginRequest):
             db.commit()
             db.refresh(user)
 
+                token = serializer.dumps({
+            "user_id": user.id,
+            "email": user.email
+        })
+
         return {
-            "message": "Google account verified successfully",
+            "message": "Google Login successful",
+            "access_token": token,
+            "token_type": "bearer",
             "user": {
                 "id": user.id,
                 "email": user.email
