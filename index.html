@@ -11643,6 +11643,12 @@ function closeAuthModal() {
 
 function openAuthModal() {
     document.getElementById("authModal").style.display = "flex";
+
+    const googleButton = document.getElementById("googleSignInButton");
+
+    if (googleButton && googleButton.innerHTML.trim() === "") {
+        googleLogin();
+    }
 }
 
 async function emailSignup() {
