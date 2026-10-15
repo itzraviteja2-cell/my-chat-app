@@ -11710,11 +11710,11 @@ async function emailLogin() {
     }
 }
 
-        async function googleLogin() {
+        function googleLogin() {
     const message = document.getElementById("authMessage");
 
     if (!window.google || !window.google.accounts) {
-        message.textContent = "Google Login is loading. Please try again.";
+        message.textContent = "Google Sign-In is loading. Please try again.";
         return;
     }
 
@@ -11751,7 +11751,16 @@ async function emailLogin() {
         }
     });
 
-    window.google.accounts.id.prompt();
+    window.google.accounts.id.renderButton(
+        document.getElementById("googleSignInButton"),
+        {
+            theme: "outline",
+            size: "large",
+            text: "continue_with",
+            shape: "rectangular",
+            width: 280
+        }
+    );
         }
     </script>
 
