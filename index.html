@@ -11624,6 +11624,75 @@ function selectPDFMode(mode) {
     </div>
 </div>
 
+    <script>
+function closeAuthModal() {
+    document.getElementById("authModal").style.display = "none";
+}
+
+function openAuthModal() {
+    document.getElementById("authModal").style.display = "flex";
+}
+
+async function emailSignup() {
+    const email = document.getElementById("authEmail").value.trim();
+    const password = document.getElementById("authPassword").value;
+    const message = document.getElementById("authMessage");
+
+    if (!email || !password) {
+        message.textContent = "Email and password are required.";
+        return;
+    }
+
+    try {
+        const response = await fetch("/auth/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || "Signup failed.");
+        }
+
+        message.textContent = "Account created. You can now log in.";
+    } catch (error) {
+        message.textContent = error.message || "Signup failed.";
+    }
+}
+
+async function emailLogin() {
+    const email = document.getElementById("authEmail").value.trim();
+    const password = document.getElementById("authPassword").value;
+    const message = document.getElementById("authMessage");
+
+    if (!email || !password) {
+        message.textContent = "Email and password are required.";
+        return;
+    }
+
+    try {
+        const response = await fetch("/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || "Login failed.");
+        }
+
+        sessionStorage.setItem("auroraAccessToken", result.access_token);
+        message.textContent = "Login successful!";
+    } catch (error) {
+        message.textContent = error.message || "Login failed.";
+    }
+}
+    </script>
+
 </body>
 
 </html>
