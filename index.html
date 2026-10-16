@@ -11814,6 +11814,13 @@ if (profileEmail && savedEmail) {
     }
         }
 
+        function logoutUser() {
+    sessionStorage.removeItem("auroraAccessToken");
+    sessionStorage.removeItem("auroraEmail");
+    updateProfile();
+    window.location.reload();
+                }
+
 updateProfile();
     </script>
 
