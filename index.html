@@ -11785,25 +11785,34 @@ if (profileEmail && savedEmail) {
     const email = sessionStorage.getItem("auroraEmail");
     const avatar = document.getElementById("profileAvatar");
     const profileEmail = document.getElementById("profileEmail");
+
     const loginButton = document.querySelector(
         '.profile button[onclick="openAuthModal()"]'
     );
 
-            const logoutButton = document.getElementById("logoutButton");
+    const logoutButton = document.getElementById("logoutButton");
 
     if (email) {
-        avatar.textContent = email.charAt(0).toLowerCase();
-        avatar.style.display = "flex";
-        profileEmail.textContent = email;
+        if (avatar) {
+            avatar.textContent = email.charAt(0).toLowerCase();
+            avatar.style.display = "flex";
+        }
+
+        if (profileEmail) {
+            profileEmail.textContent = email;
+        }
 
         if (loginButton) loginButton.style.display = "none";
+        if (logoutButton) logoutButton.style.display = "inline-block";
+
     } else {
-        avatar.style.display = "none";
-        profileEmail.textContent = "";
+        if (avatar) avatar.style.display = "none";
+        if (profileEmail) profileEmail.textContent = "Login";
 
         if (loginButton) loginButton.style.display = "inline-block";
+        if (logoutButton) logoutButton.style.display = "none";
     }
-}
+        }
 
 updateProfile();
     </script>
