@@ -11704,10 +11704,7 @@ async function emailLogin() {
         }
 
         sessionStorage.setItem("auroraAccessToken", result.access_token);
-        sessionStorage.setItem(
-    "auroraEmail",
-    data.user.email
-);
+        sessionStorage.setItem("auroraEmail", email);
         message.textContent = "Login successful!";
         closeAuthModal();
         window.location.reload();
