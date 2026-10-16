@@ -11639,8 +11639,15 @@ function openAuthModal() {
 
     const googleButton = document.getElementById("googleSignInButton");
 
-    if (googleButton && googleButton.innerHTML.trim() === "") {
+    if (!googleButton || googleButton.innerHTML.trim() !== "") {
+        return;
+    }
+
+    if (window.google && window.google.accounts) {
         googleLogin();
+    } else {
+        document.getElementById("authMessage").textContent =
+            "Google Sign-In is loading. Please close and try again.";
     }
 }
 
