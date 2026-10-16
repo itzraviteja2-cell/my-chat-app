@@ -2482,12 +2482,16 @@ def login(data: AuthRequest):
                 detail="Invalid email or password"
             )
 
-                if not verify_password(password, user.password_hash):
+        
+        if not verify_password(password, user.password_hash):
             print("PASSWORD VERIFICATION FAILED")
             raise HTTPException(
                 status_code=401,
                 detail="Invalid email or password"
             )
+        else:
+            print("PASSWORD VERIFICATION PASSED")
+            
         else:
             print("PASSWORD VERIFICATION PASSED")
 else:
