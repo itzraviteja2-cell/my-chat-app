@@ -11720,6 +11720,8 @@ async function emailLogin() {
         message.textContent = "Google Sign-In is loading. Please try again.";
         return;
     }
+            console.log("Google library loaded");
+            console.log("Google login initialization started");
 
     window.google.accounts.id.initialize({
         client_id: "655470666906-k00dhtl25j6d2751unf1gds2vuo9c4k1.apps.googleusercontent.com",
