@@ -11707,6 +11707,7 @@ async function emailLogin() {
         sessionStorage.setItem("auroraEmail", email);
         message.textContent = "Login successful!";
         closeAuthModal();
+        updateProfile();
         window.location.reload();
     } catch (error) {
         message.textContent = error.message || "Login failed.";
