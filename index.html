@@ -11639,8 +11639,8 @@ function openAuthModal() {
 
     const googleButton = document.getElementById("googleSignInButton");
 
-    if (!googleButton || googleButton.innerHTML.trim() !== "") {
-        return;
+    if (!googleButton) {
+    return;
     }
 
     if (window.google && window.google.accounts) {
