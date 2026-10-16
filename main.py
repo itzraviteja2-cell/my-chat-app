@@ -2473,6 +2473,9 @@ def login(data: AuthRequest):
             User.email == email
         ).first()
 
+        print("LOGIN USER FOUND:", bool(user))
+        print("PASSWORD HASH EXISTS:", bool(user and user.password_hash))
+
         if not user or not user.password_hash:
             raise HTTPException(
                 status_code=401,
