@@ -11772,6 +11772,13 @@ async function emailLogin() {
         }
     );
         }
+
+        const profileEmail = document.getElementById("profileEmail");
+const savedEmail = sessionStorage.getItem("auroraEmail");
+
+if (profileEmail && savedEmail) {
+    profileEmail.textContent = savedEmail;
+}
     </script>
 
 </body>
