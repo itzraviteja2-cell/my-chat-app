@@ -2483,10 +2483,13 @@ def login(data: AuthRequest):
             )
 
         if not verify_password(password, user.password_hash):
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid email or password"
-            )
+    print("PASSWORD VERIFICATION FAILED")
+    raise HTTPException(
+        status_code=401,
+        detail="Invalid email or password"
+    )
+else:
+    print("PASSWORD VERIFICATION PASSED")
 
         token = serializer.dumps({
             "user_id": user.id,
