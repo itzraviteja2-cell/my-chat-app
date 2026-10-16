@@ -11779,6 +11779,30 @@ const savedEmail = sessionStorage.getItem("auroraEmail");
 if (profileEmail && savedEmail) {
     profileEmail.textContent = savedEmail;
 }
+
+        function updateProfile() {
+    const email = sessionStorage.getItem("auroraEmail");
+    const avatar = document.getElementById("profileAvatar");
+    const profileEmail = document.getElementById("profileEmail");
+    const loginButton = document.querySelector(
+        '.profile button[onclick="openAuthModal()"]'
+    );
+
+    if (email) {
+        avatar.textContent = email.charAt(0).toLowerCase();
+        avatar.style.display = "flex";
+        profileEmail.textContent = email;
+
+        if (loginButton) loginButton.style.display = "none";
+    } else {
+        avatar.style.display = "none";
+        profileEmail.textContent = "";
+
+        if (loginButton) loginButton.style.display = "inline-block";
+    }
+}
+
+updateProfile();
     </script>
 
 </body>
