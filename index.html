@@ -11740,6 +11740,7 @@ async function emailLogin() {
                 message.textContent = "Google callback received. Checking server...";
 
                 const data = await result.json();
+                message.textContent = JSON.stringify(data);
 
                 if (!result.ok) {
                     throw new Error(data.detail || "Google Login failed.");
