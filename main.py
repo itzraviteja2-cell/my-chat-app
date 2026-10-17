@@ -125,6 +125,15 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=True)
     google_id = Column(String, unique=True, nullable=True)
+
+class ChatUsage(Base):
+    __tablename__ = "chat_usage"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False, index=True)
+    usage_date = Column(String, nullable=False, index=True)
+    message_count = Column(Integer, default=0, nullable=False)
+    
 Base.metadata.create_all(bind=engine)
 from sqlalchemy import text
 
