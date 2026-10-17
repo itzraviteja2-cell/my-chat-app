@@ -11782,14 +11782,14 @@ async function emailLogin() {
         }
 
         const profileEmail = document.getElementById("profileEmail");
-const savedEmail = sessionStorage.getItem("auroraEmail");
+const savedEmail = localStorage.getItem("auroraEmail");
 
 if (profileEmail && savedEmail) {
     profileEmail.textContent = savedEmail;
 }
 
         function updateProfile() {
-    const email = sessionStorage.getItem("auroraEmail");
+    const email = localStorage.getItem("auroraEmail");
     const avatar = document.getElementById("profileAvatar");
     const profileEmail = document.getElementById("profileEmail");
 
