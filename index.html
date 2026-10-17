@@ -9829,10 +9829,6 @@ response =
     "Authorization": "Bearer " +
         (localStorage.getItem("auroraAccessToken") || "")
 },
-            console.log(
-                "TOKEN EXISTS:",
-          !!localStorage.getItem("auroraAccessToken")
-);
 
             signal:
                 AbortSignal.timeout(30000),
