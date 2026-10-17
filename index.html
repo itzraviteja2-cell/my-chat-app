@@ -11708,8 +11708,8 @@ async function emailLogin() {
             throw new Error(result.detail || "Login failed.");
         }
 
-        sessionStorage.setItem("auroraAccessToken", result.access_token);
-        sessionStorage.setItem("auroraEmail", email);
+        localStorage.setItem("auroraAccessToken", result.access_token);
+        localStorage.setItem("auroraEmail", email);
         message.textContent = "Login successful!";
         closeAuthModal();
         updateProfile();
