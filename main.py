@@ -539,6 +539,7 @@ Web results:
 # TEXT CHAT + SMART MEMORY
 # =========================================
 
+@app.post("/chat")
 def chat(
     request: ChatRequest,
     authorization: str = Header(None)
@@ -547,13 +548,12 @@ def chat(
     if not os.getenv(
         "GEMINI_API_KEY"
     ):
-
         raise HTTPException(
             status_code=500,
             detail="GEMINI_API_KEY is not configured"
         )
 
-        user = get_current_user(authorization)
+    user = get_current_user(authorization)
 
     try:
 
