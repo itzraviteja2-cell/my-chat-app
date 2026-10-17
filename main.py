@@ -2509,6 +2509,48 @@ def login(data: AuthRequest):
     finally:
         db.close()
 
+@app.post("/auth/reset-password")
+def reset_password(
+    email: str,
+    new_password: str,
+    admin_secret: str
+):
+    expected_secret = os.getenv("ADMIN_RESET_SECRET")
+
+    if not expected_secret or not secrets.compare_digest(
+        admin_secret, expected_secret
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Invalid reset authorization"
+        )
+
+    email = email.strip().lower()
+
+    if len(new_password) < 8:
+        raise HTTPException(
+            status_code=400,
+            detail="Password must be at least 8 characters"
+        )
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.email == email).first()
+
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="Account not found"
+            )
+
+        user.password_hash = hash_password(new_password)
+        db.commit()
+
+        return {"message": "Reset password succeeded"}
+
+    finally:
+        db.close()
+
 @app.post("/auth/signup")
 def signup(data: AuthRequest):
     email = data.email.strip().lower()
