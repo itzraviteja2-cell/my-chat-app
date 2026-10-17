@@ -556,7 +556,7 @@ def chat(
 
     user = get_current_user(authorization)
 
-        usage_db = SessionLocal()
+    usage_db = SessionLocal()
     try:
         today = date.today().isoformat()
 
