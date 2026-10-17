@@ -9827,11 +9827,11 @@ response =
             headers: {
     "Content-Type": "application/json",
     "Authorization": "Bearer " +
-        (sessionStorage.getItem("auroraAccessToken") || "")
+        (localStorage.getItem("auroraAccessToken") || "")
 },
             console.log(
                 "TOKEN EXISTS:",
-          !!sessionStorage.getItem("auroraAccessToken")
+          !!localStorage.getItem("auroraAccessToken")
 );
 
             signal:
