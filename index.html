@@ -11753,15 +11753,15 @@ async function emailLogin() {
                     throw new Error(data.detail || "Google Login failed.");
                 }
 
-                sessionStorage.setItem(
-                    "auroraAccessToken",
-                    data.access_token
+                localStorage.setItem(
+                     "auroraAccessToken",
+                     data.access_token
                 );
 
-                sessionStorage.setItem(
-                    "auroraEmail",
-                    data.user.email
-               );
+                localStorage.setItem(
+                     "auroraEmail",
+                     data.user.email
+                );
 
                 message.textContent = "Google Login successful!";
                 closeAuthModal();
