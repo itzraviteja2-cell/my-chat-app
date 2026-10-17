@@ -9825,9 +9825,10 @@ response =
             method: "POST",
 
             headers: {
-                "Content-Type":
-                    "application/json"
-            },
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " +
+        (sessionStorage.getItem("auroraAccessToken") || "")
+},
 
             signal:
                 AbortSignal.timeout(30000),
