@@ -2511,22 +2511,19 @@ def login(data: AuthRequest):
         db.close()
 
 @app.post("/auth/reset-password")
-def reset_password(
-    email: str,
-    new_password: str,
-    admin_secret: str
-):
+def reset_password(data: PasswordResetRequest):
     expected_secret = os.getenv("ADMIN_RESET_SECRET")
 
     if not expected_secret or not secrets.compare_digest(
-        admin_secret, expected_secret
+        data.admin_secret, expected_secret
     ):
         raise HTTPException(
             status_code=403,
             detail="Invalid reset authorization"
         )
 
-    email = email.strip().lower()
+    email = data.email.strip().lower()
+    new_password = data.new_password
 
     if len(new_password) < 8:
         raise HTTPException(
