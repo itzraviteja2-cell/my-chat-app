@@ -11754,6 +11754,11 @@ async function emailLogin() {
                     data.access_token
                 );
 
+                sessionStorage.setItem(
+                    "auroraEmail",
+                    data.user.email
+               );
+
                 message.textContent = "Google Login successful!";
                 closeAuthModal();
                 window.location.reload();
