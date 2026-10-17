@@ -11823,6 +11823,10 @@ if (profileEmail && savedEmail) {
     window.location.reload();
                 }
 
+        window.addEventListener("pageshow", function () {
+    updateProfile();
+});
+
 updateProfile();
 
     </script>
