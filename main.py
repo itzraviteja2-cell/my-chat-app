@@ -2432,7 +2432,8 @@ async def astrologer_kundali(data: dict):
 
 class AuthRequest(BaseModel):
     email: str
-    password: str
+    new_password: str
+    admin_secret: str
 
 
 def hash_password(password: str) -> str:
