@@ -556,6 +556,35 @@ def chat(
 
     user = get_current_user(authorization)
 
+        usage_db = SessionLocal()
+    try:
+        today = date.today().isoformat()
+
+        usage = usage_db.query(ChatUsage).filter(
+            ChatUsage.user_id == user["id"],
+            ChatUsage.usage_date == today
+        ).first()
+
+        if usage and usage.message_count >= 10:
+            raise HTTPException(
+                status_code=429,
+                detail="Today's free message limit (10) has been reached."
+            )
+
+        if usage:
+            usage.message_count += 1
+        else:
+            usage = ChatUsage(
+                user_id=user["id"],
+                usage_date=today,
+                message_count=1
+            )
+            usage_db.add(usage)
+
+        usage_db.commit()
+    finally:
+        usage_db.close()
+
     try:
 
         # =====================================
