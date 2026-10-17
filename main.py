@@ -2430,7 +2430,7 @@ async def astrologer_kundali(data: dict):
             detail=str(e)
         )
 
-class AuthRequest(BaseModel):
+class PasswordResetRequest(BaseModel):
     email: str
     new_password: str
     admin_secret: str
