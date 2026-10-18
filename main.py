@@ -147,6 +147,9 @@ with engine.begin() as connection:
         connection.execute(
             text("ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id VARCHAR")
         )
+        connection.execute(
+            text("ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR DEFAULT 'free' NOT NULL")
+        )
 
 # =========================================
 # STATIC FILES
