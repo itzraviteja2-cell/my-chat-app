@@ -5265,6 +5265,8 @@ document.addEventListener("click", function (event) {
     if (!pdfFile) return;
 
     const formData = new FormData();
+    const token = sessionStorage.getItem("auroraAccessToken");
+    console.log("PDF TOKEN EXISTS:", !!token);
 
     formData.append("pdf", pdfFile);
 
