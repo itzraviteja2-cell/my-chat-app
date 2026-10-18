@@ -570,7 +570,7 @@ def chat(
             ChatUsage.usage_date == today
         ).first()
 
-                daily_limit = 200 if user.get("plan") == "premium" else 20
+        daily_limit = 200 if user.get("plan") == "premium" else 20
 
         if usage and usage.message_count >= daily_limit:
             raise HTTPException(
