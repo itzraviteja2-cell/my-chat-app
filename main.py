@@ -570,10 +570,12 @@ def chat(
             ChatUsage.usage_date == today
         ).first()
 
-        if usage and usage.message_count >= 10:
+                daily_limit = 200 if user.get("plan") == "premium" else 20
+
+        if usage and usage.message_count >= daily_limit:
             raise HTTPException(
                 status_code=429,
-                detail="Today's free message limit (10) has been reached."
+                detail=f"Today's message limit ({daily_limit}) has been reached."
             )
 
         if usage:
