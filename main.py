@@ -136,6 +136,14 @@ class ChatUsage(Base):
     user_id = Column(Integer, nullable=False, index=True)
     usage_date = Column(String, nullable=False, index=True)
     message_count = Column(Integer, default=0, nullable=False)
+
+class DocumentUsage(Base):
+    __tablename__ = "document_usage"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False, index=True)
+    usage_date = Column(String, nullable=False, index=True)
+    file_count = Column(Integer, default=0, nullable=False)
     
 Base.metadata.create_all(bind=engine)
 from sqlalchemy import text
