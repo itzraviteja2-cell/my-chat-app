@@ -77,9 +77,9 @@ def get_current_user(authorization: str = Header(None)):
             )
 
                 return {
-            "id": user.id,
-            "email": user.email,
-            "plan": user.plan or "free"
+                    "id": user.id,
+                    "email": user.email,
+                    "plan": user.plan or "free"
                 }
     finally:
         db.close()
