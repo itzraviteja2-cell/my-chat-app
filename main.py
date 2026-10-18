@@ -76,11 +76,11 @@ def get_current_user(authorization: str = Header(None)):
                 detail="User not found"
             )
 
-                return {
-                    "id": user.id,
-                    "email": user.email,
-                    "plan": user.plan or "free"
-                }
+        return {
+            "id": user.id,
+            "email": user.email,
+            "plan": user.plan or "free"
+        }
     finally:
         db.close()
 
