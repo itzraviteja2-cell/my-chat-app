@@ -1410,7 +1410,7 @@ async def chat_pdf(
 
         )
 
-        user = get_current_user(authorization)
+    user = get_current_user(authorization)
 
     usage_db = SessionLocal()
     try:
