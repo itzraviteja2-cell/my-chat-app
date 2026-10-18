@@ -11786,11 +11786,15 @@ if (profileEmail && savedEmail) {
         }
 
         function logoutUser() {
+    localStorage.removeItem("auroraAccessToken");
+    localStorage.removeItem("auroraEmail");
+
     sessionStorage.removeItem("auroraAccessToken");
     sessionStorage.removeItem("auroraEmail");
+
     updateProfile();
     window.location.reload();
-                }
+        }
 
         window.addEventListener("pageshow", function () {
     updateProfile();
