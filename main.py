@@ -126,6 +126,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=True)
     google_id = Column(String, unique=True, nullable=True)
+    plan = Column(String, default="free", nullable=False)
 
 class ChatUsage(Base):
     __tablename__ = "chat_usage"
