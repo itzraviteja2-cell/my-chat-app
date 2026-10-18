@@ -1391,11 +1391,9 @@ def generate_image(
 
 @app.post("/chat-pdf")
 async def chat_pdf(
-
     message: str = Form(...),
-
-    pdf: UploadFile = File(...)
-
+    pdf: UploadFile = File(...),
+    authorization: str = Header(None)
 ):
 
     if not os.getenv(
