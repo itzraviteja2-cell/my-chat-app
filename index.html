@@ -5277,12 +5277,16 @@ document.addEventListener("click", function (event) {
     try {
 
         const response = await fetch(
-            "/chat-pdf",
-            {
-                method: "POST",
-                body: formData
-            }
-        );
+    "/chat-pdf",
+    {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " +
+                sessionStorage.getItem("auroraAccessToken")
+        },
+        body: formData
+    }
+);
 
         const contentType =
             response.headers.get("content-type") || "";
