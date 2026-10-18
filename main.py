@@ -1410,6 +1410,39 @@ async def chat_pdf(
 
         )
 
+        user = get_current_user(authorization)
+
+    usage_db = SessionLocal()
+    try:
+        today = date.today().isoformat()
+
+        usage = usage_db.query(DocumentUsage).filter(
+            DocumentUsage.user_id == user["id"],
+            DocumentUsage.usage_date == today
+        ).first()
+
+        daily_limit = 20 if user.get("plan") == "premium" else 2
+
+        if usage and usage.file_count >= daily_limit:
+            raise HTTPException(
+                status_code=429,
+                detail=f"Today's document upload limit ({daily_limit}) has been reached."
+            )
+
+        if usage:
+            usage.file_count += 1
+        else:
+            usage = DocumentUsage(
+                user_id=user["id"],
+                usage_date=today,
+                file_count=1
+            )
+            usage_db.add(usage)
+
+        usage_db.commit()
+    finally:
+        usage_db.close()
+
 
     try:
 
