@@ -6874,17 +6874,25 @@ function handleKey(event) {
             "Summarize this TXT document and give one clear answer."
         );
 
+        const token = localStorage.getItem("auroraAccessToken");
+
+if (!token) {
+    appendMessage("📄 Please log in again before uploading a document.", "bot");
+    return;
+}
+
         try {
 
-            const response =
-                await fetch(
-                    window.location.origin +
-                    "/chat-txt",
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
+            const response = await fetch(
+    window.location.origin + "/chat-txt",
+    {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        body: formData
+    }
+);
 
             const data =
                 await response.json();
