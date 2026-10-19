@@ -7102,14 +7102,14 @@ if (fileName.endsWith(".csv")) {
     try {
 
     appendMessage(
-        "🌟 Aurora AI పని ప్రారంభించింది!\n📊 మీ Excel ఫైల్‌లోని ముఖ్యమైన సమాచారాన్ని వెలికితీస్తోంది...",
+        "🌟 Aurora AI పని ప్రారంభించింది!\n📊 మీ CSV ఫైల్‌లోని ముఖ్యమైన సమాచారాన్ని వెలికితీస్తోంది...",
         "bot"
     );
 
     const response =
         await fetch(
             window.location.origin +
-            "/chat-excel",
+            "/chat-csv",
             {
                 method: "POST",
                 body: formData
