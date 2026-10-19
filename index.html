@@ -5264,18 +5264,22 @@ document.addEventListener("click", function (event) {
 
     if (!pdfFile) return;
 
-    const token = localStorage.getItem("auroraAccessToken");
-        const authCheck = await fetch("/auth/me", {
+    if (!token) {
+    appendMessage("📄 Please log in again before uploading a PDF.", "bot");
+    return;
+}
+
+const authCheck = await fetch("/auth/me", {
     headers: {
         "Authorization": "Bearer " + token
     }
 });
 
-    console.log("PDF AUTH STATUS:", authCheck.status);
+console.log("PDF AUTH STATUS:", authCheck.status);
 
-    if (!token) {
-       appendMessage("📄 Please log in again before uploading a PDF.", "bot");
-       return;
+if (!authCheck.ok) {
+    appendMessage("📄 Login expired. Please log in again.", "bot");
+    return;
 }
 
     formData.append("pdf", pdfFile);
