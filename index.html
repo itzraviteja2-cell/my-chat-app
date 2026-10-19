@@ -5265,6 +5265,13 @@ document.addEventListener("click", function (event) {
     if (!pdfFile) return;
 
     const token = localStorage.getItem("auroraAccessToken");
+        const authCheck = await fetch("/auth/me", {
+    headers: {
+        "Authorization": "Bearer " + token
+    }
+});
+
+    console.log("PDF AUTH STATUS:", authCheck.status);
 
     if (!token) {
        appendMessage("📄 Please log in again before uploading a PDF.", "bot");
