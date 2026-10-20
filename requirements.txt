@@ -4,6 +4,7 @@ google-genai
 python-multipart
 openpyxl
 itsdangerous
+requests
 SQLAlchemy
 psycopg[binary]
 google-auth
