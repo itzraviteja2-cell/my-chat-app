@@ -2600,7 +2600,7 @@ def login(data: AuthRequest):
         else:
             print("PASSWORD VERIFICATION PASSED")
 
-                token = serializer.dumps({
+            token = serializer.dumps({
             "user_id": user.id,
             "email": user.email
         })
