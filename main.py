@@ -1043,14 +1043,29 @@ LANGUAGE RULES:
         }
 
 
+        except HTTPException:
+        raise
+
     except Exception as e:
 
+        error_text = str(e)
+
+        if (
+            "429" in error_text
+            or "RESOURCE_EXHAUSTED" in error_text
+            or "quota" in error_text.lower()
+        ):
+            raise HTTPException(
+                status_code=429,
+                detail=(
+                    "Aurora Smart AI AI service limit reached. "
+                    "Please try again later."
+                )
+            )
+
         raise HTTPException(
-
             status_code=500,
-
             detail=str(e)
-
         )
 
 
