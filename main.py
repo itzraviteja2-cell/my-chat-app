@@ -2600,12 +2600,10 @@ def login(data: AuthRequest):
         else:
             print("PASSWORD VERIFICATION PASSED")
 
-        token = serializer.dumps({
-                        "user": {
-                "id": user.id,
-                "email": user.email,
-                "plan": user.plan
-                        }
+                token = serializer.dumps({
+            "user_id": user.id,
+            "email": user.email
+        })
 
         return {
             "message": "Login successful",
@@ -2613,7 +2611,8 @@ def login(data: AuthRequest):
             "token_type": "bearer",
             "user": {
                 "id": user.id,
-                "email": user.email
+                "email": user.email,
+                "plan": user.plan
             }
         }
 
