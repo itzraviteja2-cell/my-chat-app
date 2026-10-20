@@ -5265,15 +5265,102 @@ body {
 <script>
 
     function openPremium() {
-    alert(
-        "⭐ Aurora Smart AI Premium\n\n" +
-        "🆓 Free Plan\n" +
-        "• 20 messages per day\n" +
-        "• 2 document uploads per day\n\n" +
-        "👑 Premium Plan\n" +
-        "• 200 messages per day\n" +
-        "• 20 document uploads per day\n\n" +
-        "Premium payments are coming soon!"
+    const oldPopup = document.getElementById("premiumModal");
+    if (oldPopup) oldPopup.remove();
+
+    const modal = document.createElement("div");
+    modal.id = "premiumModal";
+
+    modal.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 99999;
+    `;
+
+    modal.innerHTML = `
+        <div style="
+            width: 100%;
+            max-width: 360px;
+            background: var(--card-bg, #ffffff);
+            color: var(--text-color, #222222);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+            text-align: center;
+        ">
+            <button
+                type="button"
+                id="premiumClose"
+                aria-label="Close Premium popup"
+                style="
+                    position: absolute;
+                    top: 10px;
+                    right: 12px;
+                    border: none;
+                    background: transparent;
+                    color: inherit;
+                    font-size: 28px;
+                    cursor: pointer;
+                    padding: 4px 10px;
+                "
+            >×</button>
+
+            <div style="font-size: 34px; margin-bottom: 8px;">⭐</div>
+
+            <h2 style="margin: 0 0 8px;">Aurora Smart AI</h2>
+            <h3 style="color: #c49a20; margin: 0 0 20px;">Premium Plan</h3>
+
+            <div style="
+                text-align: left;
+                padding: 14px;
+                border-radius: 12px;
+                background: rgba(128,128,128,0.10);
+                margin-bottom: 12px;
+            ">
+                <strong>🆓 Free Plan</strong>
+                <p style="margin: 8px 0 0;">✓ 20 messages per day</p>
+                <p style="margin: 6px 0 0;">✓ 2 document uploads per day</p>
+            </div>
+
+            <div style="
+                text-align: left;
+                padding: 14px;
+                border: 1px solid #d4af37;
+                border-radius: 12px;
+                margin-bottom: 16px;
+            ">
+                <strong>👑 Premium Plan</strong>
+                <p style="margin: 8px 0 0;">✓ 200 messages per day</p>
+                <p style="margin: 6px 0 0;">✓ 20 document uploads per day</p>
+            </div>
+
+            <p style="margin: 0; color: #b18b20; font-weight: 600;">
+                🔒 Premium payments coming soon!
+            </p>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    function closePremium() {
+        modal.remove();
+    }
+
+    modal.addEventListener("click", function(event) {
+        if (event.target === modal) {
+            closePremium();
+        }
+    });
+
+    modal.querySelector("#premiumClose").addEventListener(
+        "click",
+        closePremium
     );
     }
     
