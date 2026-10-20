@@ -1043,7 +1043,7 @@ LANGUAGE RULES:
         }
 
 
-        except HTTPException:
+    except HTTPException:
         raise
 
     except Exception as e:
