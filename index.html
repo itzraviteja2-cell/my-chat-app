@@ -11871,6 +11871,19 @@ async function emailLogin() {
     }
 }
 
+        async function forgotPassword() {
+    const email = document.getElementById("authEmail").value.trim();
+    const message = document.getElementById("authMessage");
+
+    if (!email) {
+        message.textContent = "Please enter your email address first.";
+        document.getElementById("authEmail").focus();
+        return;
+    }
+
+    message.textContent = "Password reset feature is being prepared. Please try again later.";
+        }
+
         function googleLogin() {
     const message = document.getElementById("authMessage");
 
