@@ -2601,9 +2601,11 @@ def login(data: AuthRequest):
             print("PASSWORD VERIFICATION PASSED")
 
         token = serializer.dumps({
-            "user_id": user.id,
-            "email": user.email
-        })
+                        "user": {
+                "id": user.id,
+                "email": user.email,
+                "plan": user.plan
+                        }
 
         return {
             "message": "Login successful",
