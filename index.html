@@ -11881,8 +11881,30 @@ async function emailLogin() {
         return;
     }
 
-    message.textContent = "Password reset feature is being prepared. Please try again later.";
+        message.textContent = "Sending password reset request...";
+
+    try {
+        const response = await fetch("/auth/forgot-password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            message.textContent = result.detail || "Request failed. Please try again.";
+            return;
         }
+
+        message.textContent = result.message ||
+            "If an eligible account exists, password reset instructions will be sent.";
+
+    } catch (error) {
+        message.textContent = "Unable to connect. Please try again.";
+    }
 
         function googleLogin() {
     const message = document.getElementById("authMessage");
