@@ -2549,6 +2549,14 @@ class PasswordResetRequest(BaseModel):
     new_password: str
     admin_secret: str
 
+class ForgotPasswordRequest(BaseModel):
+    email: str
+
+
+class ConfirmPasswordResetRequest(BaseModel):
+    token: str
+    new_password: str
+
 
 def hash_password(password: str) -> str:
     salt = secrets.token_bytes(16)
