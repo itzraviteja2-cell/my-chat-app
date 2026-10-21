@@ -2704,7 +2704,7 @@ def forgot_password(data: ForgotPasswordRequest):
         from_email = os.getenv("RESEND_FROM_EMAIL")
 
         if api_key and from_email:
-                        print("Resend config found. Attempting to send email.")
+            print("Resend config found. Attempting to send email.")
             response = requests.post(
                 "https://api.resend.com/emails",
                 headers={
