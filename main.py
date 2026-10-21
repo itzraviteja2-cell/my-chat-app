@@ -2672,6 +2672,42 @@ def reset_password(data: PasswordResetRequest):
     finally:
         db.close()
 
+@app.post("/auth/forgot-password")
+def forgot_password(data: ForgotPasswordRequest):
+    email = data.email.strip().lower()
+
+    if not email:
+        raise HTTPException(
+            status_code=400,
+            detail="Email is required"
+        )
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(
+            User.email == email
+        ).first()
+
+        # ఒకே மாதிரியான பதில் கொடுத்து account இருப்பதை வெளிப்படுத்தாமல் இருக்கவும்.
+        if not user or not user.password_hash:
+            return {
+                "message": "If an eligible account exists, password reset instructions will be sent."
+            }
+
+        token = password_reset_serializer.dumps({
+            "user_id": user.id,
+            "email": user.email
+        })
+
+        # Email పంపడం తదుపరి దశలో జోడిస్తాం.
+        return {
+            "message": "Password reset token created. Email delivery is not configured yet.",
+            "reset_token": token
+        }
+
+    finally:
+        db.close()
+
 @app.post("/auth/signup")
 def signup(data: AuthRequest):
     email = data.email.strip().lower()
