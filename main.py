@@ -2700,10 +2700,9 @@ def forgot_password(data: ForgotPasswordRequest):
         })
 
         # Email పంపడం తదుపరి దశలో జోడిస్తాం.
-        return {
-            "message": "Password reset token created. Email delivery is not configured yet.",
-            "reset_token": token
-        }
+            return {
+            "message": "If an eligible account exists, password reset instructions will be sent."
+                }
 
     finally:
         db.close()
