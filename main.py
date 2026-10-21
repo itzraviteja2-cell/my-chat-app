@@ -2700,10 +2700,36 @@ def forgot_password(data: ForgotPasswordRequest):
             "email": user.email
         })
 
-        # Email పంపడం తదుపరి దశలో జోడిస్తాం.
+                api_key = os.getenv("RESEND_API_KEY")
+        from_email = os.getenv("RESEND_FROM_EMAIL")
+
+        if api_key and from_email:
+            response = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "from": from_email,
+                    "to": [email],
+                    "subject": "Aurora Smart AI - Password Reset",
+                    "text": (
+                        "You requested a password reset for Aurora Smart AI.\n\n"
+                        f"Your reset token is:\n{token}\n\n"
+                        "This token expires in 30 minutes. "
+                        "If you did not request this, ignore this email."
+                    )
+                },
+                timeout=15
+            )
+
+            if response.status_code >= 400:
+                print("Resend email error:", response.status_code, response.text)
+
         return {
             "message": "If an eligible account exists, password reset instructions will be sent."
-                    }
+        }
 
     finally:
         db.close()
