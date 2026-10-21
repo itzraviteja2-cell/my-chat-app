@@ -2700,7 +2700,7 @@ def forgot_password(data: ForgotPasswordRequest):
             "email": user.email
         })
 
-            api_key = os.getenv("RESEND_API_KEY")
+                             api_key = os.getenv("RESEND_API_KEY")
         from_email = os.getenv("RESEND_FROM_EMAIL")
 
         if api_key and from_email:
