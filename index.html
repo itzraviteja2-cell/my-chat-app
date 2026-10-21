@@ -11773,13 +11773,19 @@ function selectPDFMode(mode) {
             autocomplete="current-password"
         >
 
-        <button type="button" onclick="emailLogin()">
-            Login
-        </button>
+        <div style="display:flex; justify-content:space-between; gap:16px; margin-top:18px;">
 
-        <button type="button" onclick="emailSignup()">
-            Create Account
-        </button>
+    <button type="button" onclick="emailLogin()"
+        style="flex:1; min-width:0; min-height:48px; border:none; border-radius:12px; background:linear-gradient(135deg,#4f8cff,#6c5ce7); color:white; font-size:15px; font-weight:600; cursor:pointer;">
+        Login
+    </button>
+
+    <button type="button" onclick="emailSignup()"
+        style="flex:1; min-width:0; min-height:48px; border:1px solid #4f8cff; border-radius:12px; background:transparent; color:#4f8cff; font-size:15px; font-weight:600; cursor:pointer;">
+        Create Account
+    </button>
+
+        </div>
 
         <div id="authMessage" role="status"></div>
 
