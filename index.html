@@ -11902,11 +11902,12 @@ async function emailLogin() {
         message.textContent = result.message ||
             "If an eligible account exists, password reset instructions will be sent.";
 
-    } catch (error) {
+            } catch (error) {
         message.textContent = "Unable to connect. Please try again.";
     }
+}
 
-        function googleLogin() {
+function googleLogin() {
     const message = document.getElementById("authMessage");
 
     if (!window.google || !window.google.accounts) {
