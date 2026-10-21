@@ -2727,7 +2727,7 @@ def forgot_password(data: ForgotPasswordRequest):
 
             if response.status_code >= 400:
                 print("Resend email error:", response.status_code, response.text)
-                            else:
+            else:
                 print("Resend accepted email request:", response.status_code)
                 print("Resend response:", response.text)
 
