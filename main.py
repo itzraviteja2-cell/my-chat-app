@@ -2690,10 +2690,19 @@ def forgot_password(data: ForgotPasswordRequest):
         ).first()
 
         # ఒకே மாதிரியான பதில் கொடுத்து account இருப்பதை வெளிப்படுத்தாமல் இருக்கவும்.
-        if not user or not user.password_hash:
+        if not user:
+            print("Forgot password: user not found")
             return {
                 "message": "If an eligible account exists, password reset instructions will be sent."
             }
+
+        if not user.password_hash:
+            print("Forgot password: password hash missing")
+            return {
+                "message": "If an eligible account exists, password reset instructions will be sent."
+            }
+
+        print("Forgot password: eligible user found")
 
         token = password_reset_serializer.dumps({
             "user_id": user.id,
