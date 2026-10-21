@@ -2700,9 +2700,9 @@ def forgot_password(data: ForgotPasswordRequest):
         })
 
         # Email పంపడం తదుపరి దశలో జోడిస్తాం.
-            return {
+                    return {
             "message": "If an eligible account exists, password reset instructions will be sent."
-                }
+                    }
 
     finally:
         db.close()
