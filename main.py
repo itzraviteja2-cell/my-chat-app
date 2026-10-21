@@ -48,6 +48,11 @@ if not SECRET_KEY:
 
 serializer = URLSafeTimedSerializer(SECRET_KEY)
 
+password_reset_serializer = URLSafeTimedSerializer(
+    SECRET_KEY,
+    salt="aurora-password-reset"
+)
+
 def get_current_user(authorization: str = Header(None)):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(
