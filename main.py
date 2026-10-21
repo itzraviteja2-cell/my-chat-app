@@ -2708,6 +2708,46 @@ def forgot_password(data: ForgotPasswordRequest):
     finally:
         db.close()
 
+@app.post("/auth/confirm-password-reset")
+def confirm_password_reset(data: ConfirmPasswordResetRequest):
+    if len(data.new_password) < 8:
+        raise HTTPException(
+            status_code=400,
+            detail="Password must be at least 8 characters"
+        )
+
+    try:
+        token_data = password_reset_serializer.loads(
+            data.token,
+            max_age=1800
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid or expired password reset token"
+        )
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(
+            User.id == token_data.get("user_id"),
+            User.email == token_data.get("email")
+        ).first()
+
+        if not user or not user.password_hash:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid password reset request"
+            )
+
+        user.password_hash = hash_password(data.new_password)
+        db.commit()
+
+        return {"message": "Password reset successful"}
+
+    finally:
+        db.close()
+
 @app.post("/auth/signup")
 def signup(data: AuthRequest):
     email = data.email.strip().lower()
