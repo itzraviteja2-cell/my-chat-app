@@ -2437,7 +2437,7 @@ async def astrologer_kundali(data: dict):
             }
         }
 
-        kundali_request = Request(
+        kundali_request = URLRequest(
             kundali_url,
             data=json.dumps(
                 kundali_payload
