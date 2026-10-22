@@ -8,7 +8,7 @@ import requests
 from datetime import date
 
 from urllib.parse import quote
-from urllib.request import Request,as URLRequest, urlopen
+from urllib.request import Request as URLRequest, urlopen
 
 from fastapi import (
     FastAPI,
