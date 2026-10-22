@@ -2369,7 +2369,7 @@ async def astrologer_kundali(data: dict):
                 + quote(birth_place)
             )
 
-            geocode_request = Request(
+            geocode_request = URLRequest(
                 geocode_url,
                 headers={
                     "User-Agent": "Aurora-Smart-AI/1.0",
