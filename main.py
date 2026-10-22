@@ -1323,7 +1323,7 @@ def generate_image(
         )
 
 
-        api_request = urlRequest(
+        api_request = URLRequest(
 
             url,
 
