@@ -303,7 +303,7 @@ def web_search(query: str):
             + quote(query.strip())
         )
 
-        request = Request(
+        request = URLRequest(
             url,
             headers={
                 "X-API-Key": api_key
