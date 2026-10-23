@@ -1271,9 +1271,7 @@ def generate_image(
         )
 
 
-    pollinations_key = (
-        authorization[7:].strip()
-    )
+    pollinations_key = os.getenv("POLLINATIONS_API_KEY", "").strip()
 
 
     if not pollinations_key:
