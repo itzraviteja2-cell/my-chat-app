@@ -1255,20 +1255,9 @@ def generate_image(
 
 ):
 
-    if not authorization.startswith(
-        "Bearer "
-    ):
-
-        raise HTTPException(
-
-            status_code=401,
-
-            detail=(
-                "Connect your Pollinations "
-                "account first"
-            )
-
-        )
+    pollinations_key = os.getenv(
+    "POLLINATIONS_API_KEY", ""
+).strip()
 
 
     pollinations_key = os.getenv("POLLINATIONS_API_KEY", "").strip()
