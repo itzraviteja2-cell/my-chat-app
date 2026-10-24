@@ -1260,9 +1260,6 @@ def generate_image(
 ).strip()
 
 
-    pollinations_key = os.getenv("POLLINATIONS_API_KEY", "").strip()
-
-
     if not pollinations_key:
 
         raise HTTPException(
