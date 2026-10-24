@@ -9916,24 +9916,18 @@ else if (
         return;
     }
 
-    response =
-        await fetch(
-            "/generate-image",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/json",
-
-                body:
-                    JSON.stringify({
-                        prompt:
-                            message
-                    })
-            }
-        );
-}
+    response = await fetch(
+    "/generate-image",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            prompt: message
+        })
+    }
+);
 
 
         /* PDF CHAT / NORMAL CHAT */
