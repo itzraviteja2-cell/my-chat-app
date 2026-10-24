@@ -9921,8 +9921,9 @@ else if (
     {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
-        },
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + pollinationsKey
+},
         body: JSON.stringify({
             prompt: message
         })
