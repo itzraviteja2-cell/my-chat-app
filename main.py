@@ -1285,50 +1285,36 @@ def generate_image(
         )
 
 
-    try:
+        try:
+        original_prompt = request.prompt.strip()
 
-    original_prompt = request.prompt.strip()
-
-    enhanced_prompt = (
-        "Create a beautiful, high-quality, "
-        "highly detailed, realistic image of "
-        + original_prompt
-        + ". Carefully preserve the requested subject, "
-        "natural proportions, accurate anatomy, "
-        "clear facial features, realistic lighting, "
-        "sharp focus, rich details, beautiful composition. "
-        "Do not substitute a different subject."
-    )
-
-    prompt = quote(
-        enhanced_prompt,
-        safe=""
-    )
-
-
-        url = (
-
-            "https://gen.pollinations.ai/image/"
-
-            + prompt
-
-            + "?model=flux"
-
+        enhanced_prompt = (
+            "Create a beautiful, high-quality, "
+            "highly detailed, realistic image of "
+            + original_prompt
+            + ". Carefully preserve the requested subject, "
+            "natural proportions, accurate anatomy, "
+            "clear facial features, realistic lighting, "
+            "sharp focus, rich details, beautiful composition. "
+            "Do not substitute a different subject."
         )
 
+        prompt = quote(
+            enhanced_prompt,
+            safe=""
+        )
+
+        url = (
+            "https://gen.pollinations.ai/image/"
+            + prompt
+            + "?model=flux"
+        )
 
         api_request = URLRequest(
-
             url,
-
             headers={
-
-                "Authorization":
-                    "Bearer "
-                    + pollinations_key
-
+                "Authorization": "Bearer " + pollinations_key
             }
-
         )
 
 
