@@ -9977,7 +9977,11 @@ response =
             headers: {
     "Content-Type": "application/json",
     "Authorization": "Bearer " +
-        (localStorage.getItem("auroraAccessToken") || "")
+    (
+        sessionStorage.getItem("auroraAccessToken") ||
+        localStorage.getItem("auroraAccessToken") ||
+        ""
+    )
 },
 
             signal:
