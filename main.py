@@ -1287,13 +1287,23 @@ def generate_image(
 
     try:
 
-        prompt = quote(
+    original_prompt = request.prompt.strip()
 
-            request.prompt.strip(),
+    enhanced_prompt = (
+        "Create a beautiful, high-quality, "
+        "highly detailed, realistic image of "
+        + original_prompt
+        + ". Carefully preserve the requested subject, "
+        "natural proportions, accurate anatomy, "
+        "clear facial features, realistic lighting, "
+        "sharp focus, rich details, beautiful composition. "
+        "Do not substitute a different subject."
+    )
 
-            safe=""
-
-        )
+    prompt = quote(
+        enhanced_prompt,
+        safe=""
+    )
 
 
         url = (
