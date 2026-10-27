@@ -1285,7 +1285,7 @@ def generate_image(
         )
 
 
-        try:
+    try:
         original_prompt = request.prompt.strip()
 
         enhanced_prompt = (
