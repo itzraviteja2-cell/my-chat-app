@@ -1308,8 +1308,11 @@ def generate_image(
                 else original_prompt
             )
 
-        except Exception:
-            enhanced_prompt = original_prompt
+        except Exception as e:
+            raise HTTPException(
+                status_code=503,
+                detail="Image prompt creation failed. Please try again."
+        )
 
         prompt = quote(
             enhanced_prompt,
