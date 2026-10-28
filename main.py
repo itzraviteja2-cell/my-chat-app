@@ -1288,7 +1288,7 @@ def generate_image(
     try:
         original_prompt = request.prompt.strip()
 
-            prompt_response = client.models.generate_content(
+             prompt_response = client.models.generate_content(
             model="gemini-3.6-flash",
             contents=(
                 "Convert the user's request into a detailed "
