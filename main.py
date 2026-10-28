@@ -1288,24 +1288,28 @@ def generate_image(
     try:
         original_prompt = request.prompt.strip()
 
-        prompt_response = client.models.generate_content(
-            model="gemini-3.6-flash",
-            contents=(
-                "Convert the user's request into a detailed "
-                "English prompt for image generation. "
-                "Understand Telugu and English. "
-                "Preserve the exact requested subject and scene. "
-                "Do not substitute a different subject. "
-                "Return only the image prompt.\n\n"
-                "User request: " + original_prompt
+        try:
+            prompt_response = client.models.generate_content(
+                model="gemini-3.6-flash",
+                contents=(
+                    "Convert the user's request into a detailed "
+                    "English prompt for image generation. "
+                    "Understand Telugu and English. "
+                    "Preserve the exact requested subject and scene. "
+                    "Do not substitute a different subject. "
+                    "Return only the image prompt.\n\n"
+                    "User request: " + original_prompt
+                )
             )
-        )
 
-        enhanced_prompt = (
-            prompt_response.text.strip()
-            if prompt_response.text
-            else original_prompt
-        )
+            enhanced_prompt = (
+                prompt_response.text.strip()
+                if prompt_response.text
+                else original_prompt
+            )
+
+        except Exception:
+            enhanced_prompt = original_prompt
 
         prompt = quote(
             enhanced_prompt,
