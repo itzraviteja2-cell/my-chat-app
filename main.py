@@ -1416,6 +1416,8 @@ def generate_image(
 
 
     except Exception as e:
+        
+        print("IMAGE GENERATION ERROR:", repr(e))
 
         raise HTTPException(
 
