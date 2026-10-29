@@ -1288,7 +1288,7 @@ def generate_image(
     try:
         original_prompt = request.prompt.strip()
 
-                try:
+        try:
             import time
 
             prompt_response = None
