@@ -1296,8 +1296,14 @@ def generate_image(
                     "English prompt for image generation. "
                     "Understand Telugu and English. "
                     "Preserve the exact requested subject and scene. "
-                    "Do not substitute a different subject. "
-                    "Return only the image prompt.\n\n"
+"Do not substitute a different subject. "
+"Create a premium, cinematic, ultra-detailed image "
+"with professional lighting, rich but natural colors, "
+"realistic textures, beautiful composition, dramatic "
+"depth, intricate details, and polished professional "
+"art direction. Make the result visually stunning "
+"while keeping the requested subject accurate. "
+"Return only the image prompt.\n\n"
                     "User request: " + original_prompt
                 )
             )
