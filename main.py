@@ -1288,24 +1288,40 @@ def generate_image(
     try:
         original_prompt = request.prompt.strip()
 
-        try:
-            prompt_response = client.models.generate_content(
-                model="gemini-3.6-flash",
-                contents=(
-                    "Convert the user's request into a detailed "
-                    "English prompt for image generation. "
-                    "Understand Telugu and English. "
-                    "Preserve the exact requested subject and scene. "
-"Do not substitute a different subject. "
-"Create a premium, cinematic, ultra-detailed image "
-"with professional lighting, rich but natural colors, "
-"realistic textures, beautiful composition, dramatic "
-"depth, intricate details, and polished professional "
-"art direction. Make the result visually stunning "
-"while keeping the requested subject accurate. "
-"Return only the image prompt.\n\n"
-                    "User request: " + original_prompt
-                )
+                try:
+            import time
+
+            prompt_response = None
+
+            for attempt in range(3):
+                try:
+                    prompt_response = client.models.generate_content(
+                        model="gemini-3.6-flash",
+                        contents=(
+                            "Convert the user's request into a detailed "
+                            "English prompt for image generation. "
+                            "Understand Telugu and English. "
+                            "Preserve the exact requested subject and scene. "
+                            "Do not substitute a different subject. "
+                            "Create a premium, cinematic, ultra-detailed image "
+                            "with professional lighting, natural colors, "
+                            "realistic textures, beautiful composition, "
+                            "dramatic depth, and intricate details. "
+                            "Return only the image prompt.\n\n"
+                            "User request: " + original_prompt
+                        )
+                    )
+                    break
+
+                except Exception:
+                    if attempt == 2:
+                        raise
+                    time.sleep(2)
+
+            enhanced_prompt = (
+                prompt_response.text.strip()
+                if prompt_response and prompt_response.text
+                else original_prompt
             )
 
             enhanced_prompt = (
