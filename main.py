@@ -1347,7 +1347,7 @@ def generate_image(
         url = (
     "https://gen.pollinations.ai/image/"
     + prompt
-    + "?model=openai/gpt-image-1.5&seed="
+    + "?model=flux&seed="
     + str(random.randint(1, 999999999))
 )
 
