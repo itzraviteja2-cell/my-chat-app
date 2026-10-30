@@ -1347,7 +1347,7 @@ def generate_image(
         url = (
     "https://gen.pollinations.ai/image/"
     + prompt
-    + "?model=flux&seed="
+    + "?model=black-forest-labs/flux.1-schnell&seed="
     + str(random.randint(1, 999999999))
 )
 
