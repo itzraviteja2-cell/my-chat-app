@@ -1342,11 +1342,14 @@ def generate_image(
             safe=""
         )
 
-        url = (
-            "https://gen.pollinations.ai/image/"
-            + prompt
-            + "?model=flux"
-        )
+        import random
+
+url = (
+    "https://gen.pollinations.ai/image/"
+    + prompt
+    + "?model=flux&seed="
+    + str(random.randint(1, 999999999))
+)
 
         api_request = URLRequest(
             url,
