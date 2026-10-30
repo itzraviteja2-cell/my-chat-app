@@ -6903,38 +6903,23 @@ if (retryRequested) {
         row.innerHTML =
             `
 
-            <div
-                class="message-avatar"
-            >
-                <i
-                    class="
-                    fa-solid
-                    fa-sparkles
-                    "
-                ></i>
-            </div>
+            <div class="bot-wrapper typing-bubble">
 
+    ${
+        message
+        ? `<div style="margin-bottom:10px;font-size:14px;">
+               🎨 ${message}
+           </div>`
+        : ""
+    }
 
-            <div
-                class="
-                bot-wrapper
-                typing-bubble
-                "
-            >
+    <div class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
-                <div
-                    class="
-                    typing-dots
-                    "
-                >
-
-                    <span></span>
-                    <span></span>
-                    <span></span>
-
-                </div>
-
-            </div>
+</div>
 
             `;
 
