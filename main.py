@@ -1344,7 +1344,7 @@ def generate_image(
 
         import random
 
-    url = (
+        url = (
     "https://gen.pollinations.ai/image/"
     + prompt
     + "?model=flux&seed="
