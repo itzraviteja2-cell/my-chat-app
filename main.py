@@ -1332,9 +1332,9 @@ def generate_image(
                 else original_prompt
             )
 
-    except Exception as e:
-    print("Gemini prompt creation error:", repr(e))
-    enhanced_prompt = original_prompt
+        except Exception as e:
+            print("Gemini prompt creation error:", repr(e))
+            enhanced_prompt = original_prompt
 
         prompt = quote(
             enhanced_prompt,
