@@ -1333,11 +1333,8 @@ def generate_image(
             )
 
         except Exception as e:
-            print("Gemini prompt creation error:", repr(e))
-            raise HTTPException(
-                status_code=503,
-                detail="Image prompt creation failed. Please try again."
-            )
+    print("Gemini prompt creation error:", repr(e))
+    enhanced_prompt = original_prompt
 
         prompt = quote(
             enhanced_prompt,
