@@ -1332,12 +1332,6 @@ def generate_image(
                 else original_prompt
             )
 
-            enhanced_prompt = (
-                prompt_response.text.strip()
-                if prompt_response.text
-                else original_prompt
-            )
-
         except Exception as e:
             print("Gemini prompt creation error:", repr(e))
             raise HTTPException(
