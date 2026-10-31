@@ -1298,17 +1298,25 @@ def generate_image(
                     prompt_response = client.models.generate_content(
                         model="gemini-3.6-flash",
                         contents=(
-                            "Convert the user's request into a detailed "
-                            "English prompt for image generation. "
-                            "Understand Telugu and English. "
-                            "Preserve the exact requested subject and scene. "
-                            "Do not substitute a different subject. "
-                            "Create a premium, cinematic, ultra-detailed image "
-                            "with professional lighting, natural colors, "
-                            "realistic textures, beautiful composition, "
-                            "dramatic depth, and intricate details. "
-                            "Return only the image prompt.\n\n"
-                            "User request: " + original_prompt
+                            "You are an expert professional image prompt designer. "
+"Understand the user's request in Telugu or English. "
+"Identify the exact subject, action, setting, and intended scene. "
+"Preserve the user's original meaning without changing the subject. "
+"Create a highly detailed prompt suitable for premium AI image generation. "
+"Describe realistic textures, finely detailed facial features, "
+"natural anatomy, expressive eyes, intricate clothing and ornaments, "
+"beautiful composition, cinematic lighting, realistic shadows, "
+"atmospheric depth, balanced colors, and a carefully designed background. "
+"For Hindu deities, respectfully preserve recognizable traditional "
+"attributes, symbols, clothing, and iconography appropriate to the deity. "
+"For nature, animals, people, architecture, or other subjects, "
+"focus on details relevant to the requested subject. "
+"Avoid blurry details, distorted anatomy, extra limbs, duplicate objects, "
+"unwanted text, watermarks, and unrelated subjects. "
+"Choose an appropriate artistic style based on the user's request. "
+"Do not add unrelated objects or change the requested scene. "
+"Return only the final English image prompt, without explanations.\n\n"
+"User request: " + original_prompt
                         )
                     )
                     break
